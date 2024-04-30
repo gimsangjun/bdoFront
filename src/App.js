@@ -1,15 +1,15 @@
-import logo from "./logo.svg";
+import { Route, Routes } from "react-router-dom";
 import "./App.css";
-import Header from "./components/Header";
-import MainSection from "./components/MainSection";
+import RootPage from "./pages/RootPage";
+import ErrorPage from "./pages/ErrorPage";
+import LoginPage from "./pages/LoginPage";
 
-function App() {
+export default function App() {
   return (
-    <div className="h-full flex flex-col">
-      <Header />
-      <MainSection />
-    </div>
+    <Routes>
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/" element={<RootPage />} />
+      <Route path="*" element={<ErrorPage />} />
+    </Routes>
   );
 }
-
-export default App;
