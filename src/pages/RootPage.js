@@ -1,11 +1,11 @@
 import React from "react";
-import Header from "../components/Header";
 import MainSection from "../components/MainSection";
+import HeaderContainer from "../containers/HeaderContainer";
 
 export default function RootPage() {
   return (
     <div>
-      <Header />
+      <HeaderContainer />
       <MainSection />
     </div>
   );

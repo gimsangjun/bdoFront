@@ -10,6 +10,11 @@ module.exports = {
       },
       colors: {
         mainBlue: "#5383E8",
+        headerBlack: "#2F436E",
+        lightBlue: "#B3CDFF",
+      },
+      borderWidth: {
+        3: "3px",
       },
     },
   },
