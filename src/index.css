@@ -7,13 +7,7 @@ body {
     "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* Tailwind의 bg-blue-400 색상 적용 */
-  background-color: rgba(
-    96,
-    165,
-    250,
-    var(--tw-bg-opacity)
-  ); /* 이는 Tailwind CSS의 bg-blue-400에 해당 */
+  background-color: #5383e8;
   --tw-bg-opacity: 1; /* 배경색의 불투명도 설정 */
 }
 
