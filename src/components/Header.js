@@ -8,13 +8,16 @@ import campfire from "../images/campfire.png";
 import recommend from "../images/recommend.png";
 import user from "../images/user.png";
 
+// TODO: react-component 헤더부분에 넣어야할듯.
 export const MainHeader = () => {
   // const { username } = useSelector((state) => state.auth);
 
   return (
-    <div>
-      <nav className="w-full text-white mx-0 bg-headerBlack h-10">
-        <div className="container flex justify-start items-center">
+    <div className="w-full text-white mx-0 bg-headerBlack h-10">
+      <div className="flex items-center justify-between">
+        {/* subHeader 처럼 li태그를 사용하지않고 단순히 flex만 사용, flex 자식 관련 속성은 MainLink 참고 */}
+        {/* 이런식으로 그룹화 지어서 nav태그는 맨 왼쪽으로 붙이고, 로그인 버튼은 맨 오른쪽으로 붙임. */}
+        <nav className="flex text-white justify-start">
           <MainLink to="/" className="bg-mainBlue">
             <Img src={logo} alt="logo" />
             <Span>BDO_STOCK</Span>
@@ -31,8 +34,17 @@ export const MainHeader = () => {
             <Img src={recommend} alt="good" />
             <Span>추천 아이템</Span>
           </MainLink>
+        </nav>
+        {/* TODO: 극단적으로 window가 줄어들었을 때, nav태그에 로그인 버튼이 침범. 안보이게 반응형으로 해야할듯. */}
+        <div className="flex shrink-0 items-center">
+          {/* TODO : 클릭하면 /login으로 이동. */}
+          <Link to="/login">
+            <button className=" bg-mainBlue text-white py-1 px-4 mx-2 rounded text-xs">
+              로그인
+            </button>
+          </Link>
         </div>
-      </nav>
+      </div>
     </div>
   );
 };
@@ -74,43 +86,9 @@ export function NotificationHeader({ notification }) {
   );
 }
 
-const MainLink = tw.div(Link)`flex items-center px-2 h-10`;
+// grow-0 : 컨테이너 커져도 유지, shrink-0 : 컨테이너 작아져도 유지, flex-1 : 1 1 0(grow, shrink, basis)
+const MainLink = tw.div(Link)`flex items-center px-2 h-10 grow-0 shrink-0`;
 const Img = tw.img`w-6 h-6 mr-1`;
 const Span = tw.span`text-sm`;
-// TODO: 마우스 커서를 올렸을때, 아래쪽 boarder, name색깔 변화함.
+// 마우스 커서를 올렸을때, 아래쪽 boarder, name색깔 변화함.
 const SubLink = tw.li`flex items-center h-12 text-lightBlue font-medium border-b-3 border-transparent hover:border-white hover:text-white`;
-
-// <ul className="flex space-x-4">
-//   {username !== null ? (
-//     <li>
-//       <Link
-//         className="text-white hover:text-blue-200 px-3 py-2 rounded-lg mb-2 sm:mb-0"
-//         to="/logout"
-//       >
-//         로그아웃
-//       </Link>
-//       <span className="text-white px-3 py-2 rounded-lg mb-2 sm:mb-0">
-//         환영합니다, {username}!
-//       </span>
-//     </li>
-//   ) : (
-//     <li>
-//       <Link
-//         className="text-white hover:text-blue-200 px-3 py-2 rounded-lg mb-2 sm:mb-0"
-//         to="/login"
-//       >
-//         로그인
-//       </Link>
-//     </li>
-//   )}
-//   <li>
-//     <a href="#" className="hover:text-blue-200">
-//       장바구니 아이콘
-//     </a>
-//   </li>
-//   <li>
-//     <a href="#" className="hover:text-blue-200">
-//       메뉴2
-//     </a>
-//   </li>
-// </ul>;
