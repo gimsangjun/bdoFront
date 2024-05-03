@@ -13,7 +13,11 @@ module.exports = {
         headerBlack: "#2F436E",
         lightBlue: "#B3CDFF",
       },
+      borderRadius: {
+        14: "14px",
+      },
       borderWidth: {
+        1: "1px",
         3: "3px",
       },
     },
