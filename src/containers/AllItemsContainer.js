@@ -9,6 +9,20 @@ export default function AllItemsContainer() {
   const [items, setItems] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
+  // TODO: 실제로 선택된 카테코리와 favorite를 가지고 백엔드 쿼리도 짜야됨.
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [isFavoriteChecked, setIsFavoriteChecked] = useState(false);
+
+  const handleCategoryChange = (category) => {
+    setSelectedCategory(category);
+    // 여기서 선택된 카테고리에 따라 필요한 로직을 추가할 수 있습니다.
+    console.log(selectedCategory);
+  };
+
+  const handleFavoriteChange = () => {
+    setIsFavoriteChecked(!isFavoriteChecked);
+    // 즐겨찾기 체크 여부에 따라 필요한 로직 추가
+  };
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -31,7 +45,12 @@ export default function AllItemsContainer() {
         {/* 테이블 헤더 시작 */}
         <TableHeader />
         {/* 카테고리 시작 */}
-        <Category />
+        <Category
+          onCategoryChange={handleCategoryChange}
+          selectedCategory={selectedCategory}
+          onFavoriteChange={handleFavoriteChange}
+          isFavoriteChecked={isFavoriteChecked}
+        />
         {/* 데이터 부분 */}
         <ItemsData items={items} />
         {/* 페이지네이션 추가 */}
