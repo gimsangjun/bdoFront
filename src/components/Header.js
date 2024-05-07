@@ -1,7 +1,7 @@
 import React from "react";
 // import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import tw from "twin.macro";
+import tw, { styled } from "twin.macro";
 import logo from "../images/logo.png";
 import product from "../images/product.png";
 import campfire from "../images/campfire.png";
@@ -54,24 +54,24 @@ export const MainHeader = () => {
   );
 };
 
-export function SubHeader() {
+export function SubHeader({ currentPath }) {
   const sublinks = [
     { path: "/", name: "홈" },
     { path: "/items", name: "전체 아이템" },
-    { path: "/", name: "나의 관심 아이템" },
-    { path: "/", name: "거래량 TOP" },
-    { path: "/", name: "추천 아이템" },
+    { path: "/favorite", name: "나의 관심 아이템" },
+    { path: "/top", name: "거래량 TOP" },
+    { path: "/recommend", name: "추천 아이템" },
   ];
 
   return (
-    <div>
+    <div className="bg-mainBlue">
       <nav className="flex text-white w-1080 mx-auto h-12 justify-between">
         {/* ul와 div클래스를 양 끝에 두고 싶은데 방법이 있을까? => justify-between*/}
         {/* gap을 두어 li끼리 사이를 띄울수 있음. */}
         <ul className="flex gap-6 justify-start items-center text-ligntBlue">
           {sublinks.map((sublink, index) => (
-            <SubLink key={index} to={sublink.path}>
-              <Span>{sublink.name}</Span>
+            <SubLink key={index} to={sublink.path} currentPath={currentPath === sublink.path}>
+              <Link to={sublink.path}>{sublink.name}</Link>
             </SubLink>
           ))}
         </ul>
@@ -103,7 +103,10 @@ export function NotificationHeader({ notification }) {
 const MainLink = tw.div(Link)`flex items-center px-2 h-10 grow-0 shrink-0`;
 const Img = tw.img`w-6 h-6 mr-1`;
 const Span = tw.span`text-sm`;
-// 마우스 커서를 올렸을때, 아래쪽 boarder, name색깔 변화함.
-const SubLink = tw.li(
-  Link
-)`flex items-center h-12 text-lightBlue font-medium border-b-3 border-transparent hover:border-white hover:text-white`;
+
+// TODO: blog글대로 해볼려고 했는데, 뭔가 복잡해서 그냥 공식문서 보고 그대로 따라함.
+// 이런식으로 conditional styling이 가능.
+const SubLink = styled.li(({ currentPath }) => [
+  tw`flex items-center h-12 text-lightBlue font-medium border-b-3 border-transparent hover:border-white hover:text-white`,
+  currentPath && tw`border-b-3 border-white text-white`,
+]);
