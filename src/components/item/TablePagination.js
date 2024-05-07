@@ -46,7 +46,6 @@ export default function TablePagination({ currentPage, totalCount, setCurrentPag
       {/* TODO: shadow 효과를 주면 멋지다. 이거에 대해서 정리하고 다른 방법으로 더 예쁘게 할수 있는 방법이 있는지 알아본다.*/}
       {/* TODO: 어디가로 이동하는 기능을 가진 태그들은 대부분 nav - ul - li 태그 조합을 쓰는듯 하다.(op.gg, bdolytics) */}
       <nav className="rounded border shadow-xl border-gray-700">
-        {/* TODO:  <<, >>를 추가해주고 , 얘네들은 각각 맨 처음 페이지와 가장 마지막 페이지로 가게 만들어줘*/}
         <ul className="flex flex-row bg-gray-800">
           <Arrow
             onClick={() => setCurrentPage(1)} // 맨 처음 페이지로 이동

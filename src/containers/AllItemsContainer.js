@@ -28,7 +28,7 @@ export default function AllItemsContainer() {
     const fetchItems = async () => {
       // const response = await getItemsByPage(currentPage).data; 가 안되는 이유는?
       // => 호출 후에 .data 속성을 직접 접근하는 것이 아닌, 반환된 Promise의 결과를 기다리지 않고 바로 .data 속성에 접근하려고 하기 때문
-      const response = await await ItemAPI.getItemsByPage(currentPage);
+      const response = await ItemAPI.getItemsByPage(currentPage);
       setItems(response.data.itemStocks);
       setTotalCount(response.data.totalCount);
       // console.log("item Table :", response.data); // -> 얘는 정상출력됨.
@@ -40,8 +40,8 @@ export default function AllItemsContainer() {
   }, [currentPage]);
 
   return (
-    <div className="w-full h-full bg-white">
-      <div className="w-1080 mx-auto p-2 bg-gray-200 flex justify-center items-center flex-col my-5 rounded-lg">
+    <div className="w-full h-full py-4 bg-gray-200">
+      <div className="w-1080 mx-auto p-2 bg-white flex justify-center items-center flex-col rounded-lg">
         {/* 테이블 헤더 시작 */}
         <TableHeader />
         {/* 카테고리 시작 */}

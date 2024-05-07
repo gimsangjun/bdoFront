@@ -8,7 +8,7 @@ export default function TableHeader() {
       <div className="relative flex items-center justify-center rounded-lg pr-2 bg-base-200 borde opacity-90 hover:opacity-100 h-[40px] py-0.5 pl-2 bg-white">
         {/* TODO: 돋보기 추가 */}
         <input
-          autocomplete="off"
+          autoComplete="off"
           className="h-full w-full border-none bg-transparent px-2 font-medium outline-none placeholder:text-opacity-70  placeholder-gray-400 text-base"
           placeholder="아이템 이름"
         />
