@@ -6,9 +6,9 @@ export default function ItemsData({ items }) {
 
   return (
     // TODO 자식을 벗어나는 부분에 대해서는 배경색깔이 바뀌지않음.(아래로 스크롤 하면 보임.)
-    <div className="w-full h-full bg-gray-200 mx-auto flex justify-center items-center flex-col my-5">
+    <div className="h-full bg-gray-200 flex justify-center items-center flex-col">
       {/* 데이터 부분 시작. , w-full 이유 : width맞춰줄려고. */}
-      <div className="w-full overflow-x-auto rounded-lg">
+      <div className="rounded-lg">
         {/* TODO : min-w-full의 의미 */}
         <table className="min-w-full">
           <thead className="bg-gray-200 ">
@@ -26,7 +26,7 @@ export default function ItemsData({ items }) {
             {/* items를 매핑하여 각 행을 생성 */}
             {items.map((item) => (
               <tr key={item._id} className="hover:bg-gray-100 border-b-2 border-gray-100">
-                <DataTd className="flex gap-3">
+                <DataTd className="flex">
                   <img
                     src={`${imgUrl}${String(item.id).padStart(8, "0")}.webp`}
                     alt="Placeholder"
@@ -58,7 +58,6 @@ const formatName = (item) => {
   return name;
 };
 
-// TODO: 정리
 const formatDate = (dateString) => {
   const date = new Date(dateString);
   const year = date.getFullYear();
@@ -71,5 +70,6 @@ const formatDate = (dateString) => {
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 };
 
-const DataTh = tw.th`px-6 py-3 text-left text-xs font-medium text-gray-500 bg-gray-100 uppercase tracking-wider`;
+// whitespace-nowrap, col이 2줄로 안보이게함. 무조건 한줄
+const DataTh = tw.th`px-6 py-3 whitespace-nowrap text-left text-xs font-medium text-gray-500 bg-gray-100 uppercase tracking-wider`;
 const DataTd = tw.td`px-6 py-4 whitespace-nowrap`;

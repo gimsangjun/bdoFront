@@ -4,6 +4,7 @@ import TableHeader from "../components/item/TableHeader";
 import Category from "../components/item/Category";
 import TablePagination from "../components/item/TablePagination";
 import ItemsData from "../components/item/ItemsData";
+import SidebarContainer from "./SidebarContainer";
 
 export default function AllItemsContainer() {
   const [items, setItems] = useState([]);
@@ -28,8 +29,9 @@ export default function AllItemsContainer() {
     const fetchItems = async () => {
       // const response = await getItemsByPage(currentPage).data; 가 안되는 이유는?
       // => 호출 후에 .data 속성을 직접 접근하는 것이 아닌, 반환된 Promise의 결과를 기다리지 않고 바로 .data 속성에 접근하려고 하기 때문
-      const response = await ItemAPI.getItemsByPage(currentPage);
-      setItems(response.data.itemStocks);
+      // TODO: 카테고리 기능 구현, mainCategory기능이랑 subCategory기능 연결해 줘야함.
+      const response = await ItemAPI.getItemsByCategory(0, 0, currentPage);
+      setItems(response.data.items);
       setTotalCount(response.data.totalCount);
       // console.log("item Table :", response.data); // -> 얘는 정상출력됨.
       // items가 빈배열로 출력되는 이유는?
@@ -41,24 +43,30 @@ export default function AllItemsContainer() {
 
   return (
     <div className="w-full h-full py-4 bg-gray-200">
-      <div className="w-1080 mx-auto p-2 bg-white flex justify-center items-center flex-col rounded-lg">
+      {/* TODO: Bdolytics 보고 반응형웹 해보기. */}
+      <div className="w-1210 mx-auto flex flex-col">
         {/* 테이블 헤더 시작 */}
         <TableHeader />
-        {/* 카테고리 시작 */}
-        <Category
-          onCategoryChange={handleCategoryChange}
-          selectedCategory={selectedCategory}
-          onFavoriteChange={handleFavoriteChange}
-          isFavoriteChecked={isFavoriteChecked}
-        />
-        {/* 데이터 부분 */}
-        <ItemsData items={items} />
-        {/* 페이지네이션 추가 */}
-        <TablePagination
-          currentPage={currentPage}
-          totalCount={totalCount}
-          setCurrentPage={setCurrentPage}
-        />
+        <div className="flex">
+          <SidebarContainer />
+          <div className="bg-white flex justify-center items-center flex-col rounded-lg">
+            {/* 카테고리 시작  */}
+            {/* <Category
+              onCategoryChange={handleCategoryChange}
+              selectedCategory={selectedCategory}
+              onFavoriteChange={handleFavoriteChange}
+              isFavoriteChecked={isFavoriteChecked}
+            /> */}
+            {/* 데이터 부분 */}
+            <ItemsData items={items} />
+            {/* 페이지네이션 추가 */}
+            <TablePagination
+              currentPage={currentPage}
+              totalCount={totalCount}
+              setCurrentPage={setCurrentPage}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );
