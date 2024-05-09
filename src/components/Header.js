@@ -89,10 +89,11 @@ export function NotificationHeader({ notification }) {
     ? notification
     : "당신의 취향을 만족시킬 게임들, Games.op.gg에서 만나보세요! 🎮 [클릭]";
   return (
-    <div className="flex items-center min-h-10 bg-yellow-400">
+    <div className="flex items-center h-10 bg-yellow-400">
       {/* width를 주지않으면 mx-auto가 먹히지 않음. */}
       <div className="w-1080 mx-auto">
-        <Span className="">{notification}</Span>
+        {/* whitespace-nowrap : 두줄로 표시되지않게 */}
+        <Span className="whitespace-nowrap">{notification}</Span>
       </div>
       {/* TODO: op.gg에서 x표시를 relative, absolute로 해줬음 한번 해보면 좋을듯 */}
     </div>
@@ -104,7 +105,7 @@ const MainLink = tw.div(Link)`flex items-center px-2 h-10 grow-0 shrink-0`;
 const Img = tw.img`w-6 h-6 mr-1`;
 const Span = tw.span`text-sm`;
 
-// TODO: blog글대로 해볼려고 했는데, 뭔가 복잡해서 그냥 공식문서 보고 그대로 따라함.
+// blog글대로 해볼려고 했는데, 뭔가 복잡해서 그냥 공식문서 보고 그대로 따라함.
 // 이런식으로 conditional styling이 가능.
 const SubLink = styled.li(({ currentPath }) => [
   tw`flex items-center h-12 text-lightBlue font-medium border-b-3 border-transparent hover:border-white hover:text-white`,

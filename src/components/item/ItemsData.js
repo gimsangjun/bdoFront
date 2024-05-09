@@ -6,7 +6,7 @@ export default function ItemsData({ items }) {
 
   return (
     // TODO 자식을 벗어나는 부분에 대해서는 배경색깔이 바뀌지않음.(아래로 스크롤 하면 보임.)
-    <div className="h-full bg-gray-200 flex justify-center items-center flex-col">
+    <div className="bg-gray-200 flex justify-center items-center flex-col ">
       {/* 데이터 부분 시작. , w-full 이유 : width맞춰줄려고. */}
       <div className="rounded-lg">
         {/* TODO : min-w-full의 의미 */}

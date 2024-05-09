@@ -36,7 +36,8 @@ const SidebarItem = ({ item }) => {
 const Sidebar = ({ items }) => {
   // TODO: w-full을 자동으로 상속못지키나? 계속 w-full 하는게 귀찮음.
   return (
-    <aside className="w-full h-screen flex">
+    // TODO : top 속성을 넣을 때, header의 크기를 직접 계산해서 넣어야 하나?
+    <aside className="w-full flex h-96" style={{ position: "sticky", top: 192 }}>
       <div className="w-full bg-gray-800">
         <nav className="p-4">
           <ul className="space-y-2">

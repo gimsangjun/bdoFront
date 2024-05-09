@@ -42,7 +42,7 @@ export default function AllItemsContainer() {
   }, [currentPage]);
 
   return (
-    <div className="w-full h-full py-4 bg-gray-200">
+    <div className="w-full h-full bg-gray-200">
       {/* TODO: Bdolytics 보고 반응형웹 해보기. */}
       <div className="w-1210 mx-auto flex flex-col">
         {/* 테이블 헤더 시작 */}
