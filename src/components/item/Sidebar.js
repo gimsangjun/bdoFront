@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 
-// TODO: item.id == 1인 모든 아이템의 경우 expaned가
-const SidebarItem = ({ item }) => {
+const SidebarItem = ({ item, onCategoryClick }) => {
   const [expanded, setExpanded] = useState(false); // 하위 항목이 펼쳐진 상태인지 여부를 나타내는 상태
 
   const hasChildren = item.children && item.children.length > 0;
@@ -11,21 +10,25 @@ const SidebarItem = ({ item }) => {
     setExpanded(!expanded);
   };
 
+  const handleClick = () => {
+    if (!hasChildren) {
+      onCategoryClick(item.mainCategory, item.subCategory);
+    }
+    toggleExpand();
+  };
+
   return (
     <li>
-      {/* TODO : href링크는 그 카테고리의 데이터를 요청 하는 링크   */}
-      <a
-        href={item.link}
-        onClick={toggleExpand}
-        className="block text-white hover:bg-gray-700 rounded px-2 py-1"
-      >
+      <div onClick={handleClick} className="block text-white hover:bg-gray-700 rounded px-2 py-1">
         {hasChildren && <span>{expanded ? "▼" : "▶"}</span>}
-        <span className="ml-2">{item.name}</span>
-      </a>
+        <span key={item.id} className="ml-2">
+          {item.name}
+        </span>
+      </div>
       {expanded && hasChildren && (
         <ul className="ml-4">
-          {item.children.map((child) => (
-            <SidebarItem key={child.id} item={child} />
+          {item.children.map((child, index) => (
+            <SidebarItem key={index} item={child} onCategoryClick={onCategoryClick} />
           ))}
         </ul>
       )}
@@ -33,16 +36,16 @@ const SidebarItem = ({ item }) => {
   );
 };
 
-const Sidebar = ({ items }) => {
+const Sidebar = ({ items, onCategoryClick }) => {
   // TODO: w-full을 자동으로 상속못지키나? 계속 w-full 하는게 귀찮음.
   return (
     // TODO : top 속성을 넣을 때, header의 크기를 직접 계산해서 넣어야 하나?
-    <aside className="w-full flex h-96" style={{ position: "sticky", top: 192 }}>
+    <aside className="w-full h-4/5 flex" style={{ position: "sticky", top: 192 }}>
       <div className="w-full bg-gray-800">
         <nav className="p-4">
           <ul className="space-y-2">
-            {items.map((item) => (
-              <SidebarItem key={item.id} item={item} />
+            {items.map((item, index) => (
+              <SidebarItem key={index} item={item} onCategoryClick={onCategoryClick} />
             ))}
           </ul>
         </nav>

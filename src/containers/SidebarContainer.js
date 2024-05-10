@@ -1,52 +1,102 @@
 import React from "react";
 import Sidebar from "../components/item/Sidebar";
 
-export default function SidebarContainer() {
-  // TODO: 아직 예시용 데이터
-  const items = [
+export default function SidebarContainer({ onCategoryClick }) {
+  let items = [
     {
-      id: 1,
       name: "모든 아이템",
-      link: "#",
+      mainCategory: 0,
+      subCategory: 0,
     },
     {
-      id: 2,
       name: "가공",
-      link: "#",
-      children: [],
+      mainCategory: 0,
+      subCategory: 0,
     },
     {
-      id: 3,
       name: "요리",
-      link: "#",
-      children: [],
+      mainCategory: 0,
+      subCategory: 0,
     },
     {
-      id: 4,
-      name: "연금",
-      link: "#",
+      name: "재료",
+      mainCategory: 25,
+      subCategory: 0,
       children: [
         {
-          id: 5,
           name: "모든 아이템",
-          link: "#",
+          mainCategory: 25,
+          subCategory: 0,
           children: [],
         },
         {
-          id: 6,
-          name: "하위 아이템 1",
-          link: "#",
+          name: "광석",
+          mainCategory: 25,
+          subCategory: 1,
           children: [],
         },
         {
-          id: 7,
-          name: "하위 아이템 2",
-          link: "#",
+          name: "나무",
+          mainCategory: 25,
+          subCategory: 2,
+          children: [],
+        },
+        {
+          name: "곡물/열매/씨앗",
+          mainCategory: 25,
+          subCategory: 3,
+          children: [],
+        },
+        {
+          name: "가죽",
+          mainCategory: 25,
+          subCategory: 4,
+          children: [],
+        },
+        {
+          name: "피",
+          mainCategory: 25,
+          subCategory: 5,
+          children: [],
+        },
+        {
+          name: "고기",
+          mainCategory: 25,
+          subCategory: 6,
+          children: [],
+        },
+        {
+          name: "물고기",
+          mainCategory: 25,
+          subCategory: 7,
+          children: [],
+        },
+        {
+          name: "연금 재료",
+          mainCategory: 25,
+          subCategory: 8,
           children: [],
         },
       ],
     },
   ];
 
-  return <Sidebar items={items} />;
+  items = addIdsToItems(items);
+
+  return <Sidebar items={items} onCategoryClick={onCategoryClick} />;
 }
+
+const addIdsToItems = (items) => {
+  let id = 1;
+
+  const addIdToItem = (item) => {
+    item.id = id++;
+    if (item.children && item.children.length > 0) {
+      item.children.forEach(addIdToItem);
+    }
+  };
+
+  items.forEach(addIdToItem);
+
+  return items;
+};

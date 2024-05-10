@@ -1,9 +1,10 @@
 import React from "react";
 import tw from "twin.macro";
+import FavoriteButton from "./FavoriteButton";
 
-export default function ItemsData({ items }) {
-  const imgUrl = "https://cdn.bdolytics.com/images/items/";
+const imgUrl = "https://cdn.bdolytics.com/";
 
+export default function ItemsData({ items, onFavoriteClick, itemFavorites }) {
   return (
     // TODO 자식을 벗어나는 부분에 대해서는 배경색깔이 바뀌지않음.(아래로 스크롤 하면 보임.)
     <div className="bg-gray-200 flex justify-center items-center flex-col ">
@@ -28,16 +29,22 @@ export default function ItemsData({ items }) {
               <tr key={item._id} className="hover:bg-gray-100 border-b-2 border-gray-100">
                 <DataTd className="flex">
                   <img
-                    src={`${imgUrl}${String(item.id).padStart(8, "0")}.webp`}
-                    alt="Placeholder"
+                    src={foramtImgUrl(item)}
+                    alt={item.name}
                     style={{ width: "28px", height: "28px" }}
                   />
-                  {formatName(item)}
+                  {item.name}
                 </DataTd>
                 <DataTd>{new Intl.NumberFormat().format(item.basePrice)}</DataTd>
                 <DataTd>{new Intl.NumberFormat().format(item.currentStock)}</DataTd>
                 <DataTd>아직없음</DataTd>
-                <DataTd>아직없음</DataTd>
+                <DataTd>
+                  <FavoriteButton
+                    item={item}
+                    onFavoriteClick={onFavoriteClick}
+                    itemFavorites={itemFavorites}
+                  />
+                </DataTd>
                 <DataTd>아직없음</DataTd>
                 <DataTd>{formatDate(item.updateAt)}</DataTd>
               </tr>
@@ -49,6 +56,7 @@ export default function ItemsData({ items }) {
   );
 }
 
+// TODO: Item을 강화할수 얘의 경우, 그냥 가장 마지막 단계만 보이도록 일단 설정함.
 const formatName = (item) => {
   let name = item.name;
   if (item.maxEnhance > 0) {
@@ -68,6 +76,18 @@ const formatDate = (dateString) => {
   const seconds = String(date.getSeconds()).padStart(2, "0");
 
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+};
+
+const foramtImgUrl = (item) => {
+  // 고드아이드의 경우 imgurl이 다름.
+  if (item.name.includes("고드아이드")) {
+    return `${imgUrl}img/new_icon/06_pc_equipitem/00_common/01_weapon/${String(item.id).padStart(
+      8,
+      "0"
+    )}.webp`;
+  } else {
+    return `${imgUrl}images/items/${String(item.id).padStart(8, "0")}.webp`;
+  }
 };
 
 // whitespace-nowrap, col이 2줄로 안보이게함. 무조건 한줄

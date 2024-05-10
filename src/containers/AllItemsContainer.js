@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ItemAPI from "../utils/itemAPI";
 import TableHeader from "../components/item/TableHeader";
-import Category from "../components/item/Category";
 import TablePagination from "../components/item/TablePagination";
 import ItemsData from "../components/item/ItemsData";
 import SidebarContainer from "./SidebarContainer";
@@ -10,36 +9,57 @@ export default function AllItemsContainer() {
   const [items, setItems] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  // TODO: 실제로 선택된 카테코리와 favorite를 가지고 백엔드 쿼리도 짜야됨.
-  const [selectedCategory, setSelectedCategory] = useState("all");
-  const [isFavoriteChecked, setIsFavoriteChecked] = useState(false);
+  const [mainCategory, setMainCategory] = useState(0);
+  const [subCategory, setsubCategory] = useState(0);
+  const [itemFavorites, setItemFavorites] = useState([]); // TODO: 궁금한점 useState로 관리한것들은 새로고침하거나 페이지를 이동하면 사라지나?
 
-  const handleCategoryChange = (category) => {
-    setSelectedCategory(category);
-    // 여기서 선택된 카테고리에 따라 필요한 로직을 추가할 수 있습니다.
-    console.log(selectedCategory);
-  };
-
-  const handleFavoriteChange = () => {
-    setIsFavoriteChecked(!isFavoriteChecked);
-    // 즐겨찾기 체크 여부에 따라 필요한 로직 추가
-  };
-
+  // ItemData 받아오는 부분.
+  //TODO: 나중에 redux로 바꿔야할듯 복잡해짐
   useEffect(() => {
     const fetchItems = async () => {
-      // const response = await getItemsByPage(currentPage).data; 가 안되는 이유는?
-      // => 호출 후에 .data 속성을 직접 접근하는 것이 아닌, 반환된 Promise의 결과를 기다리지 않고 바로 .data 속성에 접근하려고 하기 때문
-      // TODO: 카테고리 기능 구현, mainCategory기능이랑 subCategory기능 연결해 줘야함.
-      const response = await ItemAPI.getItemsByCategory(0, 0, currentPage);
-      setItems(response.data.items);
+      // TODO: Item을 강화할수 얘의 경우, 그냥 가장 마지막 단계만 보이도록 일단 설정함.
+      // TODO: 데이터 불러오는중 로딩화면을 만들어야할듯.
+
+      const response = await ItemAPI.getItemsByCategory(mainCategory, subCategory, currentPage); // params: mainCategory, subCategory, currentPage
+      const allPrices = response.data.items.map((item) => {
+        // TODO: price데이터가 없는경우 백엔드 서버에서 bdo관련 API와 관련해서
+        // 가격정보 업데이트하고있는데, 시간초과떠서 그냥 price가 없는 상태로 넘어오는듯
+        // price가 없는경우 그냥 빈값으로 들어가게 해야할듯., 시간초과 관련부분도 더 공부하고 정리해야할듯.
+        const prices = item.price;
+        return prices && prices.length > 0 ? prices[prices.length - 1] : item;
+      });
+      setItems(allPrices);
       setTotalCount(response.data.totalCount);
-      // console.log("item Table :", response.data); // -> 얘는 정상출력됨.
-      // items가 빈배열로 출력되는 이유는?
-      // => 비동기적으로 동작하며, setItems 함수가 호출되어도 items 상태가 즉시 업데이트되지 않기 때문
     };
 
     fetchItems();
-  }, [currentPage]);
+  }, [currentPage, mainCategory, subCategory]);
+
+  const handleCategoryClick = (_mainCategory, _subCategory) => {
+    setMainCategory(_mainCategory);
+    setsubCategory(_subCategory);
+    setCurrentPage(1);
+  };
+
+  // 로그인안한 유저가 있는 경우 userFavorite를 업데이트, 맨처음 한번만 호출됨.
+  useEffect(() => {
+    const fetchItems = async () => {
+      const { favorites } = await ItemAPI.getItemFavorite();
+      setItemFavorites(favorites);
+    };
+
+    //
+    fetchItems();
+  }, []);
+
+  const handleFavoriteClick = async (item) => {
+    try {
+      const { favorites } = await ItemAPI.setItemFavorite(item);
+      setItemFavorites(favorites);
+    } catch (error) {
+      console.error("setItemFavorite erorr", error);
+    }
+  };
 
   return (
     <div className="w-full h-full bg-gray-200">
@@ -48,17 +68,14 @@ export default function AllItemsContainer() {
         {/* 테이블 헤더 시작 */}
         <TableHeader />
         <div className="flex">
-          <SidebarContainer />
+          <SidebarContainer onCategoryClick={handleCategoryClick} />
           <div className="bg-white flex justify-center items-center flex-col rounded-lg">
-            {/* 카테고리 시작  */}
-            {/* <Category
-              onCategoryChange={handleCategoryChange}
-              selectedCategory={selectedCategory}
-              onFavoriteChange={handleFavoriteChange}
-              isFavoriteChecked={isFavoriteChecked}
-            /> */}
             {/* 데이터 부분 */}
-            <ItemsData items={items} />
+            <ItemsData
+              items={items}
+              onFavoriteClick={handleFavoriteClick}
+              itemFavorites={itemFavorites}
+            />
             {/* 페이지네이션 추가 */}
             <TablePagination
               currentPage={currentPage}
