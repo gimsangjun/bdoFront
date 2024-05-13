@@ -10,7 +10,7 @@ import user from "../images/user.png";
 import home from "../images/home.png";
 
 // TODO: react-component 헤더부분에 넣어야할듯.
-export const MainHeader = () => {
+export const MainHeader = ({ onLogout }) => {
   const { username } = useSelector((state) => state.auth);
 
   return (
@@ -43,9 +43,12 @@ export const MainHeader = () => {
         </nav>
         {/* 극단적으로 window가 줄어들었을 때, nav태그에 로그인 버튼이 침범. 안보이게 반응형으로 안보이게함. */}
         <div className="flex shrink-0 items-center">
-          {/* TODO 로그아웃 버튼으로 바꿔여야함. */}
-          <Link to="/login">
-            <button className="bg-mainBlue text-white py-1 px-4 mx-2 rounded text-xs hidden sm:inline-block">
+          {/*TODO "username이 없으면 Link to "login",있으면 "/"으로 이동 */}
+          <Link to={username ? "/" : "/login"}>
+            <button
+              onClick={onLogout}
+              className="bg-mainBlue text-white py-1 px-4 mx-2 rounded text-xs hidden sm:inline-block"
+            >
               {username ? "로그아웃" : "로그인"}
             </button>
           </Link>

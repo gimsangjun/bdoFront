@@ -23,20 +23,20 @@ class AuthAPI {
     }
   }
 
-  // GET /auth/login
-  // static async logout() {
-  //   try {
-  //     await axios.get(`${API_DOMAIN}/auth/logout`);
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // }
+  // GET /auth/logout
+  static async logout() {
+    try {
+      const response = await axios.get(`${API_DOMAIN}/auth/logout`);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
 
   // POST /auth/profile
   static async getProfile() {
     try {
       const response = await axios.get(`${API_DOMAIN}/auth/profile`);
-      console.log("getProfile : ", response);
       return response;
     } catch (error) {
       throw error;

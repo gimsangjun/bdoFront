@@ -4,6 +4,7 @@ import TableHeader from "../components/item/TableHeader";
 import TablePagination from "../components/item/TablePagination";
 import ItemsData from "../components/item/ItemsData";
 import SidebarContainer from "./SidebarContainer";
+import { useSelector } from "react-redux";
 
 export default function AllItemsContainer() {
   const [items, setItems] = useState([]);
@@ -12,6 +13,7 @@ export default function AllItemsContainer() {
   const [mainCategory, setMainCategory] = useState(0);
   const [subCategory, setsubCategory] = useState(0);
   const [itemFavorites, setItemFavorites] = useState([]); // TODO: 궁금한점 useState로 관리한것들은 새로고침하거나 페이지를 이동하면 사라지나?
+  const { username } = useSelector((state) => state.auth);
 
   // ItemData 받아오는 부분.
   //TODO: 나중에 redux로 바꿔야할듯 복잡해짐
@@ -41,16 +43,16 @@ export default function AllItemsContainer() {
     setCurrentPage(1);
   };
 
-  // 로그인안한 유저가 있는 경우 userFavorite를 업데이트, 맨처음 한번만 호출됨.
+  // 로그인한 유저가 있는 경우 userFavorite를 업데이트, 맨처음 한번만 호출됨.
   useEffect(() => {
-    const fetchItems = async () => {
+    const fetchFavoritesItems = async () => {
       const { favorites } = await ItemAPI.getItemFavorite();
       setItemFavorites(favorites);
     };
 
     //
-    fetchItems();
-  }, []);
+    if (username) fetchFavoritesItems();
+  }, [username]);
 
   const handleFavoriteClick = async (item) => {
     try {

@@ -9,13 +9,13 @@ import rootReducer from "./modules";
 import { composeWithDevTools } from "@redux-devtools/extension";
 import { thunk } from "redux-thunk";
 import logger from "redux-logger";
-import { setProfile } from "./modules/auth";
+import { fetchUserProfile } from "./modules/auth";
 import { Provider } from "react-redux";
 
 const store = legacy_createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk, logger)));
 
-// edux가 초기화되도(사용자 새로고침) 로그인 유지되게
-store.dispatch(setProfile());
+// redux가 초기화되도(사용자 새로고침) 로그인 유지되게
+store.dispatch(fetchUserProfile());
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

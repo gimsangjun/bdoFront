@@ -47,7 +47,7 @@ export const login = (username, password) => {
     try {
       // const response = await axios.post(`${API_DOMAIN}/auth/login`, { username, password });
       const response = await authAPI.login(username, password);
-      // response.data.sessionID에 담긴 세션아이디를 쿠키에 담기
+      // 쿠키값은 axios에 withCredentials 값을 true로 줘서 자동으로 담김.
       // 일반적인 패턴 => 서버로부터 받은 세션 ID를 Redux 상태에 저장하고, 이후에 컴포넌트에서 상태를 확인하여 쿠키를 설정하도록 하는 것이 일반적인 패턴
       dispatch(loginSuccess(response.data.sessionID, response.status, response.data.username));
     } catch (error) {
@@ -75,7 +75,7 @@ export const logout = () => {
     try {
       await authAPI.logout();
       // 세션 정보 초기화
-      dispatch({ type: LOGOUT });
+      dispatch({ type: LOGOUT }); // 쿠키값도 삭제
     } catch (error) {
       console.log("Logout 실패 : ", error);
     }
@@ -83,15 +83,17 @@ export const logout = () => {
 };
 
 // 쿠키값에 적혀진 sessionID를 들고, 사용자 정보 요청(ex username 등)
-export const setProfile = (sessionID) => {
+export const fetchUserProfile = (sessionID) => {
   return async (dispatch) => {
     try {
       // const response = await authAPI.getProfile(sessionID);
       // authAPI의 axios설정을 하면 자동을 쿠키값(sessionID) 넘어가서 위와같이 해줄 필요없음.
       const response = await authAPI.getProfile();
+      if (!response.ok) throw new Error("Authentication check failed");
       dispatch({ type: SET_PROFILE, payload: { username: response.data.username } });
     } catch (error) {
       console.log("사용자 정보 가져오기 실패 : ", error);
+      return null; // 로그인 상태가 아니거나 요청 실패
     }
   };
 };
