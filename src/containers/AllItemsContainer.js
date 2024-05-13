@@ -50,16 +50,27 @@ export default function AllItemsContainer() {
       setItemFavorites(favorites);
     };
 
-    //
     if (username) fetchFavoritesItems();
   }, [username]);
 
   const handleFavoriteClick = async (item) => {
+    //TODO: 이미 즐겨찾기한 얘는 삭제, 안한 얘는 즐겨찾기 추가
+    // 객체형태가 달라서 include가 작동을 안해 , id, sid로 판단하게 바꿔줘
+    const isFavorite = itemFavorites.some(
+      (favorite) => favorite.id === item.id && favorite.sid === item.sid
+    );
+
     try {
-      const { favorites } = await ItemAPI.setItemFavorite(item);
-      setItemFavorites(favorites);
+      if (isFavorite) {
+        console.log("remove favorite");
+        const { favorites } = await ItemAPI.removeItemFavorite(item);
+        setItemFavorites(favorites);
+      } else {
+        const { favorites } = await ItemAPI.addItemFavorite(item);
+        setItemFavorites(favorites);
+      }
     } catch (error) {
-      console.error("setItemFavorite erorr", error);
+      console.error("Error:", error);
     }
   };
 

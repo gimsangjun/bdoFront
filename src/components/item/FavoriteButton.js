@@ -1,7 +1,9 @@
 import React from "react";
 
 const FavoriteButton = ({ item, onFavoriteClick, itemFavorites }) => {
-  const isFavorite = itemFavorites.some((fav) => fav.id === item.id && fav.sid === item.sid);
+  let isFavorite = false;
+  if (itemFavorites)
+    isFavorite = itemFavorites.some((fav) => fav.id === item.id && fav.sid === item.sid);
 
   return (
     <button onClick={() => onFavoriteClick(item)}>

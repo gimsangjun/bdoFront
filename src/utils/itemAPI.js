@@ -27,7 +27,7 @@ class ItemAPI {
     }
   }
 
-  static async setItemFavorite(item) {
+  static async addItemFavorite(item) {
     try {
       const { id, sid } = item;
       const response = await axios.post(`${API_DOMAIN}/item/favorite`, {
@@ -37,12 +37,22 @@ class ItemAPI {
       const { username, itemFavorites } = response.data;
       return { username, favorites: itemFavorites };
     } catch (error) {
-      console.error("setItemFavorite Error", error);
+      console.error("addItemFavorite Error", error);
       throw error;
     }
   }
 
-  // TODO: 다시 누르면 하트 사라지는 버튼도 만들어야됨.
+  static async removeItemFavorite(item) {
+    try {
+      const { id, sid } = item;
+      const response = await axios.delete(`${API_DOMAIN}/item/favorite?id=${id}&sid=${sid}`);
+      const { username, itemFavorites } = response.data;
+      return { username, favorites: itemFavorites };
+    } catch (error) {
+      console.error("remoeItemFavorite Error", error);
+      throw error;
+    }
+  }
 }
 
 export default ItemAPI;
