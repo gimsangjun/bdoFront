@@ -28,7 +28,11 @@ const SidebarItem = ({ item, onCategoryClick }) => {
       {expanded && hasChildren && (
         <ul className="ml-4">
           {item.children.map((child, index) => (
-            <SidebarItem key={index} item={child} onCategoryClick={onCategoryClick} />
+            <SidebarItem
+              key={index}
+              item={child}
+              onCategoryClick={() => onCategoryClick(item.mainCategory, item.subCategory)}
+            />
           ))}
         </ul>
       )}
@@ -40,7 +44,7 @@ const Sidebar = ({ items, onCategoryClick }) => {
   // TODO: w-full을 자동으로 상속못지키나? 계속 w-full 하는게 귀찮음.
   return (
     // TODO : top 속성을 넣을 때, header의 크기를 직접 계산해서 넣어야 하나?
-    <aside className="w-full h-4/5 flex" style={{ position: "sticky", top: 192 }}>
+    <aside className="w-56 h-4/5 flex" style={{ position: "sticky", top: 192 }}>
       <div className="w-full bg-gray-800">
         <nav className="p-4">
           <ul className="space-y-2">

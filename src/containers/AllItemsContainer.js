@@ -1,78 +1,63 @@
 import React, { useState, useEffect } from "react";
-import ItemAPI from "../utils/itemAPI";
 import TableHeader from "../components/item/TableHeader";
 import TablePagination from "../components/item/TablePagination";
 import ItemsData from "../components/item/ItemsData";
 import SidebarContainer from "./SidebarContainer";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getItems, setCategory } from "../modules/item";
 
 export default function AllItemsContainer() {
-  const [items, setItems] = useState([]);
-  const [totalCount, setTotalCount] = useState(0);
+  const { items, totalCount, loading, mainCategory, subCategory } = useSelector(
+    (state) => state.item
+  ); // TODO, redux, state를 새로고침해도 유지 시키는 방법
   const [currentPage, setCurrentPage] = useState(1);
-  const [mainCategory, setMainCategory] = useState(0);
-  const [subCategory, setsubCategory] = useState(0);
   const [itemFavorites, setItemFavorites] = useState([]); // TODO: 궁금한점 useState로 관리한것들은 새로고침하거나 페이지를 이동하면 사라지나?
+  const [isFav, setIsFav] = useState(0);
   const { username } = useSelector((state) => state.auth);
 
-  // ItemData 받아오는 부분.
-  //TODO: 나중에 redux로 바꿔야할듯 복잡해짐
+  const dispatch = useDispatch();
+
+  // 맨처음 아이템 로딩.
   useEffect(() => {
-    const fetchItems = async () => {
-      // TODO: Item을 강화할수 얘의 경우, 그냥 가장 마지막 단계만 보이도록 일단 설정함.
-      // TODO: 데이터 불러오는중 로딩화면을 만들어야할듯.
+    dispatch(getItems(mainCategory, subCategory, currentPage));
+  }, [dispatch, currentPage, mainCategory, subCategory]);
 
-      const response = await ItemAPI.getItemsByCategory(mainCategory, subCategory, currentPage); // params: mainCategory, subCategory, currentPage
-      const allPrices = response.data.items.map((item) => {
-        // TODO: price데이터가 없는경우 백엔드 서버에서 bdo관련 API와 관련해서
-        // 가격정보 업데이트하고있는데, 시간초과떠서 그냥 price가 없는 상태로 넘어오는듯
-        // price가 없는경우 그냥 빈값으로 들어가게 해야할듯., 시간초과 관련부분도 더 공부하고 정리해야할듯.
-        const prices = item.price;
-        return prices && prices.length > 0 ? prices[prices.length - 1] : item;
-      });
-      setItems(allPrices);
-      setTotalCount(response.data.totalCount);
-    };
-
-    fetchItems();
-  }, [currentPage, mainCategory, subCategory]);
-
-  const handleCategoryClick = (_mainCategory, _subCategory) => {
-    setMainCategory(_mainCategory);
-    setsubCategory(_subCategory);
-    setCurrentPage(1);
+  const handleCategoryClick = (mainCategory, subCategory) => {
+    dispatch(setCategory(mainCategory, subCategory));
   };
 
-  // 로그인한 유저가 있는 경우 userFavorite를 업데이트, 맨처음 한번만 호출됨.
+  // // 로그인한 유저가 있는 경우 userFavorite를 업데이트, 맨처음 한번만 호출됨.
   useEffect(() => {
-    const fetchFavoritesItems = async () => {
-      const { favorites } = await ItemAPI.getItemFavorite();
-      setItemFavorites(favorites);
-    };
-
-    if (username) fetchFavoritesItems();
+    // const fetchFavoritesItems = async () => {
+    //   const { favorites } = await ItemAPI.getItemFavorite();
+    //   setItemFavorites(favorites);
+    // };
+    // if (username) fetchFavoritesItems();
   }, [username]);
 
-  const handleFavoriteClick = async (item) => {
-    let isFavorite = false;
-    if (itemFavorites) {
-      // 이미 즐겨찾기한 얘는 삭제, 안한 얘는 즐겨찾기 추가
-      isFavorite = itemFavorites.some(
-        (favorite) => favorite.id === item.id && favorite.sid === item.sid
-      );
-    }
+  const handleAddFavoriteClick = async (item) => {
+    // let isFavorite = false;
+    // if (itemFavorites) {
+    //   // 이미 즐겨찾기한 얘는 삭제, 안한 얘는 즐겨찾기 추가
+    //   isFavorite = itemFavorites.some(
+    //     (favorite) => favorite.id === item.id && favorite.sid === item.sid
+    //   );
+    // }
+    // try {
+    //   if (isFavorite) {
+    //     const { favorites } = await ItemAPI.removeItemFavorite(item);
+    //     setItemFavorites(favorites);
+    //   } else {
+    //     const { favorites } = await ItemAPI.addItemFavorite(item);
+    //     setItemFavorites(favorites);
+    //   }
+    // } catch (error) {
+    //   console.error("Error:", error);
+    // }
+  };
 
-    try {
-      if (isFavorite) {
-        const { favorites } = await ItemAPI.removeItemFavorite(item);
-        setItemFavorites(favorites);
-      } else {
-        const { favorites } = await ItemAPI.addItemFavorite(item);
-        setItemFavorites(favorites);
-      }
-    } catch (error) {
-      console.error("Error:", error);
-    }
+  const handleFavClick = async () => {
+    // setIsFav((isFav + 1) % 2);
   };
 
   return (
@@ -83,19 +68,31 @@ export default function AllItemsContainer() {
         <TableHeader />
         <div className="flex">
           <SidebarContainer onCategoryClick={handleCategoryClick} />
-          <div className="bg-white flex justify-center items-center flex-col rounded-lg">
-            {/* 데이터 부분 */}
-            <ItemsData
-              items={items}
-              onFavoriteClick={handleFavoriteClick}
-              itemFavorites={itemFavorites}
-            />
-            {/* 페이지네이션 추가 */}
-            <TablePagination
-              currentPage={currentPage}
-              totalCount={totalCount}
-              setCurrentPage={setCurrentPage}
-            />
+          <div className="bg-white flex flex-grow justify-center items-center flex-col rounded-lg">
+            {loading ? (
+              // Display a spinner or loading message while loading is true
+              <div className="flex justify-center items-center w-full h-96">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
+              </div>
+            ) : (
+              // Regular content display when not loading
+              <>
+                {/* 데이터 부분 */}
+                <ItemsData
+                  items={items}
+                  onFavoriteAddClick={handleAddFavoriteClick}
+                  itemFavorites={itemFavorites}
+                  onFavlick={handleFavClick}
+                  isFav={isFav}
+                />
+                {/* 페이지네이션 추가 */}
+                <TablePagination
+                  currentPage={currentPage}
+                  totalCount={totalCount}
+                  setCurrentPage={setCurrentPage}
+                />
+              </>
+            )}
           </div>
         </div>
       </div>
