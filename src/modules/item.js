@@ -8,11 +8,11 @@ export const GET_ITEMS = "item/GET_ITEMS";
 export const SET_CATEGORY = "item/SET_CATEGORY";
 
 // 액션 생성 함수
-export const fetchItemsStart = () => ({
+const fetchItemsStart = () => ({
   type: FETCH_ITEM_START,
 });
 
-export const fetchItemsSuccess = (status, items, totalCount) => ({
+const fetchItemsSuccess = (status, items, totalCount) => ({
   type: FETCH_ITEM_SUCCESS,
   payload: {
     status,
@@ -21,7 +21,7 @@ export const fetchItemsSuccess = (status, items, totalCount) => ({
   },
 });
 
-export const fetchItemsFailure = (status, error) => ({
+const fetchItemsFailure = (status, error) => ({
   type: FETCH_ITEM_FAILURE,
   paylaod: {
     status,
@@ -40,7 +40,6 @@ export const getItems = (mainCategory, subCategory, page) => {
         subCategory,
         page
       );
-      console.log("getItems :", items, totalCount);
       dispatch(fetchItemsSuccess(status, items, totalCount));
     } catch (error) {
       console.log("아이템 가져오기 실패: ", error);

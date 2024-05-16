@@ -4,7 +4,7 @@ import FavoriteButton from "./FavoriteButton";
 
 const imgUrl = "https://cdn.bdolytics.com/";
 
-export default function ItemsData({ items, onFavoriteClick, itemFavorites }) {
+export default function ItemsData({ items, onFavoriteAddClick, favItems }) {
   return (
     // TODO 자식을 벗어나는 부분에 대해서는 배경색깔이 바뀌지않음.(아래로 스크롤 하면 보임.)
     <div className="bg-gray-200 flex justify-center items-center flex-col ">
@@ -33,7 +33,7 @@ export default function ItemsData({ items, onFavoriteClick, itemFavorites }) {
                     alt={item.name}
                     style={{ width: "28px", height: "28px" }}
                   />
-                  {item.name}
+                  {formatName(item)}
                 </DataTd>
                 <DataTd>{new Intl.NumberFormat().format(item.basePrice)}</DataTd>
                 <DataTd>{new Intl.NumberFormat().format(item.currentStock)}</DataTd>
@@ -41,8 +41,8 @@ export default function ItemsData({ items, onFavoriteClick, itemFavorites }) {
                 <DataTd>
                   <FavoriteButton
                     item={item}
-                    onFavoriteClick={onFavoriteClick}
-                    itemFavorites={itemFavorites}
+                    onFavoriteAddClick={onFavoriteAddClick}
+                    favItems={favItems}
                   />
                 </DataTd>
                 <DataTd>아직없음</DataTd>

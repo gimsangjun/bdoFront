@@ -5,15 +5,15 @@ import ItemsData from "../components/item/ItemsData";
 import SidebarContainer from "./SidebarContainer";
 import { useDispatch, useSelector } from "react-redux";
 import { getItems, setCategory } from "../modules/item";
-
+import { fetchFavoriteItems, addFavoriteItem, removeFavoriteItem } from "../modules/itemFav";
 export default function AllItemsContainer() {
+  // TODO, redux, state를 새로고침해도 유지 시키는 방법
   const { items, totalCount, loading, mainCategory, subCategory } = useSelector(
     (state) => state.item
-  ); // TODO, redux, state를 새로고침해도 유지 시키는 방법
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemFavorites, setItemFavorites] = useState([]); // TODO: 궁금한점 useState로 관리한것들은 새로고침하거나 페이지를 이동하면 사라지나?
-  const [isFav, setIsFav] = useState(0);
+  );
+  const { favItems } = useSelector((state) => state.itemFav);
   const { username } = useSelector((state) => state.auth);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const dispatch = useDispatch();
 
@@ -26,38 +26,24 @@ export default function AllItemsContainer() {
     dispatch(setCategory(mainCategory, subCategory));
   };
 
-  // // 로그인한 유저가 있는 경우 userFavorite를 업데이트, 맨처음 한번만 호출됨.
+  // 로그인한 유저가 있는 경우 userFavorite를 업데이트, 맨처음 한번만 호출됨.
   useEffect(() => {
-    // const fetchFavoritesItems = async () => {
-    //   const { favorites } = await ItemAPI.getItemFavorite();
-    //   setItemFavorites(favorites);
-    // };
-    // if (username) fetchFavoritesItems();
-  }, [username]);
+    if (!username) return;
+    dispatch(fetchFavoriteItems());
+  }, [username, dispatch]);
 
+  // 즐겨찾기 추가 및 삭제
   const handleAddFavoriteClick = async (item) => {
-    // let isFavorite = false;
-    // if (itemFavorites) {
-    //   // 이미 즐겨찾기한 얘는 삭제, 안한 얘는 즐겨찾기 추가
-    //   isFavorite = itemFavorites.some(
-    //     (favorite) => favorite.id === item.id && favorite.sid === item.sid
-    //   );
-    // }
-    // try {
-    //   if (isFavorite) {
-    //     const { favorites } = await ItemAPI.removeItemFavorite(item);
-    //     setItemFavorites(favorites);
-    //   } else {
-    //     const { favorites } = await ItemAPI.addItemFavorite(item);
-    //     setItemFavorites(favorites);
-    //   }
-    // } catch (error) {
-    //   console.error("Error:", error);
-    // }
-  };
-
-  const handleFavClick = async () => {
-    // setIsFav((isFav + 1) % 2);
+    if (!username) return;
+    const isFavorited = favItems.some(
+      (favItem) => favItem.id === item.id && favItem.sid === item.sid
+    );
+    if (isFavorited) {
+      dispatch(removeFavoriteItem(item));
+    } else {
+      if (favItems.length >= 30) alert("30개까지만 즐겨찾기 가능합니다.");
+      dispatch(addFavoriteItem(item));
+    }
   };
 
   return (
@@ -81,9 +67,7 @@ export default function AllItemsContainer() {
                 <ItemsData
                   items={items}
                   onFavoriteAddClick={handleAddFavoriteClick}
-                  itemFavorites={itemFavorites}
-                  onFavlick={handleFavClick}
-                  isFav={isFav}
+                  favItems={favItems}
                 />
                 {/* 페이지네이션 추가 */}
                 <TablePagination

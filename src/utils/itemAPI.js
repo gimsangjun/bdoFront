@@ -14,38 +14,35 @@ class ItemAPI {
     };
   }
 
-  static async getItemFavorite() {
+  static async getFavItem() {
     try {
       const response = await axios.get(`${API_DOMAIN}/item/favorite`);
-      const { username, itemFavorites } = response.data;
-      return { username, favorites: itemFavorites };
+      return { status: response.status, favItems: response.data.itemFavorites };
     } catch (error) {
       console.error("getItemFavorite Error", error);
       throw error;
     }
   }
 
-  static async addItemFavorite(item) {
+  static async addFavItem(item) {
     try {
       const { id, sid } = item;
       const response = await axios.post(`${API_DOMAIN}/item/favorite`, {
         id,
         sid,
       });
-      const { username, itemFavorites } = response.data;
-      return { username, favorites: itemFavorites };
+      return { status: response.status };
     } catch (error) {
       console.error("addItemFavorite Error", error);
       throw error;
     }
   }
 
-  static async removeItemFavorite(item) {
+  static async removeFavItem(item) {
     try {
       const { id, sid } = item;
       const response = await axios.delete(`${API_DOMAIN}/item/favorite?id=${id}&sid=${sid}`);
-      const { username, itemFavorites } = response.data;
-      return { username, favorites: itemFavorites };
+      return { status: response.status };
     } catch (error) {
       console.error("remoeItemFavorite Error", error);
       throw error;
