@@ -33,12 +33,9 @@ export default function AllItemsContainer() {
   }, [username, dispatch]);
 
   // 즐겨찾기 추가 및 삭제
-  const handleAddFavoriteClick = async (item) => {
+  const handleFavoriteClick = async (item, isFavorite) => {
     if (!username) return;
-    const isFavorited = favItems.some(
-      (favItem) => favItem.id === item.id && favItem.sid === item.sid
-    );
-    if (isFavorited) {
+    if (isFavorite) {
       dispatch(removeFavoriteItem(item));
     } else {
       if (favItems.length >= 30) alert("30개까지만 즐겨찾기 가능합니다.");
@@ -51,7 +48,7 @@ export default function AllItemsContainer() {
       {/* TODO: Bdolytics 보고 반응형웹 해보기. */}
       <div className="w-1210 mx-auto flex flex-col">
         {/* 테이블 헤더 시작 */}
-        <TableHeader />
+        <TableHeader tableName={"전체 아이템"} />
         <div className="flex">
           <SidebarContainer onCategoryClick={handleCategoryClick} />
           <div className="bg-white flex flex-grow justify-center items-center flex-col rounded-lg">
@@ -66,7 +63,7 @@ export default function AllItemsContainer() {
                 {/* 데이터 부분 */}
                 <ItemsData
                   items={items}
-                  onFavoriteAddClick={handleAddFavoriteClick}
+                  onFavoriteClick={handleFavoriteClick}
                   favItems={favItems}
                 />
                 {/* 페이지네이션 추가 */}

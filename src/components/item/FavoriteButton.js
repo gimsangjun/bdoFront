@@ -1,11 +1,8 @@
 import React from "react";
 
-const FavoriteButton = ({ item, onFavoriteAddClick, favItems }) => {
-  let isFavorite = false;
-  if (favItems) isFavorite = favItems.some((fav) => fav.id === item.id && fav.sid === item.sid);
-
+const FavoriteButton = ({ item, onFavoriteClick, isFavorite }) => {
   return (
-    <button onClick={() => onFavoriteAddClick(item)}>
+    <button onClick={() => onFavoriteClick(item, isFavorite)}>
       {isFavorite ? (
         <svg
           xmlns="http://www.w3.org/2000/svg"
