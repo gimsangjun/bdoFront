@@ -25,6 +25,14 @@ class ItemAPI {
     };
   }
 
+  // TODO: updateItem을 그냥 id,sid로만 업데이트하는걸로 바꿔야할듯.
+  static async updateItemByName(name) {
+    const response = await axios.post(`${API_DOMAIN}/item/update`, {
+      name,
+    });
+    return { status: response.status, updateItems: response.data.items };
+  }
+
   static async getFavItem() {
     try {
       const response = await axios.get(`${API_DOMAIN}/item/favorite`);

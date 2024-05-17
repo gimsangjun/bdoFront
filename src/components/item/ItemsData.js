@@ -1,10 +1,11 @@
 import React from "react";
 import tw from "twin.macro";
 import FavoriteButton from "./FavoriteButton";
+import { LuRefreshCcw } from "react-icons/lu";
 
 const imgUrl = "https://cdn.bdolytics.com/";
 
-export default function ItemsData({ items, onFavoriteClick, favItems }) {
+export default function ItemsData({ items, onFavoriteClick, favItems, onItemUpdate }) {
   return (
     // TODO 자식을 벗어나는 부분에 대해서는 배경색깔이 바뀌지않음.(아래로 스크롤 하면 보임.)
     <div className="bg-gray-200 flex justify-center items-center flex-col w-full">
@@ -47,7 +48,13 @@ export default function ItemsData({ items, onFavoriteClick, favItems }) {
                     />
                   </DataTd>
                   <DataTd>아직없음</DataTd>
-                  <DataTd>{formatDate(item.updateAt)}</DataTd>
+                  <DataTd className="flex items-center">
+                    {formatDate(item.updateAt)}
+                    <LuRefreshCcw
+                      className="cursor-pointer pl-1 text-lg"
+                      onClick={() => onItemUpdate(item.name, item)}
+                    />
+                  </DataTd>
                 </tr>
               ))
             ) : (

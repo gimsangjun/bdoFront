@@ -4,10 +4,11 @@ import TablePagination from "../components/item/TablePagination";
 import ItemsData from "../components/item/ItemsData";
 import SidebarContainer from "./SidebarContainer";
 import { useDispatch, useSelector } from "react-redux";
-import { getItems, setCategory } from "../modules/item";
+import { getItems, setCategory, updateItems } from "../modules/item";
 import { fetchFavoriteItems, addFavoriteItem, removeFavoriteItem } from "../modules/itemFav";
+
 export default function AllItemsContainer() {
-  // TODO, redux, state를 새로고침해도 유지 시키는 방법
+  // TODO, redux, state를 새로고침해도 유지 시키는 방법, 로컬 스토리지 인가 브라우저에 저장?
   const { items, totalCount, loading, mainCategory, subCategory } = useSelector(
     (state) => state.item
   );
@@ -43,6 +44,10 @@ export default function AllItemsContainer() {
     }
   };
 
+  const handleItemUpdate = async (name) => {
+    dispatch(updateItems(name, items));
+  };
+
   return (
     <div className="w-full h-full bg-gray-200">
       {/* TODO: Bdolytics 보고 반응형웹 해보기. */}
@@ -65,6 +70,7 @@ export default function AllItemsContainer() {
                   items={items}
                   onFavoriteClick={handleFavoriteClick}
                   favItems={favItems}
+                  onItemUpdate={handleItemUpdate}
                 />
                 {/* 페이지네이션 추가 */}
                 <TablePagination
