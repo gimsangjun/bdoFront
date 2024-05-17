@@ -3,6 +3,17 @@ import axios from "./axiosInstance";
 const API_DOMAIN = process.env.REACT_APP_API_DOMAIN;
 
 class ItemAPI {
+  static async getItemPricesByName(name) {
+    try {
+      const response = await axios.post(`${API_DOMAIN}/item/`, { name });
+      // console.log(response);
+      return { status: response.status, items: response.data, totalCount: response.data.length };
+    } catch (error) {
+      console.error("getItemPricesByName Error:", error);
+      throw error;
+    }
+  }
+
   static async getItemsByCategory(mainCategory, subCategory, page) {
     const response = await axios.get(`${API_DOMAIN}/item/category`, {
       params: { mainCategory, subCategory, page },

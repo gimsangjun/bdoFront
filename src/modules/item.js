@@ -23,13 +23,27 @@ const fetchItemsSuccess = (status, items, totalCount) => ({
 
 const fetchItemsFailure = (status, error) => ({
   type: FETCH_ITEM_FAILURE,
-  paylaod: {
+  payload: {
     status,
     error,
   },
 });
 
 // 비동기 처리 redux-think
+export const getItemByName = (name) => {
+  return async (dispatch) => {
+    dispatch(fetchItemsStart());
+    try {
+      const { status, items, totalCount } = await ItemAPI.getItemPricesByName(name);
+      dispatch(fetchItemsSuccess(status, items, totalCount));
+    } catch (error) {
+      console.log("아이템 검색 실패: ", error);
+      const statusCode = error.response ? error.response.status : 500; // 상태 코드가 없는 경우 500으로 설정
+      dispatch(fetchItemsFailure(statusCode, error));
+    }
+  };
+};
+
 export const getItems = (mainCategory, subCategory, page) => {
   // TODO: dispatch가 어디서 나온지 모르겠음.
   return async (dispatch) => {
@@ -43,7 +57,8 @@ export const getItems = (mainCategory, subCategory, page) => {
       dispatch(fetchItemsSuccess(status, items, totalCount));
     } catch (error) {
       console.log("아이템 가져오기 실패: ", error);
-      dispatch(fetchItemsFailure(error.response.status, error));
+      const statusCode = error.response ? error.response.status : 500; // 상태 코드가 없는 경우 500으로 설정
+      dispatch(fetchItemsFailure(statusCode, error));
     }
   };
 };
@@ -86,6 +101,8 @@ export default function item(state = initialState, action) {
       return {
         ...state,
         loading: false,
+        items: [],
+        totalCount: 0,
         status: action.payload.status,
         error: action.payload.error,
       };
