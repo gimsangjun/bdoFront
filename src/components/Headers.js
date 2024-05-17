@@ -38,7 +38,7 @@ export const MainHeader = ({ onLogout }) => {
           </MainLink>
           <MainLink to="/">
             <Img src={recommend} alt="good" />
-            <Span>아무거나~</Span>
+            <Span>아무거나</Span>
           </MainLink>
         </nav>
         {/* 극단적으로 window가 줄어들었을 때, nav태그에 로그인 버튼이 침범. 안보이게 반응형으로 안보이게함. */}

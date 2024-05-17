@@ -1,5 +1,5 @@
 import React from "react";
-import { MainHeader, NotificationHeader, SubHeader } from "../components/Header";
+import { MainHeader, NotificationHeader, SubHeader } from "../components/Headers";
 import { useLocation } from "react-router-dom";
 import { logout } from "../modules/auth";
 import { useDispatch } from "react-redux";
