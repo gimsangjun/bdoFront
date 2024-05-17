@@ -44,7 +44,7 @@ export default function TablePagination({ currentPage, totalCount, setCurrentPag
   return (
     <div className="flex justify-center  my-1">
       {/* TODO: shadow 효과를 주면 멋지다. 이거에 대해서 정리하고 다른 방법으로 더 예쁘게 할수 있는 방법이 있는지 알아본다.*/}
-      {/* TODO: 어디가로 이동하는 기능을 가진 태그들은 대부분 nav - ul - li 태그 조합을 쓰는듯 하다.(op.gg, bdolytics) */}
+      {/* 어디가로 이동하는 기능을 가진 태그들은 대부분 nav - ul - li 태그 조합을 쓰는듯 하다.(op.gg, bdolytics) */}
       <nav className="rounded border shadow-xl border-gray-700">
         <ul className="flex flex-row bg-gray-800">
           <Arrow

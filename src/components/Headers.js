@@ -43,7 +43,6 @@ export const MainHeader = ({ onLogout }) => {
         </nav>
         {/* 극단적으로 window가 줄어들었을 때, nav태그에 로그인 버튼이 침범. 안보이게 반응형으로 안보이게함. */}
         <div className="flex shrink-0 items-center">
-          {/*TODO "username이 없으면 Link to "login",있으면 "/"으로 이동 */}
           <Link to={username ? "/" : "/login"}>
             <button
               onClick={onLogout}
