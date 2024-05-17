@@ -7,9 +7,9 @@ const imgUrl = "https://cdn.bdolytics.com/";
 export default function ItemsData({ items, onFavoriteClick, favItems }) {
   return (
     // TODO 자식을 벗어나는 부분에 대해서는 배경색깔이 바뀌지않음.(아래로 스크롤 하면 보임.)
-    <div className="bg-gray-200 flex justify-center items-center flex-col ">
+    <div className="bg-gray-200 flex justify-center items-center flex-col w-full">
       {/* 데이터 부분 시작. , w-full 이유 : width맞춰줄려고. */}
-      <div className="rounded-lg">
+      <div className="rounded-lg w-full">
         {/* TODO : min-w-full의 의미 */}
         <table className="min-w-full">
           <thead className="bg-gray-200 ">
@@ -64,7 +64,6 @@ export default function ItemsData({ items, onFavoriteClick, favItems }) {
   );
 }
 
-// TODO: Item을 강화할수 얘의 경우, 그냥 가장 마지막 단계만 보이도록 일단 설정함.
 export const formatName = (item) => {
   let name = item.name;
   if (item.maxEnhance > 0) {
@@ -104,5 +103,5 @@ function checkIsFavorite(favItems, item) {
 }
 
 // whitespace-nowrap, col이 2줄로 안보이게함. 무조건 한줄
-const DataTh = tw.th`px-6 py-3 whitespace-nowrap text-left text-xs font-medium text-gray-500 bg-gray-100 uppercase tracking-wider`;
-const DataTd = tw.td`px-6 py-4 whitespace-nowrap`;
+const DataTh = tw.th`px-6 py-3 whitespace-nowrap text-center text-xs font-medium text-gray-500 bg-gray-100 uppercase tracking-wider`;
+const DataTd = tw.td`px-6 py-4 whitespace-nowrap text-center`;

@@ -60,5 +60,5 @@ export default function FavItemsData({ favItems, onFavoriteClick }) {
 }
 
 // whitespace-nowrap, col이 2줄로 안보이게함. 무조건 한줄
-const DataTh = tw.th`px-6 py-3 whitespace-nowrap text-left text-xs font-medium text-gray-500 bg-gray-100 uppercase tracking-wider`;
-const DataTd = tw.td`px-6 py-4 whitespace-nowrap`;
+const DataTh = tw.th`px-6 py-3 whitespace-nowrap text-center text-xs font-medium text-gray-500 bg-gray-100 uppercase tracking-wider`;
+const DataTd = tw.td`px-6 py-4 whitespace-nowrap text-center`;
