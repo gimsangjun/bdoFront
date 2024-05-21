@@ -3,25 +3,7 @@ import axios from "./axiosInstance";
 const API_DOMAIN = process.env.REACT_APP_API_DOMAIN;
 
 class AuthAPI {
-  // POST /auth/login
-  static async login(username, password) {
-    try {
-      const response = await axios.post(`${API_DOMAIN}/auth/login`, { username, password });
-      return response;
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  // POST /auth/signup
-  static async signUp(username, password) {
-    try {
-      const response = await axios.post(`${API_DOMAIN}/auth/signup`, { username, password });
-      return response;
-    } catch (error) {
-      throw error;
-    }
-  }
+  // 로그인 : header에서 redirect로 구현했기 때문에 필요없음.
 
   // GET /auth/logout
   static async logout() {

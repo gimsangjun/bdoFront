@@ -6,12 +6,22 @@ import logo from "../images/logo.png";
 import product from "../images/product.png";
 import campfire from "../images/campfire.png";
 import recommend from "../images/recommend.png";
-import user from "../images/user.png";
+import userImg from "../images/user.png";
 import home from "../images/home.png";
 
 // TODO: react-component 헤더부분에 넣어야할듯.
 export const MainHeader = ({ onLogout }) => {
-  const { username } = useSelector((state) => state.auth);
+  const API_DOMAIN = process.env.REACT_APP_API_DOMAIN;
+  const { user } = useSelector((state) => state.auth);
+
+  // 버튼 클릭 핸들러
+  const handleButtonClick = (event) => {
+    if (user) {
+      event.preventDefault(); // 링크 기능 방지
+      onLogout(); // 로그아웃 함수 실행
+    }
+    // username이 없으면 자동으로 href에 의해 페이지 이동
+  };
 
   return (
     // TODO: 문제점, 화면을 줄이고 오른쪽으로 스크롤을 하면 bg-headerBlack 색깔이 먹히지 않음.
@@ -43,14 +53,16 @@ export const MainHeader = ({ onLogout }) => {
         </nav>
         {/* 극단적으로 window가 줄어들었을 때, nav태그에 로그인 버튼이 침범. 안보이게 반응형으로 안보이게함. */}
         <div className="flex shrink-0 items-center">
-          <Link to={username ? "/" : "/login"}>
+          <a href={`${API_DOMAIN}/auth/discord`}>
+            {/* TODO: op.gg랑 똑같이 만들어보자. 임시방편으로 이렇게 해둠. */}
+            {user ? user.username : ""}
             <button
-              onClick={onLogout}
+              onClick={handleButtonClick}
               className="bg-mainBlue text-white py-1 px-4 mx-2 rounded text-xs hidden sm:inline-block"
             >
-              {username ? "로그아웃" : "로그인"}
+              {user ? "로그아웃" : "디스코드 로그인"}
             </button>
-          </Link>
+          </a>
         </div>
       </div>
     </div>
@@ -58,14 +70,14 @@ export const MainHeader = ({ onLogout }) => {
 };
 
 export function SubHeader({ currentPath }) {
-  const { username } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.auth);
 
   const sublinks = [
     { path: "/", name: "홈" },
     { path: "/items", name: "전체 아이템" },
     { path: "/favorite", name: "나의 관심 아이템" },
-    { path: "/top", name: "거래량 TOP" },
-    { path: "/recommend", name: "추천 아이템" },
+    { path: "/", name: "거래량 TOP" },
+    { path: "/", name: "추천 아이템" },
   ];
 
   return (
@@ -81,8 +93,8 @@ export function SubHeader({ currentPath }) {
           ))}
         </ul>
         <div className="flex items-center">
-          <Img src={user} alt="user" />
-          <Span>{username && username} 마이 페이지</Span>
+          <Img src={userImg} alt="user" />
+          <Span>마이 페이지</Span>
         </div>
       </nav>
     </div>
