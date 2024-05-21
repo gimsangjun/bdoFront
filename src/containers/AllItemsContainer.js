@@ -13,7 +13,7 @@ export default function AllItemsContainer() {
     (state) => state.item
   );
   const { favItems } = useSelector((state) => state.itemFav);
-  const { username } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.auth);
   const [currentPage, setCurrentPage] = useState(1);
 
   const dispatch = useDispatch();
@@ -29,13 +29,16 @@ export default function AllItemsContainer() {
 
   // 로그인한 유저가 있는 경우 userFavorite를 업데이트, 맨처음 한번만 호출됨.
   useEffect(() => {
-    if (!username) return;
+    if (!user) return;
     dispatch(fetchFavoriteItems());
-  }, [username, dispatch]);
+  }, [user, dispatch]);
 
   // 즐겨찾기 추가 및 삭제
   const handleFavoriteClick = async (item, isFavorite) => {
-    if (!username) return;
+    if (!user) {
+      alert("로그인을 하지 않았습니다.");
+      return;
+    }
     if (isFavorite) {
       dispatch(removeFavoriteItem(item));
     } else {
