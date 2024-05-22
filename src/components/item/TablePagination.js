@@ -1,7 +1,7 @@
 import React from "react";
 import tw from "twin.macro";
 
-export default function TablePagination({ currentPage, totalCount, setCurrentPage }) {
+export default function TablePagination({ currentPage, totalCount, setCurrentPage, totalPages }) {
   const renderPaginationNumbers = () => {
     const paginationNumbers = [];
     let startPage;
@@ -32,7 +32,7 @@ export default function TablePagination({ currentPage, totalCount, setCurrentPag
     return paginationNumbers;
   };
 
-  const totalPages = Math.ceil(totalCount / 30); // 한 페이지에 30개씩 데이터가 나옴.
+  // const totalPages = Math.ceil(totalCount / 30); // 한 페이지에 30개씩 데이터가 나옴.
   // console.log("totalCount, totalPages, currentPage", totalCount, totalPages, currentPage);
 
   const handlePageClick = (pageNumber) => {

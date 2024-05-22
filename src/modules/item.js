@@ -5,20 +5,21 @@ export const FETCH_ITEM_START = "item/FETCH_ITEM_START";
 export const FETCH_ITEM_SUCCESS = "item/FETCH_ITEM_SUCCESS";
 export const FETCH_ITEM_FAILURE = "item/FETCH_ITEM_FAILURE";
 export const UPDATE_ITEM_SUCCESS = "item/UPDATE_ITEM_SUCCESS";
-export const GET_ITEMS = "item/GET_ITEMS";
-export const SET_CATEGORY = "item/SET_CATEGORY";
 
 // 액션 생성 함수
 const fetchItemsStart = () => ({
   type: FETCH_ITEM_START,
 });
 
-const fetchItemsSuccess = (status, items, totalCount) => ({
+const fetchItemsSuccess = (status, query, items, totalCount, pages, currentPage) => ({
   type: FETCH_ITEM_SUCCESS,
   payload: {
     status,
+    query,
     items,
     totalCount,
+    pages,
+    currentPage,
   },
 });
 
@@ -39,12 +40,17 @@ const fetchItemsFailure = (status, error) => ({
 });
 
 // 비동기 처리 redux-think
-export const getItemByName = (name) => {
+export const getItemsByQuery = (query, _currentPage) => {
   return async (dispatch) => {
     dispatch(fetchItemsStart());
+    console.log(query);
     try {
-      const { status, items, totalCount } = await ItemAPI.getItemPricesByName(name);
-      dispatch(fetchItemsSuccess(status, items, totalCount));
+      const { status, items, totalCount, pages, currentPage } = await ItemAPI.getItemsByQuery(
+        query,
+        _currentPage
+      );
+      // status, query, items, totalCount, pages, currentPage
+      dispatch(fetchItemsSuccess(status, query, items, totalCount, pages, currentPage));
     } catch (error) {
       console.log("아이템 검색 실패: ", error);
       const statusCode = error.response ? error.response.status : 500; // 상태 코드가 없는 경우 500으로 설정
@@ -53,26 +59,6 @@ export const getItemByName = (name) => {
   };
 };
 
-export const getItems = (mainCategory, subCategory, page) => {
-  // TODO: dispatch가 어디서 나온지 모르겠음.
-  return async (dispatch) => {
-    dispatch(fetchItemsStart());
-    try {
-      const { status, items, totalCount } = await ItemAPI.getItemsByCategory(
-        mainCategory,
-        subCategory,
-        page
-      );
-      dispatch(fetchItemsSuccess(status, items, totalCount));
-    } catch (error) {
-      console.log("아이템 가져오기 실패: ", error);
-      const statusCode = error.response ? error.response.status : 500; // 상태 코드가 없는 경우 500으로 설정
-      dispatch(fetchItemsFailure(statusCode, error));
-    }
-  };
-};
-
-// TODO: updateItem을 그냥 id,sid로만 업데이트하는걸로 바꿔야할듯.
 export const updateItems = (name, items) => {
   return async (dispatch) => {
     dispatch(fetchItemsStart());
@@ -100,27 +86,21 @@ export const updateItems = (name, items) => {
   };
 };
 
-export const setCategory = (mainCategory, subCategory) => ({
-  type: SET_CATEGORY,
-  payload: {
-    mainCategory,
-    subCategory,
-  },
-});
-
 // 초기 값
 const initialState = {
   loading: false,
   items: [],
+  query: {},
+  pages: 0,
+  currentPage: 1,
   totalCount: 0,
   status: null,
   error: null,
-  mainCategory: 0,
-  subCategory: 0,
 };
 
 export default function item(state = initialState, action) {
   switch (action.type) {
+    // TODO: 더 효율적으로 작성하는 방법이 벨로퍼트에 있었던거 같음.
     case FETCH_ITEM_START:
       return {
         ...state,
@@ -132,14 +112,20 @@ export default function item(state = initialState, action) {
         loading: false,
         status: action.payload.status,
         items: action.payload.items,
+        query: action.payload.query,
         totalCount: action.payload.totalCount,
+        pages: action.payload.pages,
+        currentPage: action.payload.currentPage,
       };
     case FETCH_ITEM_FAILURE:
       return {
         ...state,
         loading: false,
         items: [],
+        query: action.payload.query,
         totalCount: 0,
+        pages: 0,
+        currentPage: 0,
         status: action.payload.status,
         error: action.payload.error,
       };
@@ -149,12 +135,6 @@ export default function item(state = initialState, action) {
         loading: false,
         status: action.payload.status,
         items: action.payload.items,
-      };
-    case SET_CATEGORY:
-      return {
-        ...state,
-        mainCategory: action.payload.mainCategory,
-        subCategory: action.payload.subCategory,
       };
     default:
       return state;

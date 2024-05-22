@@ -3,29 +3,20 @@ import axios from "./axiosInstance";
 const API_DOMAIN = process.env.REACT_APP_API_DOMAIN;
 
 class ItemAPI {
-  static async getItemPricesByName(name) {
+  static async getItemsByQuery(query, page = 1) {
     try {
-      const response = await axios.post(`${API_DOMAIN}/item/`, { name });
-      // console.log(response);
-      return { status: response.status, items: response.data, totalCount: response.data.length };
+      const response = await axios.post(`${API_DOMAIN}/item/`, {
+        query,
+        page,
+      });
+      const { items, totalCount, pages, currentPage } = response.data;
+      return { status: response.status, items, totalCount, pages, currentPage };
     } catch (error) {
-      console.error("getItemPricesByName Error:", error);
+      console.error("getItemsByQuery Error:", error);
       throw error;
     }
   }
 
-  static async getItemsByCategory(mainCategory, subCategory, page) {
-    const response = await axios.get(`${API_DOMAIN}/item/category`, {
-      params: { mainCategory, subCategory, page },
-    });
-    return {
-      status: response.status,
-      items: response.data.items,
-      totalCount: response.data.totalCount,
-    };
-  }
-
-  // TODO: updateItem을 그냥 id,sid로만 업데이트하는걸로 바꿔야할듯.
   static async updateItemByName(name) {
     const response = await axios.post(`${API_DOMAIN}/item/update`, {
       name,

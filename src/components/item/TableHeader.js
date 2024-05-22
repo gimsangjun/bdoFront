@@ -1,12 +1,9 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { getItemByName } from "../../modules/item";
 
 // TODO: 1. 이름을 일부만 입력해도 그 단어가 포함된 아이템들 리턴
 // TODO: 2. 자동완성기능  처럼 한글자씩 입력해도 그 이름을 가진 아이템들 리턴.
-export default function TableHeader({ tableName }) {
-  const [itemName, setItemName] = useState("");
-  const dispatch = useDispatch();
+export default function TableHeader({ tableName, itemSearchValue = "", onTableHeaderSearch }) {
+  const [itemName, setItemName] = useState(itemSearchValue);
 
   const handleInputChange = (event) => {
     setItemName(event.target.value);
@@ -14,7 +11,7 @@ export default function TableHeader({ tableName }) {
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
-      dispatch(getItemByName(itemName));
+      onTableHeaderSearch(itemName);
     }
   };
 
@@ -35,13 +32,14 @@ export default function TableHeader({ tableName }) {
             onKeyDown={handleKeyDown}
           />
           <svg
-            className="w-6 h-6 text-gray-600"
+            className="w-6 h-6 text-gray-600 cursor-pointer"
             fill="none"
             strokeLinecap="round"
             strokeLinejoin="round"
             strokeWidth="2"
             viewBox="0 0 24 24"
             stroke="currentColor"
+            onClick={() => onTableHeaderSearch(itemName)}
           >
             <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
