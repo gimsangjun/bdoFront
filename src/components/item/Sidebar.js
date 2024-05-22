@@ -28,11 +28,7 @@ const SidebarItem = ({ item, onCategoryClick }) => {
       {expanded && hasChildren && (
         <ul className="ml-4">
           {item.children.map((child, index) => (
-            <SidebarItem
-              key={index}
-              item={child}
-              onCategoryClick={() => onCategoryClick(item.mainCategory, item.subCategory)}
-            />
+            <SidebarItem key={index} item={child} onCategoryClick={onCategoryClick} />
           ))}
         </ul>
       )}
