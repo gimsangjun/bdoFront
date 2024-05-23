@@ -1,0 +1,2 @@
+- AllItemsContainer.js
+  - [pagination 문제](https://whimsical-dugout-2c6.notion.site/Pagination-79501666c80a489c991ddd35b7d9afdb?pvs=4)

@@ -3,7 +3,7 @@ import React from "react";
 const FavoriteButton = ({ item, onFavoriteClick, isFavorite }) => {
   return (
     <div className="flex justify-center items-center">
-      <button onClick={() => onFavoriteClick(item, isFavorite)}>
+      <button onClick={() => onFavoriteClick(item)}>
         {isFavorite ? (
           <svg
             xmlns="http://www.w3.org/2000/svg"

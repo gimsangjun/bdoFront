@@ -21,16 +21,14 @@ export default function AllItemsContainer() {
 
   const dispatch = useDispatch();
 
+  /**
+   * 10000개가 넘는 아이템을  pagination 기능을 처리해야 되고, 거기에 카테고리 검색을 해야한다.
+   * 백엔드 코드를 살펴본 결과, 카테고리 검색, 이름 검색 API가 나누어져 있어서 복잡하다.
+   * 결론은 프론트 측에서 쿼리를 하나로 모아 보내고, 백엔드 측에서 그 쿼리르 바탕으로 동적쿼리를 생성한다.
+   * 노션 - pagination 문제
+   * 링크 - https://whimsical-dugout-2c6.notion.site/Pagination-79501666c80a489c991ddd35b7d9afdb?pvs=4
+   */
   useEffect(() => {
-    // itemSearchValue가 있을 수 있는 경우
-    // 1. 메인 페이지에서 검색해서 넘어왔을 경우.
-    // 2. 전체 아이템페이지에서 TableHeader에서 검색했을 경우.
-    // TODO: 아이템을 검색할경우 pagination을 어떻게 구현해야할지 생각해봐야할듯. 많이 복잡해짐.
-    // => 현재 백엔드 코드를 살펴 본 결과 검색하는 거는 데이터가 많이 없으니까. 그냥 다 한번에 다 보냄.
-    // => 이부분에 대해서 어려웠던점 notion + github에 추가하면 좋을듯.
-    // => 프론트측에 맨처음에 모든 데이터 받아오기? 아니면 백엔드 측에 page 기능 전부 달아야됨.
-    // => 정답은 프론트측에서 동적 쿼리 보내기
-
     // 메인 페이지에서 검색해서 넘어왔을 경우.
     if (itemSearchValue) {
       const newQuery = { name: itemSearchValue };
@@ -43,7 +41,6 @@ export default function AllItemsContainer() {
   const handleCategoryClick = (mainCategory, subCategory) => {
     // TODO: 아이템 이름 검색하고, 카테고리 추가하는것도 해봐야할듯.
     const newQuery = {
-      ...query,
       mainCategory,
       subCategory,
     };
@@ -99,12 +96,10 @@ export default function AllItemsContainer() {
           <SidebarContainer onCategoryClick={handleCategoryClick} />
           <div className="bg-white flex flex-grow justify-center items-center flex-col rounded-lg">
             {loading ? (
-              // Display a spinner or loading message while loading is true
               <div className="flex justify-center items-center w-full h-96">
                 <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
               </div>
             ) : (
-              // Regular content display when not loading
               <>
                 {/* 데이터 부분 */}
                 <ItemsData
