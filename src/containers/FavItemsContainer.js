@@ -1,18 +1,10 @@
 import React from "react";
 import TableHeader from "../components/item/TableHeader";
-import { useDispatch, useSelector } from "react-redux";
-import FavItemsData from "../components/favItem/FavItemsData";
-import { removeFavoriteItem } from "../modules/itemFav";
+import { useSelector } from "react-redux";
+import FavItemsTable from "../components/favItem/FavItemsTable";
 
 export default function FavItemsContainer() {
   const { favItems, loading } = useSelector((state) => state.itemFav);
-  // const [currentPage, setCurrentPage] = useState(1); 나중에 기능구현, 지금은 즐겨찾기 추가 30개로 제한해두자.
-
-  const dispatch = useDispatch();
-
-  const handleFavoriteClick = async (item, isFavorite) => {
-    dispatch(removeFavoriteItem(item));
-  };
 
   return (
     <div className="w-full h-full bg-gray-200">
@@ -25,7 +17,7 @@ export default function FavItemsContainer() {
               <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
             </div>
           ) : (
-            <FavItemsData favItems={favItems} onFavoriteClick={handleFavoriteClick} />
+            <FavItemsTable favItems={favItems} />
           )}
         </div>
       </div>

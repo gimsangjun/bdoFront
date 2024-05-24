@@ -1,9 +1,34 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { removeFavoriteItem, addFavoriteItem } from "../../modules/itemFav";
 
-const FavoriteButton = ({ item, onFavoriteClick, isFavorite }) => {
+const FavoriteButton = ({ item }) => {
+  const { user } = useSelector((state) => state.auth);
+  const { favItems } = useSelector((state) => state.itemFav);
+  const isFavorite = checkIsFavorite(favItems, item);
+
+  const dispatch = useDispatch();
+
+  const handleFavoriteClick = async () => {
+    if (!user) {
+      alert("로그인을 하지 않았습니다.");
+      return;
+    }
+    if (isFavorite) {
+      console.log("remove!");
+      dispatch(removeFavoriteItem(item));
+    } else {
+      if (favItems.length >= 30) {
+        alert("30개까지만 즐겨찾기 가능합니다.");
+        return;
+      }
+      dispatch(addFavoriteItem(item));
+    }
+  };
+
   return (
     <div className="flex justify-center items-center">
-      <button onClick={() => onFavoriteClick(item)}>
+      <button onClick={handleFavoriteClick}>
         {isFavorite ? (
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -35,5 +60,10 @@ const FavoriteButton = ({ item, onFavoriteClick, isFavorite }) => {
     </div>
   );
 };
+
+function checkIsFavorite(favItems, item) {
+  if (!favItems) return false;
+  return favItems.some((fav) => fav.id === item.id && fav.sid === item.sid);
+}
 
 export default FavoriteButton;

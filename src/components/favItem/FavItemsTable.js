@@ -1,9 +1,9 @@
 import React from "react";
 import tw from "twin.macro";
-import { foramtImgUrl, formatName } from "../item/ItemsData";
-import FavoriteButton from "../item/FavoriteButton";
+import { foramtImgUrl, formatName } from "../item/ItemsDataTable";
+import FavoriteButton from "./FavoriteButton";
 
-export default function FavItemsData({ favItems, onFavoriteClick }) {
+export default function FavItemsTable({ favItems }) {
   return (
     <div className="bg-gray-200 flex justify-center items-center flex-col w-full">
       <div className="rounded-lg w-full">
@@ -22,7 +22,10 @@ export default function FavItemsData({ favItems, onFavoriteClick }) {
           <tbody className="bg-white divide-gray-200">
             {favItems.length > 0 ? (
               favItems.map((item) => (
-                <tr key={item._id} className="hover:bg-gray-100 border-b-2 border-gray-100">
+                <tr
+                  key={item._id}
+                  className="hover:bg-gray-100 border-b-2 border-gray-100"
+                >
                   <DataTd className="flex">
                     <img
                       src={foramtImgUrl(item)}
@@ -34,11 +37,7 @@ export default function FavItemsData({ favItems, onFavoriteClick }) {
                   <DataTd>{item.stockDetail.basePrice}</DataTd>
                   <DataTd>{item.stockDetail.currentStock}</DataTd>
                   <DataTd>
-                    <FavoriteButton
-                      item={item.stockDetail}
-                      onFavoriteClick={onFavoriteClick}
-                      isFavorite={true}
-                    />
+                    <FavoriteButton item={item.stockDetail} />
                   </DataTd>
                   <DataTd>가격알림 X</DataTd>
                   <DataTd>{item.stockDetail.updateAt}</DataTd>
@@ -47,7 +46,11 @@ export default function FavItemsData({ favItems, onFavoriteClick }) {
               ))
             ) : (
               <tr>
-                <td colSpan="7" className="text-center" style={{ height: "100px" }}>
+                <td
+                  colSpan="7"
+                  className="text-center"
+                  style={{ height: "100px" }}
+                >
                   즐겨 찾는 항목이 없습니다.
                 </td>
               </tr>

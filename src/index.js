@@ -12,7 +12,10 @@ import logger from "redux-logger";
 import { fetchUserProfile } from "./modules/auth";
 import { Provider } from "react-redux";
 
-const store = legacy_createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk, logger)));
+const store = legacy_createStore(
+  rootReducer,
+  composeWithDevTools(applyMiddleware(thunk, logger)),
+);
 
 // redux가 초기화되도(사용자 새로고침) 로그인 유지되게
 store.dispatch(fetchUserProfile());
@@ -23,7 +26,7 @@ root.render(
     <BrowserRouter>
       <App />
     </BrowserRouter>
-  </Provider>
+  </Provider>,
 );
 
 // If you want to start measuring performance in your app, pass a function

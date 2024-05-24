@@ -1,20 +1,17 @@
 import React, { useEffect } from "react";
 import TableHeader from "../components/item/TableHeader";
 import TablePagination from "../components/item/TablePagination";
-import ItemsData from "../components/item/ItemsData";
+import ItemsDataTable from "../components/item/ItemsDataTable";
 import SidebarContainer from "./SidebarContainer";
 import { useDispatch, useSelector } from "react-redux";
 import { getItemsByQuery, updateItems } from "../modules/item";
-import { fetchFavoriteItems, addFavoriteItem, removeFavoriteItem } from "../modules/itemFav";
 import { useLocation } from "react-router-dom";
 
 export default function AllItemsContainer() {
   // TODO, redux, state를 새로고침해도 유지 시키는 방법, 로컬 스토리지 인가 브라우저에 저장?
   const { loading, items, query, pages, currentPage, totalCount } = useSelector(
-    (state) => state.item
+    (state) => state.item,
   );
-  const { favItems } = useSelector((state) => state.itemFav);
-  const { user } = useSelector((state) => state.auth);
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const itemSearchValue = queryParams.get("item_search_value");
@@ -45,26 +42,6 @@ export default function AllItemsContainer() {
       subCategory,
     };
     dispatch(getItemsByQuery(newQuery, 1));
-  };
-
-  // 로그인한 유저가 있는 경우 userFavorite를 업데이트, 맨처음 한번만 호출됨.
-  useEffect(() => {
-    if (!user) return;
-    dispatch(fetchFavoriteItems());
-  }, [user, dispatch]);
-
-  // 즐겨찾기 추가 및 삭제
-  const handleFavoriteClick = async (item, isFavorite) => {
-    if (!user) {
-      alert("로그인을 하지 않았습니다.");
-      return;
-    }
-    if (isFavorite) {
-      dispatch(removeFavoriteItem(item));
-    } else {
-      if (favItems.length >= 30) alert("30개까지만 즐겨찾기 가능합니다.");
-      dispatch(addFavoriteItem(item));
-    }
   };
 
   const handleItemUpdate = async (name) => {
@@ -102,12 +79,7 @@ export default function AllItemsContainer() {
             ) : (
               <>
                 {/* 데이터 부분 */}
-                <ItemsData
-                  items={items}
-                  onFavoriteClick={handleFavoriteClick}
-                  favItems={favItems}
-                  onItemUpdate={handleItemUpdate}
-                />
+                <ItemsDataTable items={items} onItemUpdate={handleItemUpdate} />
                 {/* 페이지네이션 추가 */}
                 <TablePagination
                   currentPage={currentPage}
