@@ -70,12 +70,13 @@ export const MainHeader = ({ onLogout }) => {
 };
 
 export function SubHeader({ currentPath }) {
-  const { user } = useSelector((state) => state.auth);
+  // const { user } = useSelector((state) => state.auth);
 
   const sublinks = [
     { path: "/", name: "홈" },
     { path: "/items", name: "전체 아이템" },
     { path: "/favorite", name: "나의 관심 아이템" },
+    { path: "/price-alert", name: "가격 알림 보기" },
     { path: "/", name: "거래량 TOP" },
     { path: "/", name: "추천 아이템" },
   ];
@@ -87,12 +88,17 @@ export function SubHeader({ currentPath }) {
         {/* gap을 두어 li끼리 사이를 띄울수 있음. */}
         <ul className="flex gap-6 justify-start items-center text-ligntBlue">
           {sublinks.map((sublink, index) => (
-            <SubLink key={index} to={sublink.path} currentPath={currentPath === sublink.path}>
+            <SubLink
+              key={index}
+              to={sublink.path}
+              currentPath={currentPath === sublink.path}
+            >
               <Link to={sublink.path}>{sublink.name}</Link>
             </SubLink>
           ))}
         </ul>
         <div className="flex items-center">
+          {/* TODO: 마이페이지 기능없음. */}
           <Img src={userImg} alt="user" />
           <Span>마이 페이지</Span>
         </div>

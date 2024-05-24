@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import tw from "twin.macro";
 import FavoriteButton from "../favItem/FavoriteButton";
 import { LuRefreshCcw } from "react-icons/lu";
-import PriceAlertModal from "../itemPriceAlert/PriceAlertModal";
+import PriceAlertModal from "../PriceAlert/PriceAlertModal";
 
 const imgUrl = "https://cdn.bdolytics.com/";
 

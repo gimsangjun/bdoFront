@@ -3,6 +3,7 @@ import axios from "./axiosInstance";
 const API_DOMAIN = process.env.REACT_APP_API_DOMAIN;
 
 class ItemAPI {
+  // 아이템
   static async getItemsByQuery(query, page = 1) {
     try {
       const response = await axios.post(`${API_DOMAIN}/item/`, {
@@ -17,6 +18,21 @@ class ItemAPI {
     }
   }
 
+  // id와 sid는 배열이어야함.
+  static async getItemsByIdandSid(id, sid) {
+    try {
+      const response = await axios.post(`${API_DOMAIN}/item/id-and-sid`, {
+        id,
+        sid,
+      });
+      console.log("getItemsByIdandSid", response.data);
+      return response.data.items;
+    } catch (error) {
+      console.error("getItemsByIdandSid Error:", error);
+      throw error;
+    }
+  }
+
   static async updateItemByName(name) {
     const response = await axios.post(`${API_DOMAIN}/item/update`, {
       name,
@@ -24,6 +40,7 @@ class ItemAPI {
     return { status: response.status, updateItems: response.data.items };
   }
 
+  // 즐겨찾기
   static async getFavItem() {
     try {
       const response = await axios.get(`${API_DOMAIN}/item/favorite`);
@@ -51,10 +68,73 @@ class ItemAPI {
   static async removeFavItem(item) {
     try {
       const { id, sid } = item;
-      const response = await axios.delete(`${API_DOMAIN}/item/favorite?id=${id}&sid=${sid}`);
+      const response = await axios.delete(
+        `${API_DOMAIN}/item/favorite?id=${id}&sid=${sid}`,
+      );
       return { status: response.status };
     } catch (error) {
       console.error("remoeItemFavorite Error", error);
+      throw error;
+    }
+  }
+
+  // 가격 알림
+  static async addItemPriceAlert(item, priceThreshold) {
+    try {
+      const response = await axios.post(`${API_DOMAIN}/item/alert`, {
+        itemName: item.name,
+        itemId: item.id,
+        itemSid: item.sid,
+        priceThreshold,
+      });
+      return {
+        status: response.status,
+        itemPriceAlert: response.data.itemPriceAlert,
+      };
+    } catch (error) {
+      console.error("addItemPriceAlert Error", error);
+      throw error;
+    }
+  }
+
+  static async getItemPriceAlerts() {
+    try {
+      const response = await axios.get(`${API_DOMAIN}/item/alert`);
+      return {
+        status: response.status,
+        itemPriceAlerts: response.data.itemPriceAlerts,
+      };
+    } catch (error) {
+      console.error("getItemPriceAlerts Error", error);
+      throw error;
+    }
+  }
+
+  static async updateItemPriceAlert(alert) {
+    try {
+      const { alertId, priceThreshold } = alert;
+      const response = await axios.put(`${API_DOMAIN}/item/alert`, {
+        alertId,
+        priceThreshold,
+      });
+      return {
+        status: response.status,
+        itemPriceAlert: response.data.itemPriceAlert,
+      };
+    } catch (error) {
+      console.error("updateItemPriceAlert Error", error);
+      throw error;
+    }
+  }
+
+  static async deleteItemPriceAlert(alertId) {
+    try {
+      const response = await axios.delete(`${API_DOMAIN}/item/alert`, {
+        data: { alertId },
+      });
+      return { status: response.status };
+    } catch (error) {
+      console.error("deleteItemPriceAlert Error", error);
       throw error;
     }
   }
