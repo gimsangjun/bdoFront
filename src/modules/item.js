@@ -11,7 +11,14 @@ const fetchItemsStart = () => ({
   type: FETCH_ITEM_START,
 });
 
-const fetchItemsSuccess = (status, query, items, totalCount, pages, currentPage) => ({
+const fetchItemsSuccess = (
+  status,
+  query,
+  items,
+  totalCount,
+  pages,
+  currentPage,
+) => ({
   type: FETCH_ITEM_SUCCESS,
   payload: {
     status,
@@ -39,18 +46,17 @@ const fetchItemsFailure = (status, error) => ({
   },
 });
 
-// 비동기 처리 redux-think
+//TODO: 비동기 처리 redux-think, notion 링크 깃허브 추가
 export const getItemsByQuery = (query, _currentPage) => {
   return async (dispatch) => {
     dispatch(fetchItemsStart());
-    console.log(query);
     try {
-      const { status, items, totalCount, pages, currentPage } = await ItemAPI.getItemsByQuery(
-        query,
-        _currentPage
-      );
+      const { status, items, totalCount, pages, currentPage } =
+        await ItemAPI.getItemsByQuery(query, _currentPage);
       // status, query, items, totalCount, pages, currentPage
-      dispatch(fetchItemsSuccess(status, query, items, totalCount, pages, currentPage));
+      dispatch(
+        fetchItemsSuccess(status, query, items, totalCount, pages, currentPage),
+      );
     } catch (error) {
       console.log("아이템 검색 실패: ", error);
       const statusCode = error.response ? error.response.status : 500; // 상태 코드가 없는 경우 500으로 설정
@@ -64,20 +70,20 @@ export const updateItems = (name, items) => {
     dispatch(fetchItemsStart());
     try {
       const { status, updateItems } = await ItemAPI.updateItemByName(name);
-      console.log(status, updateItems);
 
       if (updateItems && updateItems.length > 0) {
         // items 배열 내의 각 아이템을 검사하고 필요에 따라 업데이트
         const updatedItems = items.map((item) => {
           // updateItems에서 같은 id와 sid를 가진 아이템 찾기
           const update = updateItems.find(
-            (uItem) => uItem.id === item.id && uItem.sid === item.sid
+            (uItem) => uItem.id === item.id && uItem.sid === item.sid,
           );
           // 일치하는 아이템이 있으면 업데이트된 정보로 교체
           return update ? { ...item, ...update } : item;
         });
         // 결과로 업데이트된 아이템 목록을 리덕스 상태에 저장하거나 추가적인 액션을 디스패치
         dispatch(updateItemsSuccess(status, updatedItems)); // 업데이트된 아이템 목록으로 상태 업데이트
+        return updatedItems; // 업데이트된 아이템 목록 반환
       }
     } catch (error) {
       console.error("Item update failed:", error);

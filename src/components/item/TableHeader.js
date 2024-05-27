@@ -3,7 +3,7 @@ import React, { useState } from "react";
 // TODO: 1. 이름을 일부만 입력해도 그 단어가 포함된 아이템들 리턴
 // TODO: 2. 자동완성기능  처럼 한글자씩 입력해도 그 이름을 가진 아이템들 리턴.
 export default function TableHeader({ tableName, itemSearchValue = "", onTableHeaderSearch }) {
-  const [itemName, setItemName] = useState(itemSearchValue);
+  const [itemName, setItemName] = useState(itemSearchValue ? itemSearchValue : "");
 
   const handleInputChange = (event) => {
     setItemName(event.target.value);

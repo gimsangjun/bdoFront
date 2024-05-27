@@ -6,7 +6,7 @@ export const FETCH_FAV_ITEM_SUCCESS = "item/FETCH_FAV_ITEM_SUCCESS";
 export const FETCH_FAV_ITEM_FAILURE = "item/FETCH_FAV_ITEM_FAILURE";
 
 // 액션 생성함수
-// TODO, 액션생성함수를 이렇게 줄일수도 있다. get, update와 remove 모두 fetch로 가능.
+// 액션생성함수를 이렇게 줄일수도 있다. get, update와 remove 모두 fetch로 가능.
 const fetchFavItemsStart = () => ({
   type: FETCH_FAV_ITEM_START,
 });

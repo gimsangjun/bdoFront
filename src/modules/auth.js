@@ -25,8 +25,8 @@ export const fetchUserProfile = (sessionID) => {
       // const response = await authAPI.getProfile(sessionID);
       // authAPI의 axios설정을 하면 자동을 쿠키값(sessionID) 넘어가서 위와같이 해줄 필요없음.
       const response = await authAPI.getProfile();
-      if (!response.status === 200) throw new Error("Authentication check failed");
-      console.log("fetchUserProfile", response.data);
+      if (!response.status === 200)
+        throw new Error("Authentication check failed");
       dispatch({ type: SET_PROFILE, payload: { user: response.data.user } });
     } catch (error) {
       console.log("사용자 정보 가져오기 실패 : ", error);
