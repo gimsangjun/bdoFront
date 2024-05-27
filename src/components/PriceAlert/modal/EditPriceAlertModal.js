@@ -1,29 +1,27 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
-import ItemAPI from "../../utils/itemAPI"; // 필요한 경우 경로를 수정하세요
-import SuccessModal from "./SuccessModal"; // 성공 모달 컴포넌트 가져오기
+import { useDispatch } from "react-redux";
+import {
+  updatePriceAlert,
+  removePriceAlert,
+} from "../../../modules/priceAlert";
+import SuccessModal from "./SuccessModal";
 
 Modal.setAppElement("#root");
 
-const PriceAlertModal = ({ isOpen, onRequestClose, item }) => {
-  const [price, setPrice] = useState("");
-  const [successModalIsOpen, setSuccessModalIsOpen] = useState(false);
+const EditPriceAlertModal = ({ isOpen, onRequestClose, alert }) => {
+  const [priceThreshold, setPriceThreshold] = useState(alert.priceThreshold);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const dispatch = useDispatch();
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const { status, itemPriceAlert } = await ItemAPI.addItemPriceAlert(
-      item,
-      price,
-    );
-
-    if (status === 201) {
-      setSuccessModalIsOpen(true);
-      onRequestClose();
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    try {
+      await dispatch(updatePriceAlert(alert._id, priceThreshold));
+      setShowSuccessModal(true);
+    } catch (error) {
+      console.error("Error updating price alert:", error);
     }
-  };
-
-  const closeSuccessModal = () => {
-    setSuccessModalIsOpen(false);
   };
 
   return (
@@ -49,16 +47,16 @@ const PriceAlertModal = ({ isOpen, onRequestClose, item }) => {
         }}
         className="relative bg-white rounded-lg shadow-lg w-96"
       >
-        <h2 className="text-2xl font-bold mb-4">가격 알림 설정</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <h2 className="text-2xl font-bold mb-4">가격 알림 수정</h2>
+        <form onSubmit={handleUpdate} className="space-y-4">
           <div>
             <label className="block text-gray-700 text-sm font-bold mb-2">
-              가격:
+              알림 가격:
             </label>
             <input
               type="number"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
+              value={priceThreshold}
+              onChange={(e) => setPriceThreshold(e.target.value)}
               required
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
@@ -68,7 +66,7 @@ const PriceAlertModal = ({ isOpen, onRequestClose, item }) => {
               type="submit"
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
             >
-              설정
+              수정
             </button>
             <button
               type="button"
@@ -81,11 +79,14 @@ const PriceAlertModal = ({ isOpen, onRequestClose, item }) => {
         </form>
       </Modal>
       <SuccessModal
-        isOpen={successModalIsOpen}
-        onRequestClose={closeSuccessModal}
+        isOpen={showSuccessModal}
+        onRequestClose={() => {
+          setShowSuccessModal(false);
+          onRequestClose();
+        }}
       />
     </>
   );
 };
 
-export default PriceAlertModal;
+export default EditPriceAlertModal;

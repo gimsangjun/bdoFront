@@ -4,22 +4,28 @@ import RootPage from "./pages/RootPage";
 import ErrorPage from "./pages/ErrorPage";
 import ItemsPage from "./pages/ItemsPage";
 import FavoritePage from "./pages/FavoritePage";
-import ItemPriceAlertPage from "./pages/ItemPriceAlertPage";
+import PriceAlertPage from "./pages/PriceAlertPage";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { fetchFavoriteItems } from "./modules/itemFav";
+import { fetchPriceAlerts } from "./modules/priceAlert";
 
 export default function App() {
   // 로그인한 유저가 있으면 favItems 로드
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
+  // TODO: 여기를 거치지않고, 바로 특정페이지로 가는 경우 문제가 생기는듯. => 해결 방법 찾아야됨.
   useEffect(() => {
-    if (user) dispatch(fetchFavoriteItems());
+    if (user) {
+      dispatch(fetchFavoriteItems());
+      dispatch(fetchPriceAlerts());
+    }
   }, [dispatch, user]);
 
   return (
     <Routes>
-      <Route path="/price-alert" element={<ItemPriceAlertPage />} />
+      {/* 아이템 가격 알림. */}
+      <Route path="/price-alert" element={<PriceAlertPage />} />
       <Route path="/favorite" element={<FavoritePage />} />
       <Route path="/items" element={<ItemsPage />} />
       <Route path="/" element={<RootPage />} />

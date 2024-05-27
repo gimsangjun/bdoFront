@@ -25,7 +25,6 @@ class ItemAPI {
         id,
         sid,
       });
-      console.log("getItemsByIdandSid", response.data);
       return response.data.items;
     } catch (error) {
       console.error("getItemsByIdandSid Error:", error);
@@ -110,9 +109,8 @@ class ItemAPI {
     }
   }
 
-  static async updateItemPriceAlert(alert) {
+  static async updateItemPriceAlert(alertId, priceThreshold) {
     try {
-      const { alertId, priceThreshold } = alert;
       const response = await axios.put(`${API_DOMAIN}/item/alert`, {
         alertId,
         priceThreshold,

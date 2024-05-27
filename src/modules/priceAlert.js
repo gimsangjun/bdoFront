@@ -26,7 +26,7 @@ const fetchPriceAlertsFailure = (status, error) => ({
   },
 });
 
-// 비동기 처리 redux-thunk
+//TODO 비동기 처리 redux-thunk, async안에 dispatch가 이해가 안감.
 export const fetchPriceAlerts = () => async (dispatch) => {
   dispatch(fetchPriceAlertsStart());
   try {
@@ -42,23 +42,26 @@ export const addPriceAlert = (alert) => async (dispatch) => {
   try {
     const { status } = await ItemAPI.addItemPriceAlert(alert);
     const { itemPriceAlerts } = await ItemAPI.getItemPriceAlerts();
-    console.log("itemPriceAlerts", itemPriceAlerts);
     dispatch(fetchPriceAlertsSuccess(status, itemPriceAlerts));
   } catch (error) {
     dispatch(fetchPriceAlertsFailure(error.response?.status, error.message));
   }
 };
 
-export const updatePriceAlert = (alert) => async (dispatch) => {
-  dispatch(fetchPriceAlertsStart());
-  try {
-    const { status } = await ItemAPI.updateItemPriceAlert(alert);
-    const { itemPriceAlerts } = await ItemAPI.getItemPriceAlerts();
-    dispatch(fetchPriceAlertsSuccess(status, itemPriceAlerts));
-  } catch (error) {
-    dispatch(fetchPriceAlertsFailure(error.response?.status, error.message));
-  }
-};
+export const updatePriceAlert =
+  (alertId, priceThreshold) => async (dispatch) => {
+    dispatch(fetchPriceAlertsStart());
+    try {
+      const { status } = await ItemAPI.updateItemPriceAlert(
+        alertId,
+        priceThreshold,
+      );
+      const { itemPriceAlerts } = await ItemAPI.getItemPriceAlerts();
+      dispatch(fetchPriceAlertsSuccess(status, itemPriceAlerts));
+    } catch (error) {
+      dispatch(fetchPriceAlertsFailure(error.response?.status, error.message));
+    }
+  };
 
 export const removePriceAlert = (alertId) => async (dispatch) => {
   dispatch(fetchPriceAlertsStart());

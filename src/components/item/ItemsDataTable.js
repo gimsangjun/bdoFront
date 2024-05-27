@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import tw from "twin.macro";
 import FavoriteButton from "../favItem/FavoriteButton";
 import { LuRefreshCcw } from "react-icons/lu";
-import PriceAlertModal from "../PriceAlert/PriceAlertModal";
+import PriceAlertModal from "../PriceAlert/modal/PriceAlertModal";
 
 const imgUrl = "https://cdn.bdolytics.com/";
 
@@ -25,7 +25,6 @@ export default function ItemsDataTable({ items, onItemUpdate }) {
     <div className="bg-gray-200 flex justify-center items-center flex-col w-full">
       {/* 데이터 부분 시작. , w-full 이유 : width맞춰줄려고. */}
       <div className="rounded-lg w-full">
-        {/* TODO : min-w-full의 의미 */}
         <table className="min-w-full">
           <thead className="bg-gray-200 ">
             <tr>
