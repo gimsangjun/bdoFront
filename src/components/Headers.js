@@ -8,8 +8,8 @@ import campfire from "../images/campfire.png";
 import recommend from "../images/recommend.png";
 import userImg from "../images/user.png";
 import home from "../images/home.png";
+import { FaDiscord } from "react-icons/fa";
 
-// TODO: react-component 헤더부분에 넣어야할듯.
 export const MainHeader = ({ onLogout }) => {
   const API_DOMAIN = process.env.REACT_APP_API_DOMAIN;
   const { user } = useSelector((state) => state.auth);
@@ -19,16 +19,19 @@ export const MainHeader = ({ onLogout }) => {
     if (user) {
       event.preventDefault(); // 링크 기능 방지
       onLogout(); // 로그아웃 함수 실행
+    } else {
+      // 디스코드 로그인
+      window.location.href = `${API_DOMAIN}/auth/discord`;
     }
-    // username이 없으면 자동으로 href에 의해 페이지 이동
   };
 
   return (
-    // TODO: 문제점, 화면을 줄이고 오른쪽으로 스크롤을 하면 bg-headerBlack 색깔이 먹히지 않음.
     <div className="w-full text-white mx-0 bg-headerBlack h-10">
-      <div className="flex items-center justify-between">
-        {/* subHeader 처럼 li태그를 사용하지않고 단순히 flex만 사용, flex 자식 관련 속성은 MainLink 참고 */}
-        {/* 이런식으로 그룹화 지어서 nav태그는 맨 왼쪽으로 붙이고, 로그인 버튼은 맨 오른쪽으로 붙임. */}
+      {/*윈도우가 줄어들었을때, 겹치는 문제가 생겼는데 
+      min-w-max 속성을 추가 해줌으로서 해결
+      min-w-max 속성 : 해당 요소의 최소 너비를 자식 요소들의 최대 너비로 설정하여 크기가 변하지 않도록 */}
+      <div className="flex items-center justify-between min-w-max">
+        {/* 양끝 정렬 : 이런식으로 그룹화 지어서 nav태그는 맨 왼쪽으로 붙이고, 로그인 버튼은 맨 오른쪽으로 붙임. */}
         <nav className="flex text-white justify-start">
           <MainLink to="/" className="bg-mainBlue">
             <Img src={logo} alt="logo" />
@@ -51,18 +54,26 @@ export const MainHeader = ({ onLogout }) => {
             <Span>아무거나</Span>
           </MainLink>
         </nav>
-        {/* 극단적으로 window가 줄어들었을 때, nav태그에 로그인 버튼이 침범. 안보이게 반응형으로 안보이게함. */}
-        <div className="flex shrink-0 items-center">
-          <a href={`${API_DOMAIN}/auth/discord`}>
-            {/* TODO: op.gg랑 똑같이 만들어보자. 임시방편으로 이렇게 해둠. */}
-            {user ? user.username : ""}
-            <button
-              onClick={handleButtonClick}
-              className="bg-mainBlue text-white py-1 px-4 mx-2 rounded text-xs hidden sm:inline-block"
-            >
-              {user ? "로그아웃" : "디스코드 로그인"}
-            </button>
-          </a>
+        <div className="flex shrink-0 items-center min-w-max">
+          <div
+            onClick={handleButtonClick}
+            className="flex items-center justify-center space-x-2 cursor-pointer mr-2"
+          >
+            {!user && (
+              <>
+                <FaDiscord className="h-7 w-7" />
+                <span className="text-xs">로그인</span>
+              </>
+            )}
+            {user && (
+              <>
+                {user.username}
+                <button className="bg-mainBlue text-white py-1 px-4 rounded text-xs ml-2">
+                  로그아웃
+                </button>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </div>
@@ -98,7 +109,7 @@ export function SubHeader({ currentPath }) {
           ))}
         </ul>
         <div className="flex items-center">
-          {/* TODO: 마이페이지 기능없음. */}
+          {/* TODO: 마이페이지 기능없음. 화면을 줄였을 때, 화면상에 보이지않음 고쳐야할듯. */}
           <Img src={userImg} alt="user" />
           <Span>마이 페이지</Span>
         </div>
