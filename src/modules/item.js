@@ -65,8 +65,9 @@ export const getItemsByQuery = (query, _currentPage) => {
   };
 };
 
-export const updateItems = (name, items) => {
-  return async (dispatch) => {
+export const updateItems = (name) => {
+  return async (dispatch, getState) => {
+    const { items } = getState().item;
     dispatch(fetchItemsStart());
     try {
       const { status, updateItems } = await ItemAPI.updateItemByName(name);
@@ -79,11 +80,11 @@ export const updateItems = (name, items) => {
             (uItem) => uItem.id === item.id && uItem.sid === item.sid,
           );
           // 일치하는 아이템이 있으면 업데이트된 정보로 교체
+          // 이 return은 map이 한번돌때마다 실행됨.
           return update ? { ...item, ...update } : item;
         });
         // 결과로 업데이트된 아이템 목록을 리덕스 상태에 저장하거나 추가적인 액션을 디스패치
         dispatch(updateItemsSuccess(status, updatedItems)); // 업데이트된 아이템 목록으로 상태 업데이트
-        return updatedItems; // 업데이트된 아이템 목록 반환
       }
     } catch (error) {
       console.error("Item update failed:", error);

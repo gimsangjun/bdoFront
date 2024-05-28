@@ -1,9 +1,10 @@
 import React from "react";
 import tw from "twin.macro";
-import { foramtImgUrl, formatName } from "../item/ItemsDataTable";
+import { foramtImgUrl, formatName, formatDate } from "../item/ItemsDataTable";
 import FavoriteButton from "./FavoriteButton";
+import { LuRefreshCcw } from "react-icons/lu";
 
-export default function FavItemsTable({ favItems }) {
+export default function FavItemsTable({ favItems, onItemUpdate }) {
   return (
     <div className="bg-gray-200 flex justify-center items-center flex-col w-full">
       <div className="rounded-lg w-full">
@@ -16,7 +17,6 @@ export default function FavItemsTable({ favItems }) {
               <DataTh scope="col">즐겨 찾기</DataTh>
               <DataTh scope="col">가격 알림</DataTh>
               <DataTh scope="col">가격 업데이트 시간</DataTh>
-              <DataTh scope="col">가격 업데이트</DataTh>
             </tr>
           </thead>
           <tbody className="bg-white divide-gray-200">
@@ -40,8 +40,13 @@ export default function FavItemsTable({ favItems }) {
                     <FavoriteButton item={item.stockDetail} />
                   </DataTd>
                   <DataTd>가격알림 X</DataTd>
-                  <DataTd>{item.stockDetail.updateAt}</DataTd>
-                  <DataTd>가격업데이트 버튼 X</DataTd>
+                  <DataTd className="flex items-center">
+                    {formatDate(item.stockDetail.updateAt)}
+                    <LuRefreshCcw
+                      className="cursor-pointer pl-1 text-lg"
+                      onClick={() => onItemUpdate(item.name, item)}
+                    />
+                  </DataTd>
                 </tr>
               ))
             ) : (

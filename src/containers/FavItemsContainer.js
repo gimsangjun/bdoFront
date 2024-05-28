@@ -1,10 +1,21 @@
 import React from "react";
 import TableHeader from "../components/item/TableHeader";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import FavItemsTable from "../components/favItem/FavItemsTable";
+import { updateFavoriteItems } from "../modules/itemFav";
 
 export default function FavItemsContainer() {
   const { favItems, loading } = useSelector((state) => state.itemFav);
+
+  const dispatch = useDispatch();
+
+  const handleItemUpdate = async (name) => {
+    try {
+      dispatch(updateFavoriteItems(name));
+    } catch (error) {
+      console.error("Error updating items:", error);
+    }
+  };
 
   return (
     <div className="w-full h-full bg-gray-200">
@@ -17,7 +28,10 @@ export default function FavItemsContainer() {
               <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
             </div>
           ) : (
-            <FavItemsTable favItems={favItems} />
+            <FavItemsTable
+              favItems={favItems}
+              onItemUpdate={handleItemUpdate}
+            />
           )}
         </div>
       </div>

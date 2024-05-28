@@ -38,6 +38,27 @@ export const fetchFavoriteItems = () => async (dispatch) => {
   }
 };
 
+export const updateFavoriteItems = (name) => async (dispatch, getState) => {
+  dispatch(fetchFavItemsStart());
+  try {
+    const { favItems } = getState().itemFav;
+    const { status, updateItems: stockDetails } =
+      await ItemAPI.updateItemByName(name);
+
+    const newFavItems = favItems.map((item) => {
+      const stockDetail = stockDetails.find(
+        (_stockDetail) =>
+          _stockDetail.id === item.stockDetail.id &&
+          _stockDetail.sid === item.stockDetail.sid,
+      );
+      return stockDetail ? { ...item, stockDetail } : item;
+    });
+    dispatch(fetchFavItemsSuccess(status, newFavItems));
+  } catch (error) {
+    dispatch(fetchFavItemsFailure(error.response.status, error.message));
+  }
+};
+
 export const addFavoriteItem = (item) => async (dispatch) => {
   dispatch(fetchFavItemsStart());
   try {

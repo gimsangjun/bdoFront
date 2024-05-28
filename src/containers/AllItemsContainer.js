@@ -44,8 +44,8 @@ export default function AllItemsContainer() {
     dispatch(getItemsByQuery(newQuery, 1));
   };
 
-  const handleItemUpdate = async (name) => {
-    dispatch(updateItems(name, items));
+  const handleItemUpdate = (name) => {
+    dispatch(updateItems(name));
   };
 
   const handleTableHeaderSearch = async (itemName) => {
