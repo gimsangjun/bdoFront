@@ -1,42 +1,54 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import TableHeader from "../components/item/TableHeader";
 import { useDispatch, useSelector } from "react-redux";
 import PriceAlertTable from "../components/PriceAlert/PriceAlertTable";
 import ItemAPI from "../utils/itemAPI";
 import { updateItems } from "../modules/item";
-import { removePriceAlert } from "../modules/priceAlert";
+import { fetchPriceAlerts, removePriceAlert } from "../modules/priceAlert";
 
 export default function PriceAlertContainer() {
   const { priceAlerts, loading: priceAlertLoading } = useSelector(
     (state) => state.priceAlert,
   );
+  const { user } = useSelector((state) => state.auth);
   const { loading: itemLoading } = useSelector((state) => state.item);
   const [items, setItems] = useState([]);
   const dispatch = useDispatch();
 
-  // TODO: App.js를 거치지 않고, 바로 특정페이지로 가는 경우 문제가 생기는듯. => 체크해봐야됨. App.js
+  // 초기데이터 로딩
   useEffect(() => {
-    // priceAlerts에 있는 데이터들의 가격을 가져오기 위함.
-    const fetchItems = async () => {
-      try {
-        const ids = priceAlerts.map((alert) => alert.itemId);
-        const sids = priceAlerts.map((alert) => alert.itemSid);
+    if (user) {
+      dispatch(fetchPriceAlerts());
+    }
+  }, [dispatch, user]);
 
-        const items = await ItemAPI.getItemsByIdandSid(ids, sids);
-        setItems(items);
-      } catch (error) {
-        console.error("Error fetching items for price alerts:", error);
+  const fetchItems = useCallback(async () => {
+    try {
+      if (priceAlerts.length === 0) {
+        setItems([]);
+        return;
       }
-    };
 
-    if (priceAlerts.length > 0) {
-      fetchItems();
+      const items = priceAlerts.map((alert) => ({
+        id: alert.itemId,
+        sid: alert.itemSid,
+      }));
+
+      const fetchedItems = await ItemAPI.getItemsByIdandSid(items);
+      setItems(fetchedItems);
+    } catch (error) {
+      console.error("Error fetching items for price alerts:", error);
     }
   }, [priceAlerts]);
 
-  const handleItemUpdate = async (name) => {
+  // TODO: App.js를 거치지 않고, 바로 특정페이지로 가는 경우 문제가 생기는듯. => 체크해봐야됨. App.js
+  useEffect(() => {
+    fetchItems();
+  }, [priceAlerts, fetchItems]);
+
+  const handleItemUpdate = (name) => {
     try {
-      const updatedItems = await dispatch(updateItems(name, items));
+      const updatedItems = dispatch(updateItems(name, items));
 
       // 아이템을 업데이트 후 업데이트된 아이템만 업데이트
       setItems((prevItems) =>
@@ -53,9 +65,9 @@ export default function PriceAlertContainer() {
     }
   };
 
-  const handleDeleteAlert = async (alertId) => {
+  const handleDeleteAlert = (alertId) => {
     try {
-      await dispatch(removePriceAlert(alertId));
+      dispatch(removePriceAlert(alertId));
     } catch (error) {
       console.error("Error deleting price alert:", error);
     }

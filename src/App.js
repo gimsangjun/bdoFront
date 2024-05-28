@@ -8,7 +8,6 @@ import PriceAlertPage from "./pages/PriceAlertPage";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { fetchFavoriteItems } from "./modules/itemFav";
-import { fetchPriceAlerts } from "./modules/priceAlert";
 
 export default function App() {
   // 로그인한 유저가 있으면 favItems 로드
@@ -18,7 +17,6 @@ export default function App() {
   useEffect(() => {
     if (user) {
       dispatch(fetchFavoriteItems());
-      dispatch(fetchPriceAlerts());
     }
   }, [dispatch, user]);
 

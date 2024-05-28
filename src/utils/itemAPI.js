@@ -18,12 +18,15 @@ class ItemAPI {
     }
   }
 
-  // id와 sid는 배열이어야함.
-  static async getItemsByIdandSid(id, sid) {
+  /**
+   *
+   * @param {items} [{id, sid}]
+   * @returns items
+   */
+  static async getItemsByIdandSid(items) {
     try {
       const response = await axios.post(`${API_DOMAIN}/item/id-and-sid`, {
-        id,
-        sid,
+        items,
       });
       return response.data.items;
     } catch (error) {
