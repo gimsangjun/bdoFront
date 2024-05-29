@@ -4,9 +4,9 @@ import MainSectionContainer from "../containers/MainSectionContainer";
 
 export default function RootPage() {
   return (
-    <div>
+    <>
       <HeaderContainer />
       <MainSectionContainer />
-    </div>
+    </>
   );
 }

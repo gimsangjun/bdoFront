@@ -26,7 +26,7 @@ export const MainHeader = ({ onLogout }) => {
   };
 
   return (
-    <div className="w-full text-white mx-0 bg-headerBlack h-10">
+    <div className="text-white mx-0 bg-headerBlack h-10">
       {/*윈도우가 줄어들었을때, 겹치는 문제가 생겼는데 
       min-w-max 속성을 추가 해줌으로서 해결
       min-w-max 속성 : 해당 요소의 최소 너비를 자식 요소들의 최대 너비로 설정하여 크기가 변하지 않도록 */}

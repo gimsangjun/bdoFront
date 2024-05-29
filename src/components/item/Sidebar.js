@@ -19,7 +19,10 @@ const SidebarItem = ({ item, onCategoryClick }) => {
 
   return (
     <li>
-      <div onClick={handleClick} className="block text-white hover:bg-gray-700 rounded px-2 py-1">
+      <div
+        onClick={handleClick}
+        className="block text-white hover:bg-gray-700 rounded px-2 py-1"
+      >
         {hasChildren && <span>{expanded ? "▼" : "▶"}</span>}
         <span key={item.id} className="ml-2">
           {item.name}
@@ -28,7 +31,11 @@ const SidebarItem = ({ item, onCategoryClick }) => {
       {expanded && hasChildren && (
         <ul className="ml-4">
           {item.children.map((child, index) => (
-            <SidebarItem key={index} item={child} onCategoryClick={onCategoryClick} />
+            <SidebarItem
+              key={index}
+              item={child}
+              onCategoryClick={onCategoryClick}
+            />
           ))}
         </ul>
       )}
@@ -37,15 +44,20 @@ const SidebarItem = ({ item, onCategoryClick }) => {
 };
 
 const Sidebar = ({ items, onCategoryClick }) => {
-  // TODO: w-full을 자동으로 상속못지키나? 계속 w-full 하는게 귀찮음.
   return (
-    // TODO : top 속성을 넣을 때, header의 크기를 직접 계산해서 넣어야 하나?
-    <aside className="w-56 h-4/5 flex" style={{ position: "sticky", top: 192 }}>
+    // top 속성을 넣을 때, header의 크기를 직접 계산해서 넣어야 하나? 직접 계산해야할듯.
+    // sticky 속성은 특정 스크롤 이하일때는 relative로 적용되고, 이상일 때는 fixed로 적용되기 때문에 top속성을 넣으면 내가 원하는대로 동작하게 할수 있음.
+    // top 속성은 viewport(화면 상에 보이는)를 기준으로 작동.
+    <aside className="w-60 flex sticky top-48">
       <div className="w-full bg-gray-800">
         <nav className="p-4">
           <ul className="space-y-2">
             {items.map((item, index) => (
-              <SidebarItem key={index} item={item} onCategoryClick={onCategoryClick} />
+              <SidebarItem
+                key={index}
+                item={item}
+                onCategoryClick={onCategoryClick}
+              />
             ))}
           </ul>
         </nav>
