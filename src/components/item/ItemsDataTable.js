@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import tw from "twin.macro";
 import FavoriteButton from "../favItem/FavoriteButton";
 import { LuRefreshCcw } from "react-icons/lu";
-import PriceAlertModal from "../PriceAlert/modal/PriceAlertModal";
+import PriceAlertModal from "../priceAlert/modal/PriceAlertModal";
 
 const imgUrl = "https://cdn.bdolytics.com/";
 
@@ -21,12 +21,11 @@ export default function ItemsDataTable({ items, onItemUpdate }) {
   };
 
   return (
-    // TODO 자식을 벗어나는 부분에 대해서는 배경색깔이 바뀌지않음.(아래로 스크롤 하면 보임.)
     <div className="bg-gray-200 flex justify-center items-center flex-col w-full">
-      {/* 데이터 부분 시작. , w-full 이유 : width맞춰줄려고. */}
+      {/* 데이터 부분 시작.*/}
       <div className="rounded-lg w-full">
         <table className="min-w-full">
-          <thead className="bg-gray-200 ">
+          <thead className="bg-gray-200 sticky top-48">
             <tr>
               <DataTh scope="col">이름</DataTh>
               <DataTh scope="col">현재 거래소 가격</DataTh>

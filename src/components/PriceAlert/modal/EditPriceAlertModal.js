@@ -1,10 +1,7 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
 import { useDispatch } from "react-redux";
-import {
-  updatePriceAlert,
-  removePriceAlert,
-} from "../../../modules/priceAlert";
+import { updatePriceAlert } from "../../../modules/priceAlert";
 import SuccessModal from "./SuccessModal";
 
 Modal.setAppElement("#root");

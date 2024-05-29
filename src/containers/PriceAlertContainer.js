@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import TableHeader from "../components/item/TableHeader";
 import { useDispatch, useSelector } from "react-redux";
-import PriceAlertTable from "../components/PriceAlert/PriceAlertTable";
+import PriceAlertTable from "../components/priceAlert/PriceAlertTable";
 import ItemAPI from "../utils/itemAPI";
 import { fetchPriceAlerts, removePriceAlert } from "../modules/priceAlert";
 
