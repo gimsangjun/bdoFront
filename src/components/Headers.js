@@ -108,8 +108,8 @@ export function SubHeader({ currentPath }) {
             </SubLink>
           ))}
         </ul>
-        <div className="flex items-center">
-          {/* TODO: 마이페이지 기능없음. 화면을 줄였을 때, 화면상에 보이지않음 고쳐야할듯. */}
+        {/* lg: 1024px이상일때만 mr-0 스타일이 적용됨. */}
+        <div className="flex items-center mr-2 lg:mr-0">
           <Img src={userImg} alt="user" />
           <Span>마이 페이지</Span>
         </div>

@@ -21,7 +21,7 @@ const SidebarItem = ({ item, onCategoryClick }) => {
     <li>
       <div
         onClick={handleClick}
-        className="block text-white hover:bg-gray-700 rounded px-2 py-1"
+        className="block text-white hover:bg-gray-700 rounded px-2 py-1 whitespace-nowrap"
       >
         {hasChildren && <span>{expanded ? "▼" : "▶"}</span>}
         <span key={item.id} className="ml-2">
@@ -48,7 +48,7 @@ const Sidebar = ({ items, onCategoryClick }) => {
     // top 속성을 넣을 때, header의 크기를 직접 계산해서 넣어야 하나? 직접 계산해야할듯.
     // sticky 속성은 특정 스크롤 이하일때는 relative로 적용되고, 이상일 때는 fixed로 적용되기 때문에 top속성을 넣으면 내가 원하는대로 동작하게 할수 있음.
     // top 속성은 viewport(화면 상에 보이는)를 기준으로 작동.
-    <aside className="w-60 flex sticky top-48">
+    <aside className="w-52 flex sticky top-48">
       <div className="w-full bg-gray-800">
         <nav className="p-4">
           <ul className="space-y-2">

@@ -58,8 +58,8 @@ export default function ItemsDataContainer() {
   };
 
   return (
-    <div className="bg-gray-200">
-      <div className="w-1210 mx-auto">
+    <div className="bg-gray-200 h-screen">
+      <div className="w-1080 mx-auto">
         {/* 테이블 헤더 시작, sticky */}
         <TableHeader
           tableName={"전체 아이템"}
@@ -67,13 +67,10 @@ export default function ItemsDataContainer() {
           onTableHeaderSearch={handleTableHeaderSearch}
         />
         <div className="flex flex-row items-start">
-          <SidebarContainer
-            className="sticky top-0"
-            onCategoryClick={handleCategoryClick}
-          />
+          <SidebarContainer onCategoryClick={handleCategoryClick} />
           <div className="bg-white flex flex-grow justify-center items-center flex-col rounded-lg">
             {loading ? (
-              <div className="flex justify-center items-center w-full h-96">
+              <div className="flex justify-center items-center w-full h-screen">
                 <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
               </div>
             ) : (

@@ -27,7 +27,7 @@ const FavoriteButton = ({ item }) => {
   };
 
   return (
-    <div className="flex justify-center items-center">
+    <div className="flex items-center">
       <button onClick={handleFavoriteClick}>
         {isFavorite ? (
           <svg

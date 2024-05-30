@@ -1,15 +1,29 @@
-import React from "react";
-import tw from "twin.macro";
-import { foramtImgUrl, formatName, formatDate } from "../item/ItemsDataTable";
+import React, { useState } from "react";
+import { DataTh, DataTd } from "../item/ItemsDataTable";
+import { formatDate } from "../item/ItemsDataTable";
 import FavoriteButton from "./FavoriteButton";
 import { LuRefreshCcw } from "react-icons/lu";
+import PriceAlertModal from "../priceAlert/modal/PriceAlertModal";
+import DataTdName from "../item/DataTdName";
 
 export default function FavItemsTable({ favItems, onItemUpdate }) {
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const openModal = (item) => {
+    setSelectedItem(item);
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setSelectedItem(null);
+    setModalIsOpen(false);
+  };
+
   return (
     <div className="bg-gray-200 flex justify-center items-center flex-col w-full">
       <div className="rounded-lg w-full">
         <table className="min-w-full">
-          <thead className="bg-gray-200 ">
+          <thead className="bg-gray-200 sticky top-48">
             <tr>
               <DataTh scope="col">이름</DataTh>
               <DataTh scope="col">현재 거래소 가격</DataTh>
@@ -27,25 +41,33 @@ export default function FavItemsTable({ favItems, onItemUpdate }) {
                   className="hover:bg-gray-100 border-b-2 border-gray-100"
                 >
                   <DataTd className="flex">
-                    <img
-                      src={foramtImgUrl(item)}
-                      alt={item.name}
-                      style={{ width: "28px", height: "28px" }}
-                    />
-                    {formatName(item)}
+                    <DataTdName item={item.stockDetail} />
                   </DataTd>
                   <DataTd>{item.stockDetail.basePrice}</DataTd>
                   <DataTd>{item.stockDetail.currentStock}</DataTd>
                   <DataTd>
                     <FavoriteButton item={item.stockDetail} />
                   </DataTd>
-                  <DataTd>가격알림 X</DataTd>
-                  <DataTd className="flex items-center">
-                    {formatDate(item.stockDetail.updateAt)}
-                    <LuRefreshCcw
-                      className="cursor-pointer pl-1 text-lg"
-                      onClick={() => onItemUpdate(item.name, item)}
-                    />
+                  <DataTd>
+                    <button
+                      onClick={() => openModal(item)}
+                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
+                    >
+                      알림 등록
+                    </button>
+                  </DataTd>
+                  <DataTd>
+                    <div className="flex items-center">
+                      <span className="mr-1">
+                        {formatDate(item.stockDetail.updateAt)}
+                      </span>
+                      <LuRefreshCcw
+                        className="cursor-pointer pl-1 text-lg"
+                        onClick={() =>
+                          onItemUpdate(item.stockDetail.name, item.stockDetail)
+                        }
+                      />
+                    </div>
                   </DataTd>
                 </tr>
               ))
@@ -62,11 +84,12 @@ export default function FavItemsTable({ favItems, onItemUpdate }) {
             )}
           </tbody>
         </table>
+        <PriceAlertModal
+          isOpen={modalIsOpen}
+          onRequestClose={closeModal}
+          item={selectedItem}
+        />
       </div>
     </div>
   );
 }
-
-// whitespace-nowrap, col이 2줄로 안보이게함. 무조건 한줄
-const DataTh = tw.th`px-6 py-3 whitespace-nowrap text-center text-xs font-medium text-gray-500 bg-gray-100 uppercase tracking-wider`;
-const DataTd = tw.td`px-6 py-4 whitespace-nowrap text-center`;

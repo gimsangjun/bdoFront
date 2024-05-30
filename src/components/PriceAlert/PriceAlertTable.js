@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import tw from "twin.macro";
-import { foramtImgUrl, formatName } from "../item/ItemsDataTable";
+import { DataTd, DataTh } from "../item/ItemsDataTable";
 import FavoriteButton from "../favItem/FavoriteButton";
 import { formatDate } from "../item/ItemsDataTable";
 import { LuRefreshCcw } from "react-icons/lu";
 import EditPriceAlertModal from "./modal/EditPriceAlertModal";
+import DataTdName from "../item/DataTdName";
 
 /**
  * @param {priceAlerts} 가격알림 정보
@@ -57,12 +57,7 @@ export default function PriceAlertTable({
                     className="hover:bg-gray-100 border-b-2 border-gray-100"
                   >
                     <DataTd className="flex">
-                      <img
-                        src={foramtImgUrl(item)}
-                        alt={item.name}
-                        style={{ width: "28px", height: "28px" }}
-                      />
-                      {formatName(item)}
+                      <DataTdName item={item} />
                     </DataTd>
                     <DataTd>{item.basePrice}</DataTd>
                     <DataTd>{item.currentStock}</DataTd>
@@ -87,11 +82,15 @@ export default function PriceAlertTable({
                       </button>
                     </DataTd>
                     <DataTd className="flex items-center">
-                      {formatDate(item.updateAt)}
-                      <LuRefreshCcw
-                        className="cursor-pointer pl-1 text-lg"
-                        onClick={() => onItemUpdate(item.name, item)}
-                      />
+                      <div className="flex items-center">
+                        <span className="mr-1">
+                          {formatDate(item.updateAt)}
+                        </span>
+                        <LuRefreshCcw
+                          className="cursor-pointer pl-1 text-lg"
+                          onClick={() => onItemUpdate(item.name, item)}
+                        />
+                      </div>
                     </DataTd>
                   </tr>
                 );
@@ -120,7 +119,3 @@ export default function PriceAlertTable({
     </div>
   );
 }
-
-// whitespace-nowrap, col이 2줄로 안보이게함. 무조건 한줄
-const DataTh = tw.th`px-6 py-3 whitespace-nowrap text-center text-xs font-medium text-gray-500 bg-gray-100 uppercase tracking-wider`;
-const DataTd = tw.td`px-6 py-4 whitespace-nowrap text-center`;
