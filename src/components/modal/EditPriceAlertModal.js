@@ -1,15 +1,31 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
-import { useDispatch } from "react-redux";
-import { updatePriceAlert } from "../../../modules/priceAlert";
+import { useDispatch, useSelector } from "react-redux";
+import { removePriceAlert, updatePriceAlert } from "../../modules/priceAlert";
 import SuccessModal from "./SuccessModal";
 
 Modal.setAppElement("#root");
 
-const EditPriceAlertModal = ({ isOpen, onRequestClose, alert }) => {
-  const [priceThreshold, setPriceThreshold] = useState(alert.priceThreshold);
+const EditPriceAlertModal = ({ isOpen, onRequestClose, item }) => {
+  const { priceAlerts } = useSelector((state) => state.priceAlert);
+  const [alert, setAlert] = useState("");
+  const [priceThreshold, setThreshold] = useState(0);
+
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const dispatch = useDispatch();
+
+  // item의 alert 찾기
+  useEffect(() => {
+    if (item && priceAlerts.length > 0) {
+      const alert = priceAlerts.find(
+        (alert) => alert.itemId === item.id && alert.itemSid === item.sid,
+      );
+      if (alert) {
+        setAlert(alert);
+        setThreshold(alert.priceThreshold);
+      }
+    }
+  }, [item, priceAlerts]);
 
   const handleUpdate = async (e) => {
     e.preventDefault();
@@ -18,6 +34,16 @@ const EditPriceAlertModal = ({ isOpen, onRequestClose, alert }) => {
       setShowSuccessModal(true);
     } catch (error) {
       console.error("Error updating price alert:", error);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      console.log("handleDelete:", alert);
+      await dispatch(removePriceAlert(alert._id));
+      setShowSuccessModal(true);
+    } catch (error) {
+      console.error("Error deleting price alert:", error);
     }
   };
 
@@ -53,7 +79,7 @@ const EditPriceAlertModal = ({ isOpen, onRequestClose, alert }) => {
             <input
               type="number"
               value={priceThreshold}
-              onChange={(e) => setPriceThreshold(e.target.value)}
+              onChange={(e) => setAlert(e.target.value)}
               required
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
@@ -64,6 +90,12 @@ const EditPriceAlertModal = ({ isOpen, onRequestClose, alert }) => {
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
             >
               수정
+            </button>
+            <button
+              onClick={() => handleDelete()}
+              className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded ml-2"
+            >
+              삭제
             </button>
             <button
               type="button"

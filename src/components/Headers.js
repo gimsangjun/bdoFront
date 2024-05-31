@@ -88,8 +88,6 @@ export function SubHeader({ currentPath }) {
     { path: "/items", name: "전체 아이템" },
     { path: "/favorite", name: "나의 관심 아이템" },
     { path: "/price-alert", name: "가격 알림 보기" },
-    { path: "/", name: "거래량 TOP" },
-    { path: "/", name: "추천 아이템" },
   ];
 
   return (

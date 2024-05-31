@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
-import ItemAPI from "../../../utils/itemAPI"; // 필요한 경우 경로를 수정하세요
+import ItemAPI from "../../utils/itemAPI"; // 필요한 경우 경로를 수정하세요
 import SuccessModal from "./SuccessModal"; // 성공 모달 컴포넌트 가져오기
 
 Modal.setAppElement("#root");

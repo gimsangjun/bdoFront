@@ -45,9 +45,18 @@ const SidebarItem = ({ item, onCategoryClick }) => {
 
 const Sidebar = ({ items, onCategoryClick }) => {
   return (
-    // top 속성을 넣을 때, header의 크기를 직접 계산해서 넣어야 하나? 직접 계산해야할듯.
-    // sticky 속성은 특정 스크롤 이하일때는 relative로 적용되고, 이상일 때는 fixed로 적용되기 때문에 top속성을 넣으면 내가 원하는대로 동작하게 할수 있음.
-    // top 속성은 viewport(화면 상에 보이는)를 기준으로 작동.
+    /**
+     * top 속성을 넣을 때, header의 크기를 직접 계산해서 넣어야 하나? 직접 계산해야할듯.
+     *
+     * sticky 속성은 특정 스크롤 이하일때는 relative로 적용되고, 이상일 때는 fixed로 적용되기 때문에
+     * top속성을 넣으면 내가 원하는대로 동작하게 할수 있음.
+     *
+     * top 속성은 해당 요소의 가장 가까운 스크롤 가능한 부모 요소(또는 뷰포트)를 기준으로 작동.
+     * 가장 가까운 스크롤 가능한 부모 요소를 판단하는 기준은 다음과 같습니다:
+     * overflow 속성: overflow, overflow - x,
+     * 또는 overflow - y 속성이 auto, scroll, 또는 hidden 중
+     * 하나로 설정된 요소는 스크롤 가능한 요소로 간주
+     */
     <aside className="w-52 flex sticky top-48">
       <div className="w-full bg-gray-800">
         <nav className="p-4">

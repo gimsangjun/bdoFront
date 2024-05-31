@@ -23,8 +23,8 @@ export default function TableHeader({
 
   return (
     <div
-      className="w-full bg-gray-200 bg-base-400 sticky"
-      style={{ top: 128, padding: "8px 0 0 0" }}
+      className="w-full bg-gray-200 bg-base-400 sticky top-32"
+      style={{ padding: "8px 0 0 0" }}
     >
       <div className="w-full flex flex-row bg-gray-400 p-2 rounded-lg ">
         <h1 className="mr-auto whitespace-nowrap text-3xl font-bold div">

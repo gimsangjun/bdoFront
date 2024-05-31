@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import "./App.css";
 import RootPage from "./pages/RootPage";
 import ErrorPage from "./pages/ErrorPage";
-import ItemsPage from "./pages/ItemsPage";
+import AllItemsPage from "./pages/AllItemsPage";
 import FavoritePage from "./pages/FavoritePage";
 import PriceAlertPage from "./pages/PriceAlertPage";
 import { useDispatch, useSelector } from "react-redux";
@@ -25,7 +25,7 @@ export default function App() {
       {/* 아이템 가격 알림. */}
       <Route path="/price-alert" element={<PriceAlertPage />} />
       <Route path="/favorite" element={<FavoritePage />} />
-      <Route path="/items" element={<ItemsPage />} />
+      <Route path="/items" element={<AllItemsPage />} />
       <Route path="/" element={<RootPage />} />
       <Route path="*" element={<ErrorPage />} />
     </Routes>

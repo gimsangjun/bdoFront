@@ -1,17 +1,18 @@
 import React, { useEffect, useState, useCallback } from "react";
 import TableHeader from "../components/item/TableHeader";
 import { useDispatch, useSelector } from "react-redux";
-import PriceAlertTable from "../components/priceAlert/PriceAlertTable";
 import ItemAPI from "../utils/itemAPI";
-import { fetchPriceAlerts, removePriceAlert } from "../modules/priceAlert";
+import { fetchPriceAlerts } from "../modules/priceAlert";
+import ItemsTable from "../components/item/ItemsTable";
 
+// TODO: 가격알림한 아이템 전체 새로고침 버튼
 export default function PriceAlertContainer() {
   const { priceAlerts, loading: priceAlertLoading } = useSelector(
     (state) => state.priceAlert,
   );
+  const { loading: updating } = useSelector((state) => state.item); // 가격 업데이트
   const { user } = useSelector((state) => state.auth);
-  const [items, setItems] = useState([]);
-  const [updating, setUpdating] = useState(false); // 로딩 상태 추가
+  const [items, setItems] = useState([]); // alert 가격 정보들
   const dispatch = useDispatch();
 
   // 초기데이터 로딩
@@ -45,54 +46,17 @@ export default function PriceAlertContainer() {
     fetchItems();
   }, [priceAlerts, fetchItems]);
 
-  // 아이템 가격 정보 업데이트
-  const handleItemUpdate = async (name) => {
-    try {
-      setUpdating(true); // 로딩 상태 시작
-      const { updateItems } = await ItemAPI.updateItemByName(name);
-
-      // 아이템을 업데이트 후 업데이트된 아이템만 업데이트
-      setItems((prevItems) =>
-        prevItems.map(
-          (item) =>
-            updateItems.find(
-              (updatedItem) =>
-                updatedItem.id === item.id && updatedItem.sid === item.sid,
-            ) || item,
-        ),
-      );
-      setUpdating(false); // 로딩 상태 종료
-    } catch (error) {
-      console.error("Error updating items:", error);
-      setUpdating(false); // 로딩 상태 종료
-    }
-  };
-
-  const handleDeleteAlert = (alertId) => {
-    try {
-      dispatch(removePriceAlert(alertId));
-    } catch (error) {
-      console.error("Error deleting price alert:", error);
-    }
-  };
-
   return (
-    <div className="w-full bg-gray-200 h-screen">
+    <div className="w-full bg-gray-200">
       <div className="w-1210 mx-auto flex flex-col">
         <TableHeader tableName={"가격 알림"} />
         <div className="bg-white flex flex-grow justify-center items-center flex-col rounded-lg">
           {priceAlertLoading || updating ? (
-            // Display a spinner or loading message while loading is true
             <div className="flex justify-center items-center w-full h-screen">
               <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
             </div>
           ) : (
-            <PriceAlertTable
-              priceAlerts={priceAlerts}
-              items={items}
-              onItemUpdate={handleItemUpdate}
-              onDeleteAlert={handleDeleteAlert}
-            />
+            <ItemsTable items={items} showModifyAlertButton={true} />
           )}
         </div>
       </div>

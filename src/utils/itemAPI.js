@@ -130,9 +130,9 @@ class ItemAPI {
 
   static async deleteItemPriceAlert(alertId) {
     try {
-      const response = await axios.delete(`${API_DOMAIN}/item/alert`, {
-        data: { alertId },
-      });
+      const response = await axios.delete(
+        `${API_DOMAIN}/item/alert?id=${alertId}`,
+      );
       return { status: response.status };
     } catch (error) {
       console.error("deleteItemPriceAlert Error", error);

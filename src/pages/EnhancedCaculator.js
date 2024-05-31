@@ -1,12 +1,12 @@
 import React from "react";
 import HeaderContainer from "../containers/HeaderContainer";
-import ItemsDataContainer from "../containers/ItemsDataContainer";
+import EnCalContainer from "../containers/EnCalContainer";
 
-export default function ItemsPage() {
+export default function EnhancedCaculator() {
   return (
     <>
       <HeaderContainer />
-      <ItemsDataContainer />
+      <EnCalContainer />
     </>
   );
 }
