@@ -65,12 +65,16 @@ export const getItemsByQuery = (query, _currentPage) => {
   };
 };
 
-export const updateItems = (name) => {
+/**
+ *
+ * @param {List} _items - 배열이어야함. 중복되는 name의 아이템있어도 상관없음. 백엔드에서 처리함.
+ */
+export const updateItemsPrice = (_items) => {
   return async (dispatch, getState) => {
     const { items } = getState().item;
     dispatch(fetchItemsStart());
     try {
-      const { status, updateItems } = await ItemAPI.updateItemByName(name);
+      const { status, updateItems } = await ItemAPI.updateItemsPrice(_items);
 
       if (updateItems && updateItems.length > 0) {
         // items 배열 내의 각 아이템을 검사하고 필요에 따라 업데이트

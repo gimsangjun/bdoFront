@@ -35,9 +35,9 @@ class ItemAPI {
     }
   }
 
-  static async updateItemByName(name) {
+  static async updateItemsPrice(items) {
     const response = await axios.post(`${API_DOMAIN}/item/update`, {
-      name,
+      items,
     });
     return { status: response.status, updateItems: response.data.items };
   }

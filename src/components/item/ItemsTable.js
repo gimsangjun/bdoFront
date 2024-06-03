@@ -6,7 +6,7 @@ import FavoriteButton from "./FavoriteButton";
 import DataTdName from "./DataTdName";
 import EditPriceAlertModal from "../modal/EditPriceAlertModal";
 import { useDispatch } from "react-redux";
-import { updateItems } from "../../modules/item";
+import { updateItemsPrice } from "../../modules/item";
 
 /**
  * @param {items} 테이블에 보여줄 데이터
@@ -30,8 +30,13 @@ const ItemsTable = ({ items, showModifyAlertButton = false }) => {
     setModalIsOpen(false);
   };
 
+  const handleUpdateAllItems = () => {
+    dispatch(updateItemsPrice(items));
+  };
+
   return (
     <div className="bg-gray-200 flex justify-center items-center flex-col w-full">
+      <div className="w-full flex justify-end mb-4"></div>
       {/* 데이터 부분 시작.*/}
       <table className="rounded-lg w-full">
         <thead className="bg-gray-200 sticky top-48">
@@ -43,7 +48,13 @@ const ItemsTable = ({ items, showModifyAlertButton = false }) => {
             <DataTh scope="col">
               {!showModifyAlertButton ? "가격 알림" : "가격 알림 수정"}
             </DataTh>
-            <DataTh scope="col">가격 업데이트 날짜</DataTh>
+            <DataTh scope="col" className="flex flex-row items-center">
+              가격 업데이트 날짜
+              <LuRefreshCcw
+                className="cursor-pointer pl-1 text-lg text-black"
+                onClick={() => handleUpdateAllItems(items)}
+              />
+            </DataTh>
           </tr>
         </thead>
         <tbody className="bg-white divide-gray-200">
@@ -93,7 +104,7 @@ const ItemsTable = ({ items, showModifyAlertButton = false }) => {
                     <span className="mr-1">{formatDate(item.updateAt)}</span>
                     <LuRefreshCcw
                       className="cursor-pointer pl-1 text-lg"
-                      onClick={() => dispatch(updateItems(item.name))}
+                      onClick={() => dispatch(updateItemsPrice([item]))}
                     />
                   </DataTd>
                 </tr>
