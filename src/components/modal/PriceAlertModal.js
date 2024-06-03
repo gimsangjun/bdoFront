@@ -1,17 +1,47 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Modal from "react-modal";
-import ItemAPI from "../../utils/itemAPI"; // 필요한 경우 경로를 수정하세요
-import SuccessModal from "./SuccessModal"; // 성공 모달 컴포넌트 가져오기
-
-Modal.setAppElement("#root");
+import ItemAPI from "../../utils/itemAPI";
+import SuccessModal from "./SuccessModal";
 
 const PriceAlertModal = ({ isOpen, onRequestClose, item }) => {
   const [price, setPrice] = useState("");
   const [successModalIsOpen, setSuccessModalIsOpen] = useState(false);
+  const inputRef = useRef(null);
+
+  // 초기값 로딩
+  useEffect(() => {
+    if (item) {
+      const initialPrice = item.lastSoldPrice
+        ? item.lastSoldPrice
+        : item.basePrice;
+      setPrice(initialPrice.toLocaleString()); // 초기 값도 쉼표를 추가하여 설정
+    }
+  }, [item]);
+
+  const handlePriceChange = (e) => {
+    const { value, selectionStart, selectionEnd } = e.target;
+    const rawValue = value.replace(/,/g, ""); // 쉼표 제거
+
+    if (!isNaN(rawValue)) {
+      const formattedValue = Number(rawValue).toLocaleString(); // 쉼표 추가
+      setPrice(formattedValue);
+
+      // 다음 렌더링 후 커서 위치를 복원
+      setTimeout(() => {
+        const newCursorPosition =
+          selectionStart + (formattedValue.length - value.length);
+        inputRef.current.setSelectionRange(
+          newCursorPosition,
+          newCursorPosition,
+        );
+      }, 0);
+    }
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const { status } = await ItemAPI.addItemPriceAlert(item, price);
+    const rawPrice = Number(price.replace(/,/g, "")); // 쉼표 제거 후 숫자로 변환
+    const { status } = await ItemAPI.addItemPriceAlert(item, rawPrice);
 
     if (status === 201) {
       setSuccessModalIsOpen(true);
@@ -53,11 +83,12 @@ const PriceAlertModal = ({ isOpen, onRequestClose, item }) => {
               가격:
             </label>
             <input
-              type="number"
+              type="text"
               value={price}
-              onChange={(e) => setPrice(e.target.value)}
+              onChange={handlePriceChange}
               required
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              ref={inputRef}
             />
           </div>
           <div className="flex justify-end space-x-4">
@@ -65,7 +96,7 @@ const PriceAlertModal = ({ isOpen, onRequestClose, item }) => {
               type="submit"
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
             >
-              설정
+              등록
             </button>
             <button
               type="button"

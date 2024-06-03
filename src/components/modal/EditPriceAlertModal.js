@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Modal from "react-modal";
 import { useDispatch, useSelector } from "react-redux";
 import { removePriceAlert, updatePriceAlert } from "../../modules/priceAlert";
@@ -8,8 +8,9 @@ Modal.setAppElement("#root");
 
 const EditPriceAlertModal = ({ isOpen, onRequestClose, item }) => {
   const { priceAlerts } = useSelector((state) => state.priceAlert);
-  const [alert, setAlert] = useState("");
-  const [priceThreshold, setThreshold] = useState(0);
+  const [alert, setAlert] = useState(null);
+  const [priceThreshold, setThreshold] = useState("");
+  const inputRef = useRef(null);
 
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const dispatch = useDispatch();
@@ -17,20 +18,40 @@ const EditPriceAlertModal = ({ isOpen, onRequestClose, item }) => {
   // item의 alert 찾기
   useEffect(() => {
     if (item && priceAlerts.length > 0) {
-      const alert = priceAlerts.find(
+      const foundAlert = priceAlerts.find(
         (alert) => alert.itemId === item.id && alert.itemSid === item.sid,
       );
-      if (alert) {
-        setAlert(alert);
-        setThreshold(alert.priceThreshold);
+      if (foundAlert) {
+        setAlert(foundAlert);
+        setThreshold(foundAlert.priceThreshold.toLocaleString());
       }
     }
   }, [item, priceAlerts]);
 
+  const handlePriceChange = (e) => {
+    const { value, selectionStart, selectionEnd } = e.target;
+    const rawValue = value.replace(/,/g, "");
+    if (!isNaN(rawValue)) {
+      const formattedValue = Number(rawValue).toLocaleString();
+      setThreshold(formattedValue);
+
+      // 다음 렌더링 후 커서 위치를 복원
+      setTimeout(() => {
+        const newCursorPosition =
+          selectionStart + (formattedValue.length - value.length);
+        inputRef.current.setSelectionRange(
+          newCursorPosition,
+          newCursorPosition,
+        );
+      }, 0);
+    }
+  };
+
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      await dispatch(updatePriceAlert(alert._id, priceThreshold));
+      const rawPrice = priceThreshold.replace(/,/g, ""); // 쉼표 제거 후 API 호출
+      await dispatch(updatePriceAlert(alert._id, rawPrice));
       setShowSuccessModal(true);
     } catch (error) {
       console.error("Error updating price alert:", error);
@@ -77,11 +98,12 @@ const EditPriceAlertModal = ({ isOpen, onRequestClose, item }) => {
               알림 가격:
             </label>
             <input
-              type="number"
+              type="text"
               value={priceThreshold}
-              onChange={(e) => setAlert(e.target.value)}
+              onChange={handlePriceChange}
               required
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              ref={inputRef}
             />
           </div>
           <div className="flex justify-end space-x-4">
