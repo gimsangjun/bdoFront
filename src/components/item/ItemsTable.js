@@ -54,27 +54,41 @@ const ItemsTable = ({ items, showModifyAlertButton = false }) => {
                   key={item._id}
                   className="hover:bg-gray-100 border-b-2 border-gray-100"
                 >
+                  {/* 아이템 이름 */}
                   <DataTd>
                     <DataTdName item={item} />
                   </DataTd>
+                  {/* 현재 거래소 가격 */}
                   <DataTd>
-                    {new Intl.NumberFormat().format(item.basePrice)}
+                    {new Intl.NumberFormat().format(
+                      item.lastSoldPrice ? item.lastSoldPrice : item.basePrice,
+                    )}
                   </DataTd>
+                  {/* 현재 매물 */}
                   <DataTd>
                     {new Intl.NumberFormat().format(item.currentStock)}
                   </DataTd>
+                  {/* 즐겨찾기 추가 */}
                   <DataTd>
                     <FavoriteButton item={item} />
                   </DataTd>
-                  {/* TODO: 가격알림 페이지로 가면 등록한 가격알림이 보여야됨. */}
                   <DataTd>
+                    {/* 가격 알림 */}
+                    {showModifyAlertButton ? (
+                      <span>
+                        {new Intl.NumberFormat().format(item.priceThreshold)}
+                      </span>
+                    ) : (
+                      ""
+                    )}
                     <button
                       onClick={() => openAlertModal(item)}
-                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
+                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded ml-2"
                     >
                       {!showModifyAlertButton ? "등록" : "수정"}
                     </button>
                   </DataTd>
+                  {/* 아이템 가격 업데이트 날짜 */}
                   <DataTd className="flex items-center">
                     <span className="mr-1">{formatDate(item.updateAt)}</span>
                     <LuRefreshCcw
@@ -115,7 +129,7 @@ const ItemsTable = ({ items, showModifyAlertButton = false }) => {
   );
 };
 
-export const formatDate = (dateString) => {
+const formatDate = (dateString) => {
   const date = new Date(dateString);
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");

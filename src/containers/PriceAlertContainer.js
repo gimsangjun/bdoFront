@@ -6,6 +6,7 @@ import { fetchPriceAlerts } from "../modules/priceAlert";
 import ItemsTable from "../components/item/ItemsTable";
 
 // TODO: 가격알림한 아이템 전체 새로고침 버튼
+// TODO: 화면작을때 오른쪽으로 넘기면 이상해짐.
 export default function PriceAlertContainer() {
   const { priceAlerts, loading: priceAlertLoading } = useSelector(
     (state) => state.priceAlert,
@@ -36,7 +37,19 @@ export default function PriceAlertContainer() {
       }));
 
       const fetchedItems = await ItemAPI.getItemsByIdandSid(items);
-      setItems(fetchedItems);
+
+      // fechtedItems 각각에 priceAlerts의 priceThreshold 값을 추가
+      const itemsWithPriceThreshold = fetchedItems.map((item) => {
+        const matchingAlert = priceAlerts.find(
+          (alert) => alert.itemId === item.id && alert.itemSid === item.sid,
+        );
+        return {
+          ...item,
+          priceThreshold: matchingAlert ? matchingAlert.priceThreshold : null,
+        };
+      });
+
+      setItems(itemsWithPriceThreshold);
     } catch (error) {
       console.error("Error fetching items for price alerts:", error);
     }
