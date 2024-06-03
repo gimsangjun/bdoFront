@@ -6,7 +6,7 @@ export default function DataTdName({ item }) {
   return (
     <div className={`flex items-center ${getItemColor(item)}`}>
       <img
-        src={foramtImgUrl(item)}
+        src={formatImgUrl(item)}
         className={`mr-1 border ${getItemColor(item)} `}
         alt={item.name}
         style={{ width: "32px", height: "32px", borderRadius: "2px" }}
@@ -39,14 +39,21 @@ const getItemColor = (item) => {
   }
 };
 
-export const foramtImgUrl = (item) => {
-  // 고드아이드의 경우 imgurl이 다름.
-  if (item.name.includes("고드아이드")) {
+export const formatImgUrl = (item) => {
+  const defaultImgUrl = `${imgUrl}images/items/${String(item.id).padStart(
+    8,
+    "0",
+  )}.webp`;
+
+  if (item.imgUrl) {
+    return item.imgUrl;
+  } else if (item.name.includes("고드아이드")) {
+    // 고드아이드의 경우 imgUrl이 다름.
     return `${imgUrl}img/new_icon/06_pc_equipitem/00_common/01_weapon/${String(
       item.id,
     ).padStart(8, "0")}.webp`;
   } else {
-    return `${imgUrl}images/items/${String(item.id).padStart(8, "0")}.webp`;
+    return defaultImgUrl;
   }
 };
 
