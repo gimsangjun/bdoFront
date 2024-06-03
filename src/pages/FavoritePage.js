@@ -4,7 +4,7 @@ import FavItemsContainer from "../containers/FavItemsContainer";
 
 export default function FavoritePage() {
   return (
-    <div className="flex min-h-screen flex-col bg-gray-200">
+    <div className="flex min-w-[1080px] min-h-screen flex-col bg-gray-200 ">
       <HeaderContainer />
       <FavItemsContainer />
     </div>

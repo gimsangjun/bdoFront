@@ -4,7 +4,7 @@ import PriceAlertContainer from "../containers/PriceAlertContainer";
 
 export default function PriceAlertPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-gray-200">
+    <div className="flex min-w-[1080px] min-h-screen flex-col bg-gray-200 ">
       <HeaderContainer />
       <PriceAlertContainer />
     </div>
