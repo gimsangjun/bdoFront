@@ -9,6 +9,9 @@ export default function PriceAlertContainer() {
   const { priceAlerts, loading: priceAlertLoading } = useSelector(
     (state) => state.priceAlert,
   );
+  const { status, loading: itemUpdateLoading } = useSelector(
+    (state) => state.item,
+  );
   const { user } = useSelector((state) => state.auth);
   const [items, setItems] = useState([]); // alert 가격 정보들
   const [loading, setLoading] = useState(false);
@@ -59,13 +62,13 @@ export default function PriceAlertContainer() {
 
   useEffect(() => {
     fetchItems();
-  }, [priceAlerts, fetchItems]);
+  }, [priceAlerts, fetchItems, itemUpdateLoading]);
 
   return (
     <div className="w-1080 mx-auto">
       <TableHeader tableName={"가격 알림"} />
       <div className="bg-white flex flex-grow justify-center items-center flex-col rounded-lg">
-        {priceAlertLoading || loading ? (
+        {priceAlertLoading || itemUpdateLoading || loading ? (
           <div className="flex justify-center items-center w-full h-screen">
             <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
           </div>

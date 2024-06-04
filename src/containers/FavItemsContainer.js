@@ -8,6 +8,9 @@ export default function FavItemsContainer() {
   const { favItems, loading: favLoading } = useSelector(
     (state) => state.itemFav,
   ); // App.js에서 바로 업데이트함.
+  const { status, loading: itemUpdateLoading } = useSelector(
+    (state) => state.item,
+  );
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -37,13 +40,13 @@ export default function FavItemsContainer() {
 
   useEffect(() => {
     fetchItems();
-  }, [favItems, fetchItems]);
+  }, [favItems, fetchItems, itemUpdateLoading]);
 
   return (
     <div className="w-1080 mx-auto">
       <TableHeader tableName={"관심 아이템"} />
       <div className="bg-white flex flex-grow justify-center items-center flex-col rounded-lg">
-        {favLoading || loading ? (
+        {favLoading || itemUpdateLoading || loading ? (
           <div className="flex justify-center items-center w-full h-screen">
             <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
           </div>
