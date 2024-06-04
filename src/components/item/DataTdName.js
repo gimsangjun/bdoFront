@@ -47,14 +47,8 @@ export const formatImgUrl = (item) => {
 
   if (item.imgUrl) {
     return item.imgUrl;
-  } else if (item.name.includes("고드아이드")) {
-    // 고드아이드의 경우 imgUrl이 다름.
-    return `${imgUrl}img/new_icon/06_pc_equipitem/00_common/01_weapon/${String(
-      item.id,
-    ).padStart(8, "0")}.webp`;
-  } else {
-    return defaultImgUrl;
   }
+  return defaultImgUrl;
 };
 
 export const formatName = (item) => {
