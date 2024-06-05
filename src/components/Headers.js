@@ -8,6 +8,7 @@ import campfire from "../images/campfire.png";
 import recommend from "../images/recommend.png";
 import userImg from "../images/user.png";
 import home from "../images/home.png";
+import anvil from "../images/anvil.png";
 import { FaDiscord } from "react-icons/fa";
 
 export const MainHeader = ({ onLogout }) => {
@@ -40,6 +41,10 @@ export const MainHeader = ({ onLogout }) => {
           <MainLink to="/" className="bg-mainBlue">
             <Img src={home} alt="home" />
             <Span>거래소</Span>
+          </MainLink>
+          <MainLink to="/enhanceing-caculator">
+            <Img src={anvil} alt="anvil" />
+            <Span>강화 기댓값 계산기</Span>
           </MainLink>
           <MainLink to="/">
             <Img src={product} alt="product" />

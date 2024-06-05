@@ -140,7 +140,7 @@ const ItemsTable = ({ items, showModifyAlertButton = false }) => {
   );
 };
 
-const formatDate = (dateString) => {
+export const formatDate = (dateString) => {
   const date = new Date(dateString);
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");

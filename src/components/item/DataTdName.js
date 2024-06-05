@@ -17,7 +17,7 @@ export default function DataTdName({ item }) {
 }
 
 // 소모성 아이템부터 DB업데이트하기 힘들어서 그만함. 음식이름이 다 달라가지고..
-const getItemColor = (item) => {
+export const getItemColor = (item) => {
   switch (item.grade) {
     case "legendary":
       // "text-orange-400 border-orange-400";

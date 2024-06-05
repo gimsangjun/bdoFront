@@ -8,6 +8,7 @@ import PriceAlertPage from "./pages/PriceAlertPage";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { fetchFavoriteItems } from "./modules/itemFav";
+import EnhancingCalPage from "./pages/EnhancingCalPage";
 
 export default function App() {
   // 로그인한 유저가 있으면 favItems 로드
@@ -23,6 +24,7 @@ export default function App() {
   return (
     <Routes>
       {/* 아이템 가격 알림. */}
+      <Route path="/enhanceing-caculator" element={<EnhancingCalPage />} />
       <Route path="/price-alert" element={<PriceAlertPage />} />
       <Route path="/favorite" element={<FavoritePage />} />
       <Route path="/items" element={<AllItemsPage />} />
