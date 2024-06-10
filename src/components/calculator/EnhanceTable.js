@@ -1,82 +1,83 @@
 import React from "react";
 import ItemImg from "../item/ItemImg";
+import tw from "twin.macro";
 
 export default function EnhanceTable({ items, enhancingData }) {
-  console.log("EnhanceTable", enhancingData);
-  const tableData = {
-    stages: ["장", "광", "고", "유", "동"],
-    cronStones: [95, 288, 865, 2405, 11548],
-    recommendedStack: [30, 40, 44, 110, 280],
-    enhancementChance: ["70%", "50%", "40.5%", "30%", "14.5%"],
-    decreaseChance: ["5%", "10%", "15%", "20%", "25%"], // 강화 실패시 하락확률 40퍼센트
-    netProfit: ["100,000", "200,000", "300,000", "400,000", "500,000"],
-  };
+  // console.log("EnhanceTable:", enhancingData);
 
   return (
     <div className="flex flex-col">
       <div className="flex items-center">
         <ItemImg item={items[0]} />
-        <span className="m-2">데보레카 목걸이</span>
+        <span className="m-2">{items[0].name}</span>
       </div>
       <div>
         <table className="table-auto w-full">
           <thead>
             <tr>
-              <th className="px-4 py-2">강화 단계</th>
-              {tableData.stages.map((stage, index) => (
-                <th key={index} className="px-4 py-2">
+              <Th className="px-4 py-2">강화 단계</Th>
+              {enhancingData.stages.map((stage, index) => (
+                <Th key={index} className="px-4 py-2">
                   {stage}
-                </th>
+                </Th>
               ))}
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td className="border px-4 py-2">크론석 소모</td>
-              {tableData.cronStones.map((cronStone, index) => (
-                <td key={index} className="border px-4 py-2">
+              <Td className="border px-4 py-2">크론석 소모 갯수</Td>
+              {enhancingData.cronStones.map((cronStone, index) => (
+                <Td key={index} className="border px-4 py-2">
                   {cronStone}
-                </td>
+                </Td>
               ))}
             </tr>
             <tr>
-              <td className="border px-4 py-2">추천 스택</td>
-              {tableData.recommendedStack.map((stack, index) => (
-                <td key={index} className="border px-4 py-2">
+              <Td className="border px-4 py-2">추천 스택</Td>
+              {enhancingData.recommendStack.map((stack, index) => (
+                <Td key={index} className="border px-4 py-2">
                   {stack}
-                </td>
+                </Td>
               ))}
             </tr>
             <tr>
-              <td className="border px-4 py-2">강화 성공 확률</td>
-              {tableData.enhancementChance.map((chance, index) => (
-                <td key={index} className="border px-4 py-2">
+              <Td className="border px-4 py-2">강화 성공 확률</Td>
+              {enhancingData.enhancementChance.map((chance, index) => (
+                <Td key={index} className="border px-4 py-2">
                   {chance}
-                </td>
+                </Td>
               ))}
             </tr>
             <tr>
-              <td className="border px-4 py-2">하락 확률</td>
-              {tableData.decreaseChance.map((chance, index) => (
-                <td key={index} className="border px-4 py-2">
+              <Td className="border px-4 py-2">하락 확률</Td>
+              {enhancingData.gradeDecreaseChance.map((chance, index) => (
+                <Td key={index} className="border px-4 py-2">
                   {chance}
-                </td>
+                </Td>
               ))}
             </tr>
             <tr>
-              <td className="border px-4 py-2">트라이당 비용</td>
-              {tableData.decreaseChance.map((chance, index) => (
-                <td key={index} className="border px-4 py-2">
-                  {chance}
-                </td>
+              <Td className="border px-4 py-2">트라이당 비용</Td>
+              {enhancingData.costPerTry.map((cost, index) => (
+                <Td key={index} className="border px-4 py-2">
+                  {formatCost(cost)}
+                </Td>
               ))}
             </tr>
             <tr>
-              <td className="border px-4 py-2">득실 (수수료 포함)</td>
-              {tableData.netProfit.map((profit, index) => (
-                <td key={index} className="border px-4 py-2">
-                  {profit}
-                </td>
+              <Td className="border px-4 py-2">평균 시도 횟수(하락 x) </Td>
+              {enhancingData.averageTry.map((averageTry, index) => (
+                <Td key={index} className="border px-4 py-2">
+                  {averageTry}
+                </Td>
+              ))}
+            </tr>
+            <tr>
+              <Td className="border px-4 py-2">기대값 (수수료 미포함)</Td>
+              {enhancingData.netProfit.map((profit, index) => (
+                <Td key={index} className="border px-4 py-2">
+                  {formatCost(profit)}
+                </Td>
               ))}
             </tr>
           </tbody>
@@ -85,3 +86,28 @@ export default function EnhanceTable({ items, enhancingData }) {
     </div>
   );
 }
+
+export const formatCost = (cost) => {
+  const formatNumber = (number) => {
+    const formattedNumber = Math.abs(number).toFixed(2);
+    if (formattedNumber.endsWith(".00")) {
+      return formattedNumber.slice(0, -3);
+    } else if (formattedNumber.endsWith("0")) {
+      return formattedNumber.slice(0, -1);
+    }
+    return formattedNumber;
+  };
+
+  const sign = cost < 0 ? "-" : "";
+
+  if (Math.abs(cost) >= 1e8) {
+    return `${sign}${formatNumber(cost / 1e8)}억`;
+  } else if (Math.abs(cost) >= 1e5) {
+    return `${sign}${formatNumber(cost / 1e5)}만원`;
+  } else {
+    return `${sign}${Math.abs(cost)}원`;
+  }
+};
+
+const Th = tw.th`px-4 py-2 whitespace-nowrap`;
+const Td = tw.td`border px-4 py-2 whitespace-nowrap`;
