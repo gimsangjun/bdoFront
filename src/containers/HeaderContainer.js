@@ -17,7 +17,7 @@ export default function HeaderContainer() {
   const onLogout = () => dispatch(logout());
 
   return (
-    <div className="min-w-[1080px] top-0 sticky">
+    <div className="min-w-[1080px] top-0 sticky z-50">
       <MainHeader onLogout={onLogout} />
       <SubHeader currentPath={location.pathname} />
       <NotificationHeader />

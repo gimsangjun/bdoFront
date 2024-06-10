@@ -1,15 +1,14 @@
 import React from "react";
-
-const imgUrl = "https://cdn.bdolytics.com/";
+import ItemImg from "./ItemImg";
 
 export default function DataTdName({ item }) {
   return (
     <div className={`flex items-center ${getItemColor(item)}`}>
-      <img
-        src={formatImgUrl(item)}
-        className={`mr-1 border ${getItemColor(item)} `}
-        alt={item.name}
+      <ItemImg
+        item={item}
+        className={`mr-1 border `}
         style={{ width: "32px", height: "32px", borderRadius: "2px" }}
+        enhanceLevelSize="1rem" // 로마 숫자의 크기를 조절
       />
       <span>{formatName(item)}</span>
     </div>
@@ -39,19 +38,7 @@ export const getItemColor = (item) => {
   }
 };
 
-export const formatImgUrl = (item) => {
-  const defaultImgUrl = `${imgUrl}images/items/${String(item.id).padStart(
-    8,
-    "0",
-  )}.webp`;
-
-  if (item.imgUrl) {
-    return item.imgUrl;
-  }
-  return defaultImgUrl;
-};
-
-export const formatName = (item) => {
+const formatName = (item) => {
   let name = item.name;
   const romanNumerals = {
     16: "Ⅰ",
