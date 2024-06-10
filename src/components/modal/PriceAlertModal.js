@@ -4,7 +4,7 @@ import ItemAPI from "../../utils/itemAPI";
 import SuccessModal from "./SuccessModal";
 
 const PriceAlertModal = ({ isOpen, onRequestClose, item }) => {
-  const [price, setPrice] = useState("");
+  const [priceThreshold, setPriceThreshold] = useState(0);
   const [successModalIsOpen, setSuccessModalIsOpen] = useState(false);
   const inputRef = useRef(null);
 
@@ -14,33 +14,13 @@ const PriceAlertModal = ({ isOpen, onRequestClose, item }) => {
       const initialPrice = item.lastSoldPrice
         ? item.lastSoldPrice
         : item.basePrice;
-      setPrice(initialPrice.toLocaleString()); // 초기 값도 쉼표를 추가하여 설정
+      setPriceThreshold(initialPrice); // 초기 값도 쉼표를 추가하여 설정
     }
   }, [item]);
 
-  const handlePriceChange = (e) => {
-    const { value, selectionStart, selectionEnd } = e.target;
-    const rawValue = value.replace(/,/g, ""); // 쉼표 제거
-
-    if (!isNaN(rawValue)) {
-      const formattedValue = Number(rawValue).toLocaleString(); // 쉼표 추가
-      setPrice(formattedValue);
-
-      // 다음 렌더링 후 커서 위치를 복원
-      setTimeout(() => {
-        const newCursorPosition =
-          selectionStart + (formattedValue.length - value.length);
-        inputRef.current.setSelectionRange(
-          newCursorPosition,
-          newCursorPosition,
-        );
-      }, 0);
-    }
-  };
-
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const rawPrice = Number(price.replace(/,/g, "")); // 쉼표 제거 후 숫자로 변환
+    const rawPrice = Number(priceThreshold.replace(/,/g, "")); // 쉼표 제거 후 숫자로 변환
     const { status } = await ItemAPI.addItemPriceAlert(item, rawPrice);
 
     if (status === 201) {
@@ -82,10 +62,11 @@ const PriceAlertModal = ({ isOpen, onRequestClose, item }) => {
             <label className="block text-gray-700 text-sm font-bold mb-2">
               가격:
             </label>
+            {/* TODO: 나중에 가격 보기 쉽게 ,로 보이게 할수 있을듯. */}
             <input
-              type="text"
-              value={price}
-              onChange={handlePriceChange}
+              type="number"
+              value={priceThreshold}
+              onChange={(e) => setPriceThreshold(e.target.value)}
               required
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               ref={inputRef}

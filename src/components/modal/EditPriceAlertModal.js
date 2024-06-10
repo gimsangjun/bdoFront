@@ -9,7 +9,7 @@ Modal.setAppElement("#root");
 const EditPriceAlertModal = ({ isOpen, onRequestClose, item }) => {
   const { priceAlerts } = useSelector((state) => state.priceAlert);
   const [alert, setAlert] = useState(null);
-  const [priceThreshold, setThreshold] = useState("");
+  const [priceThreshold, setPriceThreshold] = useState(0);
   const inputRef = useRef(null);
 
   const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -23,29 +23,10 @@ const EditPriceAlertModal = ({ isOpen, onRequestClose, item }) => {
       );
       if (foundAlert) {
         setAlert(foundAlert);
-        setThreshold(foundAlert.priceThreshold.toLocaleString());
+        setPriceThreshold(foundAlert.priceThreshold);
       }
     }
   }, [item, priceAlerts]);
-
-  const handlePriceChange = (e) => {
-    const { value, selectionStart, selectionEnd } = e.target;
-    const rawValue = value.replace(/,/g, "");
-    if (!isNaN(rawValue)) {
-      const formattedValue = Number(rawValue).toLocaleString();
-      setThreshold(formattedValue);
-
-      // 다음 렌더링 후 커서 위치를 복원
-      setTimeout(() => {
-        const newCursorPosition =
-          selectionStart + (formattedValue.length - value.length);
-        inputRef.current.setSelectionRange(
-          newCursorPosition,
-          newCursorPosition,
-        );
-      }, 0);
-    }
-  };
 
   const handleUpdate = async (e) => {
     e.preventDefault();
@@ -97,10 +78,11 @@ const EditPriceAlertModal = ({ isOpen, onRequestClose, item }) => {
             <label className="block text-gray-700 text-sm font-bold mb-2">
               알림 가격:
             </label>
+            {/* TODO: 나중에 가격 보기 쉽게 ,로 보이게 할수 있을듯. */}
             <input
-              type="text"
+              type="number"
               value={priceThreshold}
-              onChange={handlePriceChange}
+              onChange={(e) => setPriceThreshold(e.target.value)}
               required
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               ref={inputRef}
