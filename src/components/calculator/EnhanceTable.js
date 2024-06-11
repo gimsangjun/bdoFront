@@ -1,5 +1,6 @@
 import React from "react";
 import ItemImg from "../item/ItemImg";
+import { formatCost } from "../../utils/formatUtil";
 import tw from "twin.macro";
 
 export default function EnhanceTable({ items, enhancingData }) {
@@ -86,28 +87,6 @@ export default function EnhanceTable({ items, enhancingData }) {
     </div>
   );
 }
-
-export const formatCost = (cost) => {
-  const formatNumber = (number) => {
-    const formattedNumber = Math.abs(number).toFixed(2);
-    if (formattedNumber.endsWith(".00")) {
-      return formattedNumber.slice(0, -3);
-    } else if (formattedNumber.endsWith("0")) {
-      return formattedNumber.slice(0, -1);
-    }
-    return formattedNumber;
-  };
-
-  const sign = cost < 0 ? "-" : "";
-
-  if (Math.abs(cost) >= 1e8) {
-    return `${sign}${formatNumber(cost / 1e8)}억`;
-  } else if (Math.abs(cost) >= 1e5) {
-    return `${sign}${formatNumber(cost / 1e5)}만원`;
-  } else {
-    return `${sign}${Math.abs(cost)}원`;
-  }
-};
 
 const Th = tw.th`px-4 py-2 whitespace-nowrap`;
 const Td = tw.td`border px-4 py-2 whitespace-nowrap`;

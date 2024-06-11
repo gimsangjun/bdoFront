@@ -7,6 +7,7 @@ import DataTdName from "./DataTdName";
 import EditPriceAlertModal from "../modal/EditPriceAlertModal";
 import { useDispatch } from "react-redux";
 import { updateItemsPrice } from "../../modules/item";
+import { formatDate } from "../../utils/formatUtil";
 
 /**
  * @param {items} 테이블에 보여줄 데이터
@@ -140,19 +141,8 @@ const ItemsTable = ({ items, showModifyAlertButton = false }) => {
   );
 };
 
-export const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  const hours = String(date.getHours()).padStart(2, "0");
-  const minutes = String(date.getMinutes()).padStart(2, "0");
-
-  return `${year}-${month}-${day} ${hours}:${minutes}`;
-};
-
 // whitespace-nowrap, col이 2줄로 안보이게함. 무조건 한줄
-export const DataTh = tw.th`py-1 whitespace-nowrap text-left text-base font-medium text-gray-500 bg-gray-100 uppercase tracking-wider`;
-export const DataTd = tw.td`py-1 whitespace-nowrap text-left text-base`;
+const DataTh = tw.th`py-1 whitespace-nowrap text-left text-base font-medium text-gray-500 bg-gray-100 uppercase tracking-wider`;
+const DataTd = tw.td`py-1 whitespace-nowrap text-left text-base`;
 
 export default ItemsTable;
