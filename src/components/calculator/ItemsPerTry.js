@@ -49,35 +49,37 @@ export default function ItemsPerTry({
           )}
         </div>
       </div>
-      <div>
-        {/* 강화에 소모되는 아이템 */}
-        {/* 악세사리의 경우, 강화의 재료로 자기자신이 들어가기 떄문에 */}
-        {/* TODO: 악세사리 제외 다른 아이템들의 경우 다른 강화재료가 들어감. 나중에 */}
-        <div className="flex items-center mb-4">
-          <ItemImg item={items[0]} />
-          <div>
-            <p className="ml-1">{itemNamePerTry}</p>
+      {/* items[0].name 과 itemNamePerTry가 같으면 보여주지 않기. 악세사리의 경우 0단계 악세사리(자기자신)가 들어가 들어갈필요가 없음. */}
+      {items[0].name !== itemNamePerTry && (
+        <div>
+          {/* 강화에 소모되는 아이템 */}
+          {/* TODO: 악세사리 제외 다른 아이템들의 경우 다른 강화재료가 들어감. 나중에 */}
+          <div className="flex items-center mb-4">
+            <ItemImg item={items[0]} />
+            <div>
+              <p className="ml-1">{itemNamePerTry}</p>
 
-            {editingItemPrice ? (
-              <input
-                type="number"
-                value={itemPricePerTry}
-                onChange={(e) => handleItemPricePerTry(e.target.value)}
-                onBlur={handleItemPriceBlur}
-                className="border p-2 rounded"
-                autoFocus
-              />
-            ) : (
-              <p
-                onClick={() => setEditingItemPrice(true)}
-                className="border p-2 rounded cursor-pointer w-32"
-              >
-                {formatCost(itemPricePerTry)}
-              </p>
-            )}
+              {editingItemPrice ? (
+                <input
+                  type="number"
+                  value={itemPricePerTry}
+                  onChange={(e) => handleItemPricePerTry(e.target.value)}
+                  onBlur={handleItemPriceBlur}
+                  className="border p-2 rounded"
+                  autoFocus
+                />
+              ) : (
+                <p
+                  onClick={() => setEditingItemPrice(true)}
+                  className="border p-2 rounded cursor-pointer w-32"
+                >
+                  {formatCost(itemPricePerTry)}
+                </p>
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
