@@ -94,6 +94,14 @@ export default function EnCalContainer({ itemName }) {
     setItemPricePerTry(price);
   };
 
+  const handleItemsPrice = (newPrices) => {
+    const updatedItems = items.map((item, index) => ({
+      ...item,
+      lastSoldPrice: parseInt(newPrices[index]),
+    }));
+    setItems(updatedItems);
+  };
+
   return (
     <div
       className="min-w-[1080px] mx-auto min-h-screen"
@@ -115,7 +123,11 @@ export default function EnCalContainer({ itemName }) {
             <div className="grid grid-cols-4 grid-rows-2 gap-4 mt-4">
               <div className="col-span-1 row-span-1 bg-white p-4 shadow-md rounded-lg">
                 {/* 거래소 가격 */}
-                <ExchangePrice items={items} />
+                <ExchangePrice
+                  items={items}
+                  enhancingData={enhancingData}
+                  handleItemsPrice={handleItemsPrice}
+                />
               </div>
               <div className="col-span-2 row-span-1 bg-white p-4 shadow-md rounded-lg">
                 {/* 강화 정보 제공 테이블 */}
@@ -168,7 +180,6 @@ const makeEnhancingData = (
   itemPricePerTry,
 ) => {
   const updatedEnhancingData = { ...enhancingData };
-  console.log("makeEnhancingData:", itemPricePerTry);
 
   // 가격 정보 업데이트
   // price에는 price만 담기도록, lastSoldPrice나 basePrice둘중 하나만 담기게 바꾸기

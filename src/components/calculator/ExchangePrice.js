@@ -1,25 +1,59 @@
-import React from "react";
+import React, { useState } from "react";
 import ItemImg from "../item/ItemImg";
-import { formatCost } from "./EnhanceTable";
-import { formatDate } from "../item/ItemsTable";
+import { formatCost, formatDate } from "../../utils/formatUtil";
 
-const ExchangePrice = ({ items }) => {
+const ExchangePrice = ({ items, handleItemsPrice }) => {
+  const [prices, setPrices] = useState(
+    items.map((item) =>
+      item.lastSoldPrice ? item.lastSoldPrice : item.basePrice,
+    ),
+  );
+
+  const [editingIndex, setEditingIndex] = useState(null);
+
+  const handlePriceChange = (e, index) => {
+    const newPrices = [...prices];
+    newPrices[index] = e.target.value;
+    setPrices(newPrices);
+    handleItemsPrice(newPrices);
+  };
+
+  const handleBlur = () => {
+    setEditingIndex(null);
+  };
+
+  const handleFocus = (index) => {
+    setEditingIndex(index);
+  };
+
   return (
     <>
       <h1 className="text-2xl mb-2">거래소 가격</h1>
       <div>
-        {items.map((item) => (
+        {items.map((item, index) => (
           <div key={item.sid} className="flex items-center mb-4">
             <ItemImg item={item} />
             <div>
               <p className="text-lg font-semibold">
                 {getEnhancedItemName(item)}
               </p>
-              <p>
-                {formatCost(
-                  item.lastSoldPrice ? item.lastSoldPrice : item.basePrice,
-                )}
-              </p>
+              {editingIndex === index ? (
+                <input
+                  type="number"
+                  value={prices[index]}
+                  onChange={(e) => handlePriceChange(e, index)}
+                  onBlur={handleBlur}
+                  className="border p-2 rounded"
+                  autoFocus
+                />
+              ) : (
+                <p
+                  onClick={() => handleFocus(index)}
+                  className="border p-2 rounded cursor-pointer"
+                >
+                  {formatCost(parseInt(prices[index], 10))}
+                </p>
+              )}
             </div>
           </div>
         ))}
@@ -27,7 +61,7 @@ const ExchangePrice = ({ items }) => {
       <div>
         <div>가격업데이트 날짜</div>
         <span>{formatDate(items[0].updateAt)}</span>
-        {/* TODO: 가격 업데이트하는 버튼 만들어야됨. */}
+        {/* TODO: 가격 업데이트하는 버튼도 만들어야됨. */}
       </div>
     </>
   );
