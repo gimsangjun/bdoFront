@@ -3,18 +3,39 @@ import ItemImg from "../item/ItemImg";
 import { formatCost } from "../../utils/formatUtil";
 import tw from "twin.macro";
 
-export default function EnhanceTable({ items, enhancingData }) {
-  // console.log("EnhanceTable:", enhancingData);
+export default function EnhanceTable({
+  items,
+  enhancingData,
+  stacks,
+  handleStacks,
+}) {
+  const handleStackChange = (e, index) => {
+    const newStacks = [...stacks];
+    newStacks[index] = e.target.value;
+    handleStacks(newStacks);
+  };
+
+  // 기대값이 가장 높은 부분을 찾음
+  // maxIndex: 현재까지 가장 큰 기대값의 인덱스를 저장하는 누산기
+  // profit: 현재 순회 중인 배열 요소 (enhancingData.netProfit의 현재 값)
+  // index: 현재 순회 중인 배열 요소의 인덱스
+  // array: 원본 배열 (enhancingData.netProfit)
+  // 초기값으로 0을 설정하여 첫 번째 요소를 초기 최대값으로 설정
+  const maxNetProfitIndex = enhancingData.netProfit.reduce(
+    (maxIndex, profit, index, array) =>
+      parseInt(profit) > parseInt(array[maxIndex]) ? index : maxIndex,
+    0,
+  );
 
   return (
     <div className="flex flex-col">
-      <div className="flex items-center">
+      <div className="flex items-center mb-4">
         <ItemImg item={items[0]} />
-        <span className="m-2">{items[0].name}</span>
+        <span className="ml-2 text-lg font-semibold">{items[0].name}</span>
       </div>
-      <div>
+      <div className="overflow-x-auto">
         <table className="table-auto w-full">
-          <thead>
+          <thead className="bg-gray-200">
             <tr>
               <Th className="px-4 py-2">강화 단계</Th>
               {enhancingData.stages.map((stage, index) => (
@@ -45,7 +66,7 @@ export default function EnhanceTable({ items, enhancingData }) {
               <Td className="border px-4 py-2">강화 성공 확률</Td>
               {enhancingData.enhancementChance.map((chance, index) => (
                 <Td key={index} className="border px-4 py-2">
-                  {chance}
+                  {chance}%
                 </Td>
               ))}
             </tr>
@@ -53,7 +74,7 @@ export default function EnhanceTable({ items, enhancingData }) {
               <Td className="border px-4 py-2">하락 확률</Td>
               {enhancingData.gradeDecreaseChance.map((chance, index) => (
                 <Td key={index} className="border px-4 py-2">
-                  {chance}
+                  {chance}%
                 </Td>
               ))}
             </tr>
@@ -76,7 +97,12 @@ export default function EnhanceTable({ items, enhancingData }) {
             <tr>
               <Td className="border px-4 py-2">기대값 (수수료 미포함)</Td>
               {enhancingData.netProfit.map((profit, index) => (
-                <Td key={index} className="border px-4 py-2">
+                <Td
+                  key={index}
+                  className={`border px-4 py-2 ${
+                    index === maxNetProfitIndex ? "bg-yellow-200" : ""
+                  }`}
+                >
                   {formatCost(profit)}
                 </Td>
               ))}
@@ -84,9 +110,28 @@ export default function EnhanceTable({ items, enhancingData }) {
           </tbody>
         </table>
       </div>
+      <div className="mt-6">
+        <h2 className="text-lg font-semibold mb-2">강화 스택 입력 하기</h2>
+        <div className="flex space-x-2">
+          {stacks.map((stack, index) => (
+            <div key={index} className="flex flex-col items-center">
+              <span className="text-sm mb-1">
+                {enhancingData.stages[index]}
+              </span>
+              <input
+                type="number"
+                value={stacks[index]}
+                onChange={(e) => handleStackChange(e, index)}
+                className="border p-2 rounded w-20 text-center"
+                autoFocus={index === 0}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
 
-const Th = tw.th`px-4 py-2 whitespace-nowrap`;
-const Td = tw.td`border px-4 py-2 whitespace-nowrap`;
+const Th = tw.th`px-4 py-2 text-center whitespace-nowrap`;
+const Td = tw.td`border px-4 py-2 text-center whitespace-nowrap`;

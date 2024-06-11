@@ -14,6 +14,7 @@ export default function EnCalContainer({ itemName }) {
   const [cronStonePrice, setCronStonePrice] = useState(2240000); // 크론석 가격 224만원 or 300만원
   const [itemNamePerTry, setItemNamePerTry] = useState(null); // 강화를 할때 마다 들어가는 아이템 이름(크론석 말고)
   const [itemPricePerTry, setItemPricePerTry] = useState(null); // 강화를 할때 마다 들어가는 아이템 가격(크론석 말고)
+  const [stacks, setStacks] = useState([]); // 강화 스택
   // 초기 데이터 로딩.
   useEffect(() => {
     const fetchItem = async () => {
@@ -62,29 +63,45 @@ export default function EnCalContainer({ itemName }) {
         //TODO: 기억의 파편이 필요한 경우 따로 key값 만들어야해야할듯
       };
 
+      // 강화 시도할때마다 드는 재화 초기 업데이트 (크론석 말고)
+      if (itemNamePerTry === null && itemPricePerTry === null) {
+        if (initEnhancingData.itemsPerTry[0].name === "") {
+          setItemNamePerTry(itemName);
+          setItemPricePerTry(
+            items[0].lastSoldPrice
+              ? items[0].lastSoldPrice
+              : items[0].basePrice,
+          );
+        } else {
+          // TODO: 나중에 악세사리말고 그냥 장비들도 처리할수 있게 바꿔야됨.
+          setItemNamePerTry(initEnhancingData.itemsPerTry[0].name);
+          setItemPricePerTry(1000);
+        }
+      }
+
+      // 강화 스택 초기 업데이트
+      if (stacks.length === 0) {
+        setStacks(initEnhancingData.recommendStack);
+      }
+
       const updatedData = makeEnhancingData(
         items,
         initEnhancingData,
-        initEnhancingData.recommendStack,
+        stacks,
         cronStonePrice,
         itemPricePerTry,
       );
 
       setEnhancingData(updatedData);
-
-      // 강화 시도할때마다 드는 재화 (크론석 말고)
-      if (itemNamePerTry === null && itemPricePerTry === null) {
-        if (updatedData.itemsPerTry[0].name === "") {
-          setItemNamePerTry(itemName);
-          setItemPricePerTry(updatedData.prices[0]);
-        } else {
-          // TODO: 나중에 악세사리말고 그냥 장비들도 처리할수 있게 바꿔야됨.
-          setItemNamePerTry(updatedData.itemsPerTry[0].name);
-          setItemPricePerTry(1000);
-        }
-      }
     }
-  }, [items, cronStonePrice, itemName, itemPricePerTry, itemNamePerTry]);
+  }, [
+    items,
+    cronStonePrice,
+    itemName,
+    itemPricePerTry,
+    itemNamePerTry,
+    stacks,
+  ]);
 
   const handleCronStonePrice = (price) => {
     setCronStonePrice(price);
@@ -100,6 +117,10 @@ export default function EnCalContainer({ itemName }) {
       lastSoldPrice: parseInt(newPrices[index]),
     }));
     setItems(updatedItems);
+  };
+
+  const handleStacks = (newStacks) => {
+    setStacks(newStacks);
   };
 
   return (
@@ -132,7 +153,12 @@ export default function EnCalContainer({ itemName }) {
               <div className="col-span-2 row-span-1 bg-white p-4 shadow-md rounded-lg">
                 {/* 강화 정보 제공 테이블 */}
                 {enhancingData && (
-                  <EnhanceTable items={items} enhancingData={enhancingData} />
+                  <EnhanceTable
+                    items={items}
+                    enhancingData={enhancingData}
+                    stacks={stacks}
+                    handleStacks={handleStacks}
+                  />
                 )}
               </div>
               <div className="col-span-1 row-span-1 bg-white p-4 shadow-md rounded-lg">
