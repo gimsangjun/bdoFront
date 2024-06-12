@@ -139,6 +139,19 @@ class ItemAPI {
       throw error;
     }
   }
+
+  // 강화 정보 가져오기
+  static async getReinforcementInfo(type) {
+    try {
+      const response = await axios.post(`${API_DOMAIN}/reinforcement`, {
+        type,
+      });
+      return response.data;
+    } catch (error) {
+      console.error("getReinforcementInfo Error", error);
+      throw error;
+    }
+  }
 }
 
 export default ItemAPI;
