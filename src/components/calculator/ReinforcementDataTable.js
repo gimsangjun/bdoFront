@@ -3,9 +3,9 @@ import ItemImg from "../item/ItemImg";
 import { formatCost } from "../../utils/formatUtil";
 import tw from "twin.macro";
 
-export default function EnhanceTable({
+export default function ReinforcementDataTable({
   items,
-  enhancingData,
+  reinforcementData,
   stacks,
   handleStacks,
 }) {
@@ -21,7 +21,9 @@ export default function EnhanceTable({
   // index: 현재 순회 중인 배열 요소의 인덱스
   // array: 원본 배열 (enhancingData.netProfit)
   // 초기값으로 0을 설정하여 첫 번째 요소를 초기 최대값으로 설정
-  const maxNetProfitIndex = enhancingData.netProfit.reduce(
+
+  // const maxNetProfitIndex = 0;
+  const maxNetProfitIndex = reinforcementData.netProfit.reduce(
     (maxIndex, profit, index, array) =>
       parseInt(profit) > parseInt(array[maxIndex]) ? index : maxIndex,
     0,
@@ -38,7 +40,7 @@ export default function EnhanceTable({
           <thead className="bg-gray-200">
             <tr>
               <Th className="px-4 py-2">강화 단계</Th>
-              {enhancingData.stages.map((stage, index) => (
+              {reinforcementData.stages.map((stage, index) => (
                 <Th key={index} className="px-4 py-2">
                   {stage}
                 </Th>
@@ -48,7 +50,7 @@ export default function EnhanceTable({
           <tbody>
             <tr>
               <Td className="border px-4 py-2">크론석 소모 갯수</Td>
-              {enhancingData.cronStones.map((cronStone, index) => (
+              {reinforcementData.cronStones.map((cronStone, index) => (
                 <Td key={index} className="border px-4 py-2">
                   {cronStone}
                 </Td>
@@ -56,7 +58,7 @@ export default function EnhanceTable({
             </tr>
             <tr>
               <Td className="border px-4 py-2">추천 스택</Td>
-              {enhancingData.recommendStack.map((stack, index) => (
+              {reinforcementData.recommendStack.map((stack, index) => (
                 <Td key={index} className="border px-4 py-2">
                   {stack}
                 </Td>
@@ -64,7 +66,7 @@ export default function EnhanceTable({
             </tr>
             <tr>
               <Td className="border px-4 py-2">강화 성공 확률</Td>
-              {enhancingData.enhancementChance.map((chance, index) => (
+              {reinforcementData.reinforcementChance.map((chance, index) => (
                 <Td key={index} className="border px-4 py-2">
                   {chance}%
                 </Td>
@@ -72,7 +74,7 @@ export default function EnhanceTable({
             </tr>
             <tr>
               <Td className="border px-4 py-2">하락 확률</Td>
-              {enhancingData.gradeDecreaseChance.map((chance, index) => (
+              {reinforcementData.gradeDecreaseChance.map((chance, index) => (
                 <Td key={index} className="border px-4 py-2">
                   {chance}%
                 </Td>
@@ -80,7 +82,7 @@ export default function EnhanceTable({
             </tr>
             <tr>
               <Td className="border px-4 py-2">트라이당 비용</Td>
-              {enhancingData.costPerTry.map((cost, index) => (
+              {reinforcementData.costPerTry.map((cost, index) => (
                 <Td key={index} className="border px-4 py-2">
                   {formatCost(cost)}
                 </Td>
@@ -88,7 +90,7 @@ export default function EnhanceTable({
             </tr>
             <tr>
               <Td className="border px-4 py-2">평균 시도 횟수(하락 x) </Td>
-              {enhancingData.averageTry.map((averageTry, index) => (
+              {reinforcementData.averageTry.map((averageTry, index) => (
                 <Td key={index} className="border px-4 py-2">
                   {averageTry}
                 </Td>
@@ -96,7 +98,7 @@ export default function EnhanceTable({
             </tr>
             <tr>
               <Td className="border px-4 py-2">기대값 (수수료 미포함)</Td>
-              {enhancingData.netProfit.map((profit, index) => (
+              {reinforcementData.netProfit.map((profit, index) => (
                 <Td
                   key={index}
                   className={`border px-4 py-2 ${
@@ -116,7 +118,7 @@ export default function EnhanceTable({
           {stacks.map((stack, index) => (
             <div key={index} className="flex flex-col items-center">
               <span className="text-sm mb-1">
-                {enhancingData.stages[index]}
+                {reinforcementData.stages[index]}
               </span>
               <input
                 type="number"

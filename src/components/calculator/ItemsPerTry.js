@@ -5,7 +5,7 @@ import { formatCost } from "../../utils/formatUtil";
 
 export default function ItemsPerTry({
   items, // 아이템 이미지
-  enhancingData,
+  reinforcementData,
   cronStonePrice,
   handleCronStonePrice,
   itemPricePerTry,
@@ -48,6 +48,9 @@ export default function ItemsPerTry({
             </p>
           )}
         </div>
+      </div>
+      <div>
+        <p>기억의 파편</p>
       </div>
       {/* items[0].name 과 itemNamePerTry가 같으면 보여주지 않기. 악세사리의 경우 0단계 악세사리(자기자신)가 들어가 들어갈필요가 없음. */}
       {items[0].name !== itemNamePerTry && (

@@ -42,7 +42,7 @@ export const MainHeader = ({ onLogout }) => {
             <Img src={home} alt="home" />
             <Span>거래소</Span>
           </MainLink>
-          <MainLink to="/enhanceing-caculator">
+          <MainLink to="/reinforcement-caculator">
             <Img src={anvil} alt="anvil" />
             <Span>강화 기댓값 계산기</Span>
           </MainLink>

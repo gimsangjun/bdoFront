@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import anvil from "../images/anvil-black.png";
 import ItemAPI from "../utils/itemAPI";
-import EnhanceTable from "../components/calculator/EnhanceTable";
+import EnhanceTable from "../components/calculator/ReinforcementDataTable";
 import ExchangePrice from "../components/calculator/ExchangePrice";
 import ItemsPerTry from "../components/calculator/ItemsPerTry";
 
 // EnhancedCalculatorContainer
-export default function EnCalContainer({ itemName }) {
+export default function ReinforcementContainer({ itemName }) {
   const [items, setItems] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const [enhancingData, setEnhancingData] = useState(null);
+  const [reinforcementData, setReinforcementData] = useState(null);
   const [cronStonePrice, setCronStonePrice] = useState(2240000); // 크론석 가격 224만원 or 300만원
   const [itemNamePerTry, setItemNamePerTry] = useState(null); // 강화를 할때 마다 들어가는 아이템 이름(크론석 말고)
   const [itemPricePerTry, setItemPricePerTry] = useState(null); // 강화를 할때 마다 들어가는 아이템 가격(크론석 말고)
@@ -34,8 +34,17 @@ export default function EnCalContainer({ itemName }) {
 
   // 강화 데이터 로딩
   useEffect(() => {
+    // const fetchEnhancingData = async () => {
+    //   try {
+    //     const response = await ItemAPI.getReinforcementInfo(items[0].type);
+    //   } catch (error) {
+    //     console.error("Error fetching enhancing data:", error);
+    //   }
+    // };
+
     if (items && items.length > 0) {
-      // TODO: 아랫부분은 나중에 DB에 저장해야될지도?, 종류별로 아이템 초기데이터 다 구성하고 DB구성하자.
+      // TODO enhancingData
+
       const initEnhancingData = {
         name: [
           "데보레카 목걸이",
@@ -63,9 +72,12 @@ export default function EnCalContainer({ itemName }) {
         //TODO: 기억의 파편이 필요한 경우 따로 key값 만들어야해야할듯
       };
 
+      // fetchEnhancingData();
+
       // 강화 시도할때마다 드는 재화 초기 업데이트 (크론석 말고)
       if (itemNamePerTry === null && itemPricePerTry === null) {
         if (initEnhancingData.itemsPerTry[0].name === "") {
+          // 아이템 type이 엑세사리 악세사리
           setItemNamePerTry(itemName);
           setItemPricePerTry(
             items[0].lastSoldPrice
@@ -92,7 +104,7 @@ export default function EnCalContainer({ itemName }) {
         itemPricePerTry,
       );
 
-      setEnhancingData(updatedData);
+      setReinforcementData(updatedData);
     }
   }, [
     items,
@@ -146,16 +158,15 @@ export default function EnCalContainer({ itemName }) {
                 {/* 거래소 가격 */}
                 <ExchangePrice
                   items={items}
-                  enhancingData={enhancingData}
                   handleItemsPrice={handleItemsPrice}
                 />
               </div>
               <div className="col-span-2 row-span-1 bg-white p-4 shadow-md rounded-lg">
                 {/* 강화 정보 제공 테이블 */}
-                {enhancingData && (
+                {reinforcementData && (
                   <EnhanceTable
                     items={items}
-                    enhancingData={enhancingData}
+                    reinforcementData={reinforcementData}
                     stacks={stacks}
                     handleStacks={handleStacks}
                   />
@@ -169,7 +180,7 @@ export default function EnCalContainer({ itemName }) {
                 {itemPricePerTry && (
                   <ItemsPerTry
                     items={items}
-                    enhancingData={enhancingData}
+                    reinforcementData={reinforcementData}
                     cronStonePrice={cronStonePrice}
                     handleCronStonePrice={handleCronStonePrice}
                     itemPricePerTry={itemPricePerTry}
@@ -313,3 +324,31 @@ const makeEnhancingData = (
 
   return updatedEnhancingData;
 };
+
+// 데보레카
+// const initEnhancingData = {
+//   name: [
+//     "데보레카 목걸이",
+//     "데보레카 허리띠",
+//     "데보레카 귀걸이",
+//     "데보레카 반지",
+//   ],
+//   stages: ["장", "광", "고", "유", "동"],
+//   cronStones: [95, 288, 865, 2405, 11548], // 강화단계별 크론석 소모 갯수
+//   enhancementStart: [25, 10, 7.5, 2.5, 0.5], // 0스택 확률
+//   enhanceIncreasedAmountBeforeSoftCap: [2.5, 1, 0.75, 0.25, 0.05], // 소프트캡 이전 1스택당 오르는 확률
+//   enhanceIncreasedAmountAfterSoftCap: [0.5, 0.2, 0.15, 0.05], // 소프트캡 이후 1스택당 오르는 확률
+//   stackSoftCap: [18, 40, 44, 110, 999999], // 스택 소프트캡. 동단계는 소프트캡없음.
+//   recommendStack: [30, 40, 80, 110, 280], // 기본값 추천 스택,
+//   maxEnhancementChange: [90, 72, 56.4, 39.5, 15.5], // 강화확률 오를수 있는 최대 퍼센트.
+//   itemsPerTry: [
+//     // 강화단계별 크론석 제외 필요한 아이템, 이름이 없는 경우(ex 악세), 자기자신0단계가 들어감.
+//     // Ex 무결한 혼돈의 블랙스톤 등등.
+//     { name: "", count: 1 },
+//     { name: "", count: 1 },
+//     { name: "", count: 1 },
+//     { name: "", count: 1 },
+//     { name: "", count: 1 },
+//   ],
+//   //TODO: 기억의 파편이 필요한 경우 따로 key값 만들어야해야할듯
+// };
