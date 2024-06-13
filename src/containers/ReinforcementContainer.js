@@ -5,6 +5,7 @@ import ReinforcementDataTable from "../components/calculator/ReinforcementDataTa
 import ExchangePrice from "../components/calculator/ExchangePrice";
 import ItemsPerTry from "../components/calculator/ItemsPerTry";
 import SelectItem from "../components/calculator/SelectItem";
+import Simulator from "../components/calculator/Simulator";
 
 // EnhancedCalculatorContainer
 export default function ReinforcementContainer({ itemId: _itemId }) {
@@ -63,10 +64,7 @@ export default function ReinforcementContainer({ itemId: _itemId }) {
   };
 
   return (
-    <div
-      className="min-w-[1080px] mx-auto min-h-screen"
-      style={{ padding: "8px 0 0 0" }}
-    >
+    <div className="min-w-[1080px] mx-auto" style={{ padding: "8px 0 0 0" }}>
       <div className="flex bg-gray-400 rounded-lg">
         <img src={anvil} alt="icon" />
         <h1 className="m-2 text-3xl">강화 기댓값 계산기</h1>
@@ -85,6 +83,7 @@ export default function ReinforcementContainer({ itemId: _itemId }) {
                 {/* 거래소 가격 */}
                 <ExchangePrice
                   items={items}
+                  setItems={setItems}
                   handleItemsPrice={handleItemsPrice}
                 />
               </div>
@@ -103,8 +102,7 @@ export default function ReinforcementContainer({ itemId: _itemId }) {
                 )}
               </div>
               <div className="col-span-1 row-span-1 bg-white p-4 shadow-md rounded-lg">
-                <p>Item 3</p>
-                <p>최근에 본 아이템들.</p>
+                <p>설명서</p>
               </div>
               <div className="col-span-1 row-span-1 bg-white p-4 shadow-md rounded-lg">
                 {reinforcementData && (
@@ -116,9 +114,13 @@ export default function ReinforcementContainer({ itemId: _itemId }) {
                   />
                 )}
               </div>
-              <div className="col-span-2 row-span-1 bg-white p-4 shadow-md rounded-lg">
-                <p>하락할수 있는 강화 시뮬레이터</p>
-              </div>
+              {reinforcementData && (
+                <Simulator
+                  reinforcementData={reinforcementData}
+                  cronStonePrice={cronStonePrice}
+                  items={items}
+                />
+              )}
             </div>
           )}
         </>
@@ -151,8 +153,8 @@ const makeReinforcementData = (
   );
 
   // 강화 확률 계산
-  updatedReinforcementData.reinforcementChance = stacks.map((stack, index) => {
-    const baseChance = reinforcementData.reinforcementStart[index];
+  updatedReinforcementData.successProbability = stacks.map((stack, index) => {
+    const baseProbability = reinforcementData.reinforcementStart[index];
     const softCap = reinforcementData.stackSoftCap[index];
     const increaseBeforeSoftCap =
       reinforcementData.reinforceIncreasedAmountBeforeSoftCap[index];
@@ -160,37 +162,37 @@ const makeReinforcementData = (
       reinforcementData.reinforceIncreasedAmountAfterSoftCap[index];
     const maxChange = reinforcementData.maxReinforcementChange[index];
 
-    let chance = baseChance;
+    let probaility = baseProbability;
     if (stack <= softCap) {
-      chance += stack * increaseBeforeSoftCap;
+      probaility += stack * increaseBeforeSoftCap;
     } else {
-      chance +=
+      probaility +=
         softCap * increaseBeforeSoftCap +
         (stack - softCap) * increaseAfterSoftCap;
     }
-    return Math.min(chance, maxChange).toFixed(2);
+    return Math.min(probaility, maxChange).toFixed(2);
   });
 
   // 아이템 강화를 실패 하였을 때, 아이템 등급이 하락할 확률은 40% 그러므로 (100-성공확률) * 하락할 확률 40%
   // 소수점 2번째 자리에서 올림.
   if (updatedReinforcementData.downgradeProbability > 0) {
-    updatedReinforcementData.gradeDecreaseChance =
-      updatedReinforcementData.reinforcementChance.map((chance, index) => {
+    updatedReinforcementData.gradeDecreaseProbability =
+      updatedReinforcementData.successProbability.map((probaility, index) => {
         if (index === 0) return "0.00"; // 노강 -> 장트라이는 아이템 강화등급이 하락할수가 없음.
-        return ((100 - parseFloat(chance)) * 0.4).toFixed(2);
+        return ((100 - parseFloat(probaility)) * 0.4).toFixed(2);
       });
   } else {
     // 악세사리 강화 말고는 하락하지 않음.
-    updatedReinforcementData.gradeDecreaseChance = [0, 0, 0, 0, 0];
+    updatedReinforcementData.gradeDecreaseProbability = [0, 0, 0, 0, 0];
   }
 
   // 강화 실패시, 강화등급 유지확률, 100퍼센트 - 강화 성공 확률 - 아이템 등급 하락 확률
-  updatedReinforcementData.gradeMaintainChance =
-    updatedReinforcementData.reinforcementChance.map((chance, index) =>
+  updatedReinforcementData.gradeMaintainProbability =
+    updatedReinforcementData.successProbability.map((probaility, index) =>
       (
         100 -
-        parseFloat(chance) -
-        parseFloat(updatedReinforcementData.gradeDecreaseChance[index])
+        parseFloat(probaility) -
+        parseFloat(updatedReinforcementData.gradeDecreaseProbability[index])
       ).toFixed(2),
     );
 
@@ -212,8 +214,8 @@ const makeReinforcementData = (
 
   // 강화를 성공하기까지 평균 시도 횟수 계산
   updatedReinforcementData.averageTry =
-    updatedReinforcementData.reinforcementChance.map((chance) =>
-      (100 / parseFloat(chance)).toFixed(2),
+    updatedReinforcementData.successProbability.map((probaility) =>
+      (100 / parseFloat(probaility)).toFixed(2),
     );
 
   // 강화 기댓값 계산
@@ -223,25 +225,27 @@ const makeReinforcementData = (
   updatedReinforcementData.netProfit = updatedReinforcementData.stages.map(
     (stage, index) => {
       // 확률은 지금은 %단위로 작성되어 있어서, ex: "14.6" => 0.146으로 변환
-      const successChance =
-        parseFloat(updatedReinforcementData.reinforcementChance[index]) / 100;
-      const maintainChance =
-        parseFloat(updatedReinforcementData.gradeMaintainChance[index]) / 100;
-      const decreaseChance =
-        parseFloat(updatedReinforcementData.gradeDecreaseChance[index]) / 100;
+      const successProbability =
+        parseFloat(updatedReinforcementData.successProbability[index]) / 100;
+      const maintainProbability =
+        parseFloat(updatedReinforcementData.gradeMaintainProbability[index]) /
+        100;
+      const decreaseProbability =
+        parseFloat(updatedReinforcementData.gradeDecreaseProbability[index]) /
+        100;
 
       const successProfit =
-        successChance *
+        successProbability *
         (updatedReinforcementData.prices[index + 1] - // 성공 시 가격
           updatedReinforcementData.costPerTry[index] - // 트라이당 비용
           updatedReinforcementData.prices[index]); // 기존 가격
 
       const maintainLoss =
-        maintainChance * -updatedReinforcementData.costPerTry[index];
+        maintainProbability * -updatedReinforcementData.costPerTry[index];
 
       const decreaseLoss =
-        decreaseChance > 0
-          ? decreaseChance *
+        decreaseProbability > 0
+          ? decreaseProbability *
             (-updatedReinforcementData.prices[index] + // 기존 가격
               updatedReinforcementData.prices[index - 1] - // 하락 후 가격
               updatedReinforcementData.costPerTry[index]) // 트라이당 비용

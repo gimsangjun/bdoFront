@@ -59,19 +59,21 @@ export default function ReinforcementDataTable({
             </tr>
             <tr>
               <Td className="border px-4 py-2">강화 성공 확률</Td>
-              {reinforcementData.reinforcementChance.map((chance, index) => (
+              {reinforcementData.successProbability.map((probaility, index) => (
                 <Td key={index} className="border px-4 py-2">
-                  {chance}%
+                  {probaility}%
                 </Td>
               ))}
             </tr>
             <tr>
               <Td className="border px-4 py-2">하락 확률</Td>
-              {reinforcementData.gradeDecreaseChance.map((chance, index) => (
-                <Td key={index} className="border px-4 py-2">
-                  {chance}%
-                </Td>
-              ))}
+              {reinforcementData.gradeDecreaseProbability.map(
+                (probaility, index) => (
+                  <Td key={index} className="border px-4 py-2">
+                    {probaility}%
+                  </Td>
+                ),
+              )}
             </tr>
             <tr>
               <Td className="border px-4 py-2">트라이당 비용</Td>
