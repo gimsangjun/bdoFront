@@ -15,8 +15,6 @@ export default function ReinforcementContainer({ itemId: _itemId }) {
   const [reinforcementInitData, setReinforcementInitData] = useState(null); // 강화 정보 초기 데이터
   const [reinforcementData, setReinforcementData] = useState(null); // 계속쓸 강화데이터 (강화확률이 포함되어있음.)
   const [cronStonePrice, setCronStonePrice] = useState(2240000); // 크론석 가격 224만원 or 300만원
-  const [itemNamePerTry, setItemNamePerTry] = useState(null); // 강화를 할때 마다 들어가는 아이템 이름(크론석 말고)
-  const [itemPricePerTry, setItemPricePerTry] = useState(null); // 강화를 할때 마다 들어가는 아이템 가격(크론석 말고)
   const [stacks, setStacks] = useState([]); // 강화 스택
 
   // 초기 데이터 로딩.
@@ -28,27 +26,8 @@ export default function ReinforcementContainer({ itemId: _itemId }) {
         setItems(response.items);
 
         // 강화 기본 정보 업데이트
-        console.log(items);
         const data = await ItemAPI.getReinforcementInfo(response.items[0].type);
         setReinforcementInitData(data);
-
-        console.log(data);
-        // 강화 시도할때마다 드는 재화 초기 업데이트 (크론석 말고)
-        if (data.itemsPerTry[0].name === "") {
-          // 아이템 type이 엑세사리 악세사리
-          setItemNamePerTry(response.items[0].name);
-          setItemPricePerTry(
-            response.items[0].lastSoldPrice
-              ? response.items[0].lastSoldPrice
-              : response.items[0].basePrice,
-          );
-        } else {
-          // TODO: 나중에 악세사리말고 그냥 장비들도 처리할수 있게 바꿔야됨.
-
-          setItemNamePerTry(data.itemsPerTry[0].name);
-          setItemPricePerTry(1000); // 무결한 혼돈의 블랙스톤, 사르는 태양의 원석
-        }
-
         // 강화 스택 초기 업데이트
         setStacks(data.recommendStack);
       } catch (error) {
@@ -69,19 +48,11 @@ export default function ReinforcementContainer({ itemId: _itemId }) {
         reinforcementInitData,
         stacks,
         cronStonePrice,
-        itemPricePerTry,
       );
 
       setReinforcementData(updatedData);
     }
-  }, [
-    items,
-    cronStonePrice,
-    itemPricePerTry,
-    itemNamePerTry,
-    stacks,
-    reinforcementInitData,
-  ]);
+  }, [items, cronStonePrice, stacks, reinforcementInitData]);
 
   const handleItemsPrice = (newPrices) => {
     const updatedItems = items.map((item, index) => ({
@@ -136,15 +107,12 @@ export default function ReinforcementContainer({ itemId: _itemId }) {
                 <p>최근에 본 아이템들.</p>
               </div>
               <div className="col-span-1 row-span-1 bg-white p-4 shadow-md rounded-lg">
-                {itemPricePerTry && (
+                {reinforcementData && (
                   <ItemsPerTry
                     items={items}
                     reinforcementData={reinforcementData}
                     cronStonePrice={cronStonePrice}
                     handleCronStonePrice={setCronStonePrice}
-                    itemPricePerTry={itemPricePerTry}
-                    handleItemPricePerTry={setItemPricePerTry}
-                    itemNamePerTry={itemNamePerTry}
                   />
                 )}
               </div>
@@ -173,7 +141,6 @@ const makeReinforcementData = (
   reinforcementData,
   stacks,
   cronStonePrice,
-  itemPricePerTry,
 ) => {
   const updatedReinforcementData = { ...reinforcementData };
 
@@ -229,19 +196,16 @@ const makeReinforcementData = (
 
   // 한번 트라이당 비용
   updatedReinforcementData.costPerTry = updatedReinforcementData.stages.map(
-    // 악세사리의 경우 0강짜리 악세 하나 소모.
-    // TODO: 악세사리말고 다른 아이템의 경우 다르게 처리해야됨.
     (stage, index) => {
       const cronStoneCost =
         cronStonePrice * updatedReinforcementData.cronStones[index];
       let additionalItemsCost = 0;
-      if (updatedReinforcementData.itemsPerTry[index].name === "") {
+      // 아이템 type이 "악세사리"면 가격 추가
+      if (updatedReinforcementData.type === "악세사리") {
         additionalItemsCost =
-          updatedReinforcementData.itemsPerTry[index].count * itemPricePerTry;
-      } else {
-        //TODO 악세사리 제외 다른 아이템들은 다른 아이템을 소모하여 강화를 함. 그 경우는 나중에.
+          updatedReinforcementData.itemsPerTry[index].count *
+          updatedReinforcementData.prices[0];
       }
-
       return cronStoneCost + additionalItemsCost;
     },
   );

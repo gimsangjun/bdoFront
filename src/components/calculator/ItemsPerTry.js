@@ -1,26 +1,42 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import cronStone from "../../images/cronStone.png";
 import ItemImg from "../item/ItemImg";
 import { formatCost } from "../../utils/formatUtil";
+import ItemAPI from "../../utils/itemAPI";
 
 export default function ItemsPerTry({
   items, // 아이템 이미지
   reinforcementData,
   cronStonePrice,
   handleCronStonePrice,
-  itemPricePerTry,
-  handleItemPricePerTry,
-  itemNamePerTry,
 }) {
   const [editingCronStone, setEditingCronStone] = useState(false);
-  const [editingItemPrice, setEditingItemPrice] = useState(false);
+  const [memoryFragmentPrice, setMemoryFragmentPrice] = useState(0);
+  const [editingMemoryFragmentPrice, setEditingMemoryFragmentPrice] =
+    useState(false);
+
+  // 기억의 파편 가격 업데이트
+  useEffect(() => {
+    const fetchItem = async () => {
+      const response = await ItemAPI.getItemsByQuery(
+        { name: "기억의 파편" },
+        1,
+      );
+      setMemoryFragmentPrice(
+        response.items[0].lastSoldPrice
+          ? response.items[0].lastSoldPrice
+          : response.items[0].basePrice,
+      );
+    };
+    fetchItem();
+  }, []);
 
   const handleCronStoneBlur = () => {
     setEditingCronStone(false);
   };
 
-  const handleItemPriceBlur = () => {
-    setEditingItemPrice(false);
+  const handleMemoryFragmentPriceBlur = () => {
+    setEditingMemoryFragmentPrice(false);
   };
 
   return (
@@ -28,8 +44,8 @@ export default function ItemsPerTry({
       <h1 className="text-2xl mb-2">아이템 재화 가격</h1>
       <div className="flex items-center mb-4">
         <img src={cronStone} alt="크론석" className="w-12 h-12 mr-2" />
-        <div>
-          <p className="ml-1">크론석</p>
+        <div className="ml-2">
+          <p className="font-semibold">크론석</p>
           {editingCronStone ? (
             <input
               type="number"
@@ -49,39 +65,51 @@ export default function ItemsPerTry({
           )}
         </div>
       </div>
-      <div>
-        <p>기억의 파편</p>
-      </div>
-      {/* items[0].name 과 itemNamePerTry가 같으면 보여주지 않기. 악세사리의 경우 0단계 악세사리(자기자신)가 들어가 들어갈필요가 없음. */}
-      {items[0].name !== itemNamePerTry && (
-        <div>
-          {/* 강화에 소모되는 아이템 */}
-          {/* TODO: 악세사리 제외 다른 아이템들의 경우 다른 강화재료가 들어감. 나중에 */}
-          <div className="flex items-center mb-4">
-            <ItemImg item={items[0]} />
-            <div>
-              <p className="ml-1">{itemNamePerTry}</p>
+      {items[0].type !== "악세사리" && (
+        <>
+          <div className="mb-4">
+            {/* 기억의 파편 */}
+            <div className="flex mb-4 items-center">
+              <ItemImg item={{ id: 44195 }} className="w-12 h-12 mr-2" />
+              <div className="ml-2">
+                <div className="flex gap-1 items-center">
+                  <p className="font-semibold">기억의 파편</p>
+                  <p className="text-sm text-gray-600">
+                    필요량:{" "}
+                    {reinforcementData.durabilityLossOnFailure}개
+                  </p>
+                </div>
 
-              {editingItemPrice ? (
-                <input
-                  type="number"
-                  value={itemPricePerTry}
-                  onChange={(e) => handleItemPricePerTry(e.target.value)}
-                  onBlur={handleItemPriceBlur}
-                  className="border p-2 rounded"
-                  autoFocus
-                />
-              ) : (
-                <p
-                  onClick={() => setEditingItemPrice(true)}
-                  className="border p-2 rounded cursor-pointer w-32"
-                >
-                  {formatCost(itemPricePerTry)}
-                </p>
-              )}
+                {editingMemoryFragmentPrice ? (
+                  <input
+                    type="number"
+                    value={memoryFragmentPrice}
+                    onChange={(e) => setMemoryFragmentPrice(e.target.value)}
+                    onBlur={handleMemoryFragmentPriceBlur}
+                    className="border p-2 rounded w-32"
+                    autoFocus
+                  />
+                ) : (
+                  <p
+                    onClick={() => setEditingMemoryFragmentPrice(true)}
+                    className="border p-2 rounded cursor-pointer w-32"
+                  >
+                    {formatCost(memoryFragmentPrice)}
+                  </p>
+                )}
+              </div>
+            </div>
+            <div>
+              <p className="text-sm text-gray-600">
+                한번 트라이당 소모되는 기파의 가격:{" "}
+                {formatCost(
+                  memoryFragmentPrice *
+                    reinforcementData.durabilityLossOnFailure,
+                )}
+              </p>
             </div>
           </div>
-        </div>
+        </>
       )}
     </div>
   );
