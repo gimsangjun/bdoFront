@@ -1,5 +1,4 @@
 import React from "react";
-import ItemImg from "../item/ItemImg";
 import { formatCost } from "../../utils/formatUtil";
 import tw from "twin.macro";
 
@@ -21,8 +20,6 @@ export default function ReinforcementDataTable({
   // index: 현재 순회 중인 배열 요소의 인덱스
   // array: 원본 배열 (enhancingData.netProfit)
   // 초기값으로 0을 설정하여 첫 번째 요소를 초기 최대값으로 설정
-
-  // const maxNetProfitIndex = 0;
   const maxNetProfitIndex = reinforcementData.netProfit.reduce(
     (maxIndex, profit, index, array) =>
       parseInt(profit) > parseInt(array[maxIndex]) ? index : maxIndex,
@@ -30,11 +27,7 @@ export default function ReinforcementDataTable({
   );
 
   return (
-    <div className="flex flex-col">
-      <div className="flex items-center mb-4">
-        <ItemImg item={items[0]} />
-        <span className="ml-2 text-lg font-semibold">{items[0].name}</span>
-      </div>
+    <>
       <div className="overflow-x-auto">
         <table className="table-auto w-full">
           <thead className="bg-gray-200">
@@ -131,7 +124,7 @@ export default function ReinforcementDataTable({
           ))}
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

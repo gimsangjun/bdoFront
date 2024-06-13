@@ -6,7 +6,7 @@ export default function ReinforcementCalPage() {
   return (
     <div className="flex min-w-[1400px] min-h-screen flex-col bg-gray-200">
       <HeaderContainer />
-      <ReinforcementContainer itemName={"데보레카 허리띠"} />
+      <ReinforcementContainer itemId={12094} />
     </div>
   );
 }

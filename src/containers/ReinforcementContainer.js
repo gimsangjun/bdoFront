@@ -4,10 +4,12 @@ import ItemAPI from "../utils/itemAPI";
 import ReinforcementDataTable from "../components/calculator/ReinforcementDataTable";
 import ExchangePrice from "../components/calculator/ExchangePrice";
 import ItemsPerTry from "../components/calculator/ItemsPerTry";
+import SelectItem from "../components/calculator/SelectItem";
 
 // EnhancedCalculatorContainer
-export default function ReinforcementContainer({ itemName }) {
-  const [items, setItems] = useState(null);
+export default function ReinforcementContainer({ itemId: _itemId }) {
+  const [itemId, setItemId] = useState(_itemId); // 현재 선택된 아이템의 이름.
+  const [items, setItems] = useState(null); // 선택된 아이템의 거래소 정보
   const [loading, setLoading] = useState(false);
 
   const [reinforcementInitData, setReinforcementInitData] = useState(null); // 강화 정보 초기 데이터
@@ -16,22 +18,25 @@ export default function ReinforcementContainer({ itemName }) {
   const [itemNamePerTry, setItemNamePerTry] = useState(null); // 강화를 할때 마다 들어가는 아이템 이름(크론석 말고)
   const [itemPricePerTry, setItemPricePerTry] = useState(null); // 강화를 할때 마다 들어가는 아이템 가격(크론석 말고)
   const [stacks, setStacks] = useState([]); // 강화 스택
+
   // 초기 데이터 로딩.
   useEffect(() => {
     const fetchItem = async () => {
       setLoading(true);
       try {
-        const response = await ItemAPI.getItemsByQuery({ name: itemName }, 1);
+        const response = await ItemAPI.getItemsByQuery({ id: itemId }, 1);
         setItems(response.items);
 
         // 강화 기본 정보 업데이트
+        console.log(items);
         const data = await ItemAPI.getReinforcementInfo(response.items[0].type);
         setReinforcementInitData(data);
 
+        console.log(data);
         // 강화 시도할때마다 드는 재화 초기 업데이트 (크론석 말고)
         if (data.itemsPerTry[0].name === "") {
           // 아이템 type이 엑세사리 악세사리
-          setItemNamePerTry(itemName);
+          setItemNamePerTry(response.items[0].name);
           setItemPricePerTry(
             response.items[0].lastSoldPrice
               ? response.items[0].lastSoldPrice
@@ -39,8 +44,9 @@ export default function ReinforcementContainer({ itemName }) {
           );
         } else {
           // TODO: 나중에 악세사리말고 그냥 장비들도 처리할수 있게 바꿔야됨.
+
           setItemNamePerTry(data.itemsPerTry[0].name);
-          setItemPricePerTry(1000);
+          setItemPricePerTry(1000); // 무결한 혼돈의 블랙스톤, 사르는 태양의 원석
         }
 
         // 강화 스택 초기 업데이트
@@ -53,7 +59,7 @@ export default function ReinforcementContainer({ itemName }) {
     };
 
     fetchItem();
-  }, [itemName]);
+  }, [itemId]);
 
   // 강화 데이터 로딩
   useEffect(() => {
@@ -77,24 +83,12 @@ export default function ReinforcementContainer({ itemName }) {
     reinforcementInitData,
   ]);
 
-  const handleCronStonePrice = (price) => {
-    setCronStonePrice(price);
-  };
-
-  const handleItemPricePerTry = (price) => {
-    setItemPricePerTry(price);
-  };
-
   const handleItemsPrice = (newPrices) => {
     const updatedItems = items.map((item, index) => ({
       ...item,
       lastSoldPrice: parseInt(newPrices[index]),
     }));
     setItems(updatedItems);
-  };
-
-  const handleStacks = (newStacks) => {
-    setStacks(newStacks);
   };
 
   return (
@@ -126,12 +120,15 @@ export default function ReinforcementContainer({ itemName }) {
               <div className="col-span-2 row-span-1 bg-white p-4 shadow-md rounded-lg">
                 {/* 강화 정보 제공 테이블 */}
                 {reinforcementData && (
-                  <ReinforcementDataTable
-                    items={items}
-                    reinforcementData={reinforcementData}
-                    stacks={stacks}
-                    handleStacks={handleStacks}
-                  />
+                  <div className="flex flex-col">
+                    <SelectItem items={items} handleItemId={setItemId} />
+                    <ReinforcementDataTable
+                      items={items}
+                      reinforcementData={reinforcementData}
+                      stacks={stacks}
+                      handleStacks={setStacks}
+                    />
+                  </div>
                 )}
               </div>
               <div className="col-span-1 row-span-1 bg-white p-4 shadow-md rounded-lg">
@@ -144,9 +141,9 @@ export default function ReinforcementContainer({ itemName }) {
                     items={items}
                     reinforcementData={reinforcementData}
                     cronStonePrice={cronStonePrice}
-                    handleCronStonePrice={handleCronStonePrice}
+                    handleCronStonePrice={setCronStonePrice}
                     itemPricePerTry={itemPricePerTry}
-                    handleItemPricePerTry={handleItemPricePerTry}
+                    handleItemPricePerTry={setItemPricePerTry}
                     itemNamePerTry={itemNamePerTry}
                   />
                 )}
@@ -209,11 +206,16 @@ const makeReinforcementData = (
 
   // 아이템 강화를 실패 하였을 때, 아이템 등급이 하락할 확률은 40% 그러므로 (100-성공확률) * 하락할 확률 40%
   // 소수점 2번째 자리에서 올림.
-  updatedReinforcementData.gradeDecreaseChance =
-    updatedReinforcementData.reinforcementChance.map((chance, index) => {
-      if (index === 0) return "0.00"; // 노강 -> 장트라이는 아이템 강화등급이 하락할수가 없음.
-      return ((100 - parseFloat(chance)) * 0.4).toFixed(2);
-    });
+  if (updatedReinforcementData.downgradeProbability > 0) {
+    updatedReinforcementData.gradeDecreaseChance =
+      updatedReinforcementData.reinforcementChance.map((chance, index) => {
+        if (index === 0) return "0.00"; // 노강 -> 장트라이는 아이템 강화등급이 하락할수가 없음.
+        return ((100 - parseFloat(chance)) * 0.4).toFixed(2);
+      });
+  } else {
+    // 악세사리 강화 말고는 하락하지 않음.
+    updatedReinforcementData.gradeDecreaseChance = [0, 0, 0, 0, 0];
+  }
 
   // 강화 실패시, 강화등급 유지확률, 100퍼센트 - 강화 성공 확률 - 아이템 등급 하락 확률
   updatedReinforcementData.gradeMaintainChance =
@@ -280,7 +282,6 @@ const makeReinforcementData = (
               updatedReinforcementData.prices[index - 1] - // 하락 후 가격
               updatedReinforcementData.costPerTry[index]) // 트라이당 비용
           : 0;
-
       return successProfit + maintainLoss + decreaseLoss;
     },
   );
