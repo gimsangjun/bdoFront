@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import ItemImg from "../item/ItemImg";
 import { formatCost, formatDate } from "../../utils/formatUtil";
+import { LuRefreshCcw } from "react-icons/lu";
+import ItemAPI from "../../utils/itemAPI";
 
-const ExchangePrice = ({ items, handleItemsPrice }) => {
+const ExchangePrice = ({ items, handleItemsPrice, setItems }) => {
   const [prices, setPrices] = useState(
     items.map((item) =>
       item.lastSoldPrice ? item.lastSoldPrice : item.basePrice,
@@ -26,9 +28,28 @@ const ExchangePrice = ({ items, handleItemsPrice }) => {
     setEditingIndex(index);
   };
 
+  const handleUpdate = async () => {
+    const { updateItems } = await ItemAPI.updateItemsPrice(items);
+    setItems(updateItems);
+  };
+
   return (
     <>
-      <h1 className="text-2xl mb-2">거래소 가격</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl mb-2">거래소 가격</h1>
+        <div className="flex flex-col">
+          <div className="flex">
+            <div className="text-sm text-gray-600">업데이트 날짜</div>
+            <LuRefreshCcw
+              className="cursor-pointer pl-1 text-lg"
+              onClick={handleUpdate}
+            />
+          </div>
+          <span className="text-sm text-gray-600">
+            {formatDate(items[0].updateAt)}
+          </span>
+        </div>
+      </div>
       <div>
         {items.map((item, index) => (
           <div key={item.sid} className="flex items-center mb-4">
@@ -57,11 +78,6 @@ const ExchangePrice = ({ items, handleItemsPrice }) => {
             </div>
           </div>
         ))}
-      </div>
-      <div>
-        <div>가격업데이트 날짜</div>
-        <span>{formatDate(items[0].updateAt)}</span>
-        {/* TODO: 가격 업데이트하는 버튼도 만들어야됨. */}
       </div>
     </>
   );
