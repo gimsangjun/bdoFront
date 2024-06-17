@@ -5,6 +5,7 @@ import SuccessModal from "./SuccessModal";
 
 const PriceAlertModal = ({ isOpen, onRequestClose, item }) => {
   const [priceThreshold, setPriceThreshold] = useState(0);
+  const [errorMessage, setErrorMessage] = useState(""); // 에러 메시지 상태 추가
   const [successModalIsOpen, setSuccessModalIsOpen] = useState(false);
   const inputRef = useRef(null);
 
@@ -20,12 +21,17 @@ const PriceAlertModal = ({ isOpen, onRequestClose, item }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // const rawPrice = Number(priceThreshold.replace(/,/g, "")); // 쉼표 제거 후 숫자로 변환
-    const { status } = await ItemAPI.addItemPriceAlert(item, priceThreshold);
-
+    const { status, message } = await ItemAPI.addItemPriceAlert(
+      item,
+      priceThreshold,
+    );
     if (status === 201) {
       setSuccessModalIsOpen(true);
       onRequestClose();
+    } else if (status === 400 && message === "이미 존재하는 가격 알림입니다.") {
+      setErrorMessage("이미 존재하는 가격 알림입니다.");
+    } else {
+      setErrorMessage("가격 알림 등록에 실패했습니다.");
     }
   };
 
@@ -37,7 +43,10 @@ const PriceAlertModal = ({ isOpen, onRequestClose, item }) => {
     <>
       <Modal
         isOpen={isOpen}
-        onRequestClose={onRequestClose}
+        onRequestClose={() => {
+          setErrorMessage(""); // 모달 닫을 때 에러 메시지 초기화
+          onRequestClose();
+        }}
         style={{
           content: {
             top: "50%",
@@ -64,7 +73,6 @@ const PriceAlertModal = ({ isOpen, onRequestClose, item }) => {
             <label className="block text-gray-700 text-sm font-bold mb-2">
               가격:
             </label>
-            {/* TODO: 나중에 가격 보기 쉽게 ,로 보이게 할수 있을듯. */}
             <input
               type="number"
               value={priceThreshold}
@@ -74,6 +82,9 @@ const PriceAlertModal = ({ isOpen, onRequestClose, item }) => {
               ref={inputRef}
             />
           </div>
+          {errorMessage && (
+            <p className="text-red-500 text-sm">{errorMessage}</p>
+          )}
           <div className="flex justify-end space-x-4">
             <button
               type="submit"
@@ -83,7 +94,10 @@ const PriceAlertModal = ({ isOpen, onRequestClose, item }) => {
             </button>
             <button
               type="button"
-              onClick={onRequestClose}
+              onClick={() => {
+                setErrorMessage(""); // 취소 버튼 클릭 시 에러 메시지 초기화
+                onRequestClose();
+              }}
               className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
             >
               취소

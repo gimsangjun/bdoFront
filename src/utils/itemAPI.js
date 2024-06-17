@@ -95,7 +95,10 @@ class ItemAPI {
       };
     } catch (error) {
       console.error("addItemPriceAlert Error", error);
-      throw error;
+      return {
+        status: error.response.status,
+        message: error.response.data.message,
+      };
     }
   }
 

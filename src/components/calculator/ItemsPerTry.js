@@ -65,7 +65,7 @@ export default function ItemsPerTry({
           )}
         </div>
       </div>
-      {items[0].type !== "악세사리" && (
+      {reinforcementData.durabilityLossOnFailure !== 0 && (
         <>
           <div className="mb-4">
             {/* 기억의 파편 */}
@@ -75,8 +75,7 @@ export default function ItemsPerTry({
                 <div className="flex gap-1 items-center">
                   <p className="font-semibold">기억의 파편</p>
                   <p className="text-sm text-gray-600">
-                    필요량:{" "}
-                    {reinforcementData.durabilityLossOnFailure}개
+                    필요량: {reinforcementData.durabilityLossOnFailure}개
                   </p>
                 </div>
 
@@ -111,6 +110,17 @@ export default function ItemsPerTry({
           </div>
         </>
       )}
+      {/* TODO: 강화에 드는 재료는 나중에 추가 */}
+      {/* <div>
+        {reinforcementData.itemsPerTry[0].name && (
+          <div>
+            <div>{reinforcementData.itemsPerTry[0].name}</div>
+            {reinforcementData.itemsPerTry.map((item, index) => (
+              <div key={index}>{item.count}</div>
+            ))}
+          </div>
+        )}
+      </div> */}
     </div>
   );
 }
