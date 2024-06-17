@@ -119,9 +119,70 @@ export default function ReinforcementContainer({ itemId: _itemId }) {
                   </div>
                 )}
               </div>
-              <div className="col-span-1 row-span-1 bg-white p-4 shadow-md rounded-lg">
-                <p>설명서</p>
+              <div className="col-span-1 row-span-1 bg-white p-6 shadow-lg rounded-lg">
+                <h1 className="text-2xl font-bold mb-4">설명서</h1>
+                <ul className="space-y-4">
+                  <li>
+                    <div className="flex items-start">
+                      <span className="text-blue-500 mr-2">•</span>
+                      <p>
+                        사용자가 직접 입력할 수 있는 부분은{" "}
+                        <span className="font-semibold">강화별 스택</span>,{" "}
+                        <span className="font-semibold">거래소의 가격</span>,{" "}
+                        <span className="font-semibold">크론석의 가격</span>{" "}
+                        (기본 가격은 펄옷을 추출했을 때의 가격입니다.),{" "}
+                        <span className="font-semibold">
+                          기억의 파편의 가격
+                        </span>
+                        입니다.
+                      </p>
+                    </div>
+                  </li>
+                  <li>
+                    <div className="flex items-start">
+                      <span className="text-blue-500 mr-2">•</span>
+                      <p>
+                        가장 이득이 되는 강화는{" "}
+                        <span className="text-yellow-500 font-semibold">
+                          노란색
+                        </span>
+                        으로 표시됩니다.
+                      </p>
+                    </div>
+                  </li>
+                  <li>
+                    <div className="flex items-start">
+                      <span className="text-blue-500 mr-2">•</span>
+                      <p>
+                        기대값에 고려되는 요소는{" "}
+                        <span className="font-semibold">크론석의 가격</span>과{" "}
+                        <span className="font-semibold">
+                          강화되는 아이템의 가격
+                        </span>
+                        뿐입니다. 따라서 마노스 악세사리를 강화하는 데 드는
+                        아이템인{" "}
+                        <span className="italic">
+                          "응축된 마력의 검은 결정"
+                        </span>{" "}
+                        등의 아이템 가격은 고려되지 않습니다.
+                      </p>
+                    </div>
+                  </li>
+                  <li>
+                    <div className="flex items-start">
+                      <span className="text-blue-500 mr-2">•</span>
+                      <p>평균 시도 횟수는 하락을 고려하지 않습니다.</p>
+                    </div>
+                  </li>
+                  <li>
+                    <div className="flex items-start">
+                      <span className="text-blue-500 mr-2">•</span>
+                      <p>기대값은 거래소 수수료를 고려하지 않습니다.</p>
+                    </div>
+                  </li>
+                </ul>
               </div>
+
               <div className="col-span-1 row-span-1 bg-white p-4 shadow-md rounded-lg">
                 {reinforcementData && (
                   <ItemsPerTry
