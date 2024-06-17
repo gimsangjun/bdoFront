@@ -37,10 +37,9 @@ const ItemsTable = ({ items, showModifyAlertButton = false }) => {
 
   return (
     <div className="bg-gray-200 flex justify-center items-center flex-col w-full">
-      <div className="w-full flex justify-end mb-4"></div>
       {/* 데이터 부분 시작.*/}
       <table className="rounded-lg w-full">
-        <thead className="bg-gray-200 sticky top-48">
+        <thead className="bg-gray-200 sticky top-48 z-50">
           <tr>
             <DataTh scope="col">이름</DataTh>
             <DataTh scope="col">현재 거래소 가격</DataTh>

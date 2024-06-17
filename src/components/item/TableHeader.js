@@ -22,7 +22,7 @@ export default function TableHeader({
 
   return (
     <div
-      className="w-full bg-gray-200 bg-base-400 sticky top-32"
+      className="w-full bg-gray-200 bg-base-400 sticky top-32 z-50"
       style={{ padding: "8px 0 0 0" }}
     >
       <div className="w-full flex flex-row bg-gray-400 p-2 rounded-lg ">

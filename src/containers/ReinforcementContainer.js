@@ -24,11 +24,21 @@ export default function ReinforcementContainer({ itemId: _itemId }) {
       setLoading(true);
       try {
         const response = await ItemAPI.getItemsByQuery({ id: itemId }, 1);
-        setItems(response.items);
+
+        // 여기에 response.items가 7개 이상이면 sid 15,16,17,18,19,20(노강, 장,광, 고, 유,동)의 아이템만 가져오기
+        let filteredItems = response.items;
+        if (response.items.length >= 7) {
+          filteredItems = response.items.filter((item) =>
+            [15, 16, 17, 18, 19, 20].includes(item.sid),
+          );
+        }
+
+        setItems(filteredItems);
 
         // 강화 기본 정보 업데이트
-        const data = await ItemAPI.getReinforcementInfo(response.items[0].type);
+        const data = await ItemAPI.getReinforcementInfo(filteredItems[0].type);
         setReinforcementInitData(data);
+
         // 강화 스택 초기 업데이트
         setStacks(data.recommendStack);
       } catch (error) {
