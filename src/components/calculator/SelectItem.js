@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import ItemImg from "../item/ItemImg"; // 경로는 실제 ItemImg 파일 경로로 바꿔주세요
 import ItemAPI from "../../utils/itemAPI";
+import { IdsAndSids } from "./SelectItemList";
 
 export default function SelectItem({ items, handleItemId }) {
   const [selectListItem, setSelectListItem] = useState([]);
@@ -12,18 +13,6 @@ export default function SelectItem({ items, handleItemId }) {
   useEffect(() => {
     const fetchItem = async () => {
       try {
-        const IdsAndSids = [
-          { id: 12094, sid: 0 }, // 데보레카 반지
-          { id: 11653, sid: 0 }, // 데보레카 목걸이
-          { id: 11882, sid: 0 }, // 데보레카 귀걸이
-          { id: 12276, sid: 0 }, // 데보레카 허리띠
-          { id: 719897, sid: 0 }, // 라브레스카의 투구
-          { id: 719898, sid: 0 }, // 죽은신의 갑옷
-          { id: 719899, sid: 0 }, // 단의 장갑
-          { id: 719955, sid: 0 }, // 단의 장갑
-          { id: 719900, sid: 0 }, // 아토르의 신발
-          { id: 719956, sid: 0 }, // 아토르의 신발
-        ];
         const data = await ItemAPI.getItemsByIdandSid(IdsAndSids);
         setSelectListItem(data);
         setLoading(false); // 로딩 완료
