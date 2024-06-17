@@ -65,6 +65,13 @@ export default function ReinforcementContainer({ itemId: _itemId }) {
     }
   }, [items, cronStonePrice, stacks, reinforcementInitData]);
 
+  // 거래소 가격 업데이트
+  const handleUpdateItemsPrice = async () => {
+    const { updateItems } = await ItemAPI.updateItemsPrice(items);
+    setItems(updateItems);
+  };
+
+  // 거래소 가격 임의로 변경
   const handleItemsPrice = (newPrices) => {
     const updatedItems = items.map((item, index) => ({
       ...item,
@@ -95,6 +102,7 @@ export default function ReinforcementContainer({ itemId: _itemId }) {
                   items={items}
                   setItems={setItems}
                   handleItemsPrice={handleItemsPrice}
+                  handleUpdateItemsPrice={handleUpdateItemsPrice}
                 />
               </div>
               <div className="col-span-2 row-span-1 bg-white p-4 shadow-md rounded-lg">

@@ -1,15 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ItemImg from "../item/ItemImg";
 import { formatCost, formatDate } from "../../utils/formatUtil";
 import { LuRefreshCcw } from "react-icons/lu";
-import ItemAPI from "../../utils/itemAPI";
 
-const ExchangePrice = ({ items, handleItemsPrice, setItems }) => {
-  const [prices, setPrices] = useState(
-    items.map((item) =>
+const ExchangePrice = ({
+  items,
+  handleItemsPrice,
+  setItems,
+  handleUpdateItemsPrice,
+}) => {
+  const [prices, setPrices] = useState([]);
+
+  // items가 바뀔 때마다 prices를 업데이트
+  useEffect(() => {
+    const initialPrices = items.map((item) =>
       item.lastSoldPrice ? item.lastSoldPrice : item.basePrice,
-    ),
-  );
+    );
+    setPrices(initialPrices);
+  }, [items]);
 
   const [editingIndex, setEditingIndex] = useState(null);
 
@@ -28,11 +36,6 @@ const ExchangePrice = ({ items, handleItemsPrice, setItems }) => {
     setEditingIndex(index);
   };
 
-  const handleUpdate = async () => {
-    const { updateItems } = await ItemAPI.updateItemsPrice(items);
-    setItems(updateItems);
-  };
-
   return (
     <>
       <div className="flex items-center justify-between">
@@ -42,7 +45,7 @@ const ExchangePrice = ({ items, handleItemsPrice, setItems }) => {
             <div className="text-sm text-gray-600">업데이트 날짜</div>
             <LuRefreshCcw
               className="cursor-pointer pl-1 text-lg"
-              onClick={handleUpdate}
+              onClick={handleUpdateItemsPrice}
             />
           </div>
           <span className="text-sm text-gray-600">
