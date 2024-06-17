@@ -20,8 +20,8 @@ const PriceAlertModal = ({ isOpen, onRequestClose, item }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const rawPrice = Number(priceThreshold.replace(/,/g, "")); // 쉼표 제거 후 숫자로 변환
-    const { status } = await ItemAPI.addItemPriceAlert(item, rawPrice);
+    // const rawPrice = Number(priceThreshold.replace(/,/g, "")); // 쉼표 제거 후 숫자로 변환
+    const { status } = await ItemAPI.addItemPriceAlert(item, priceThreshold);
 
     if (status === 201) {
       setSuccessModalIsOpen(true);
@@ -49,9 +49,11 @@ const PriceAlertModal = ({ isOpen, onRequestClose, item }) => {
             padding: "2rem",
             backgroundColor: "#f9fafb",
             borderRadius: "0.5rem",
+            zIndex: 999,
           },
           overlay: {
             backgroundColor: "rgba(0, 0, 0, 0.75)",
+            zIndex: 999,
           },
         }}
         className="relative bg-white rounded-lg shadow-lg w-96"

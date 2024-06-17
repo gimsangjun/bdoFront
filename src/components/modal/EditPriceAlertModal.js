@@ -65,9 +65,11 @@ const EditPriceAlertModal = ({ isOpen, onRequestClose, item }) => {
             padding: "2rem",
             backgroundColor: "#f9fafb",
             borderRadius: "0.5rem",
+            zIndex: 999,
           },
           overlay: {
             backgroundColor: "rgba(0, 0, 0, 0.75)",
+            zIndex: 999,
           },
         }}
         className="relative bg-white rounded-lg shadow-lg w-96"

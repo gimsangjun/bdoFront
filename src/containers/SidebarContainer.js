@@ -8,16 +8,23 @@ export default function SidebarContainer({ onCategoryClick }) {
       mainCategory: 0,
       subCategory: 0,
     },
+    // TODO: 무기 방어구 추가, 방어구 전체 업데이트 잘안됨.
     {
-      name: "가공",
-      mainCategory: 0,
+      name: "무기",
+      mainCategory: 1,
       subCategory: 0,
     },
     {
-      name: "요리",
-      mainCategory: 0,
+      name: "방어구",
+      mainCategory: 15,
       subCategory: 0,
     },
+    {
+      name: "악세사리",
+      mainCategory: 20,
+      subCategory: 0,
+    },
+
     {
       name: "재료",
       mainCategory: 25,
