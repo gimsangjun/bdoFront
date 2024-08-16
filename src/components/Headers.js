@@ -12,7 +12,7 @@ import anvil from "../images/anvil.png";
 import { FaDiscord } from "react-icons/fa";
 
 export const MainHeader = ({ onLogout }) => {
-  const API_DOMAIN = process.env.REACT_APP_API_DOMAIN;
+  const API_DOMAIN = process.env.REACT_APP_API_URL;
   const { user } = useSelector((state) => state.auth);
 
   // 버튼 클릭 핸들러

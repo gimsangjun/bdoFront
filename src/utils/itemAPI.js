@@ -1,15 +1,16 @@
 import axios from "./axiosInstance";
 
-const API_DOMAIN = process.env.REACT_APP_API_DOMAIN;
-
 class ItemAPI {
   // 아이템
   static async getItemsByQuery(query, page = 1) {
     try {
-      const response = await axios.post(`${API_DOMAIN}/item/`, {
-        query,
-        page,
-      });
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/item/`,
+        {
+          query,
+          page,
+        },
+      );
       const { items, totalCount, pages, currentPage } = response.data;
       return { status: response.status, items, totalCount, pages, currentPage };
     } catch (error) {
@@ -25,9 +26,12 @@ class ItemAPI {
    */
   static async getItemsByIdandSid(items) {
     try {
-      const response = await axios.post(`${API_DOMAIN}/item/id-and-sid`, {
-        items,
-      });
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/item/id-and-sid`,
+        {
+          items,
+        },
+      );
       return response.data.items;
     } catch (error) {
       console.error("getItemsByIdandSid Error:", error);
@@ -36,16 +40,21 @@ class ItemAPI {
   }
 
   static async updateItemsPrice(items) {
-    const response = await axios.post(`${API_DOMAIN}/item/update`, {
-      items,
-    });
+    const response = await axios.post(
+      `${process.env.REACT_APP_API_URL}/item/update`,
+      {
+        items,
+      },
+    );
     return { status: response.status, updateItems: response.data.items };
   }
 
   // 즐겨찾기
   static async getFavItem() {
     try {
-      const response = await axios.get(`${API_DOMAIN}/item/favorite`);
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/item/favorite`,
+      );
       return { status: response.status, favItems: response.data.itemFavorites };
     } catch (error) {
       console.error("getItemFavorite Error", error);
@@ -56,10 +65,13 @@ class ItemAPI {
   static async addFavItem(item) {
     try {
       const { id, sid } = item;
-      const response = await axios.post(`${API_DOMAIN}/item/favorite`, {
-        id,
-        sid,
-      });
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/item/favorite`,
+        {
+          id,
+          sid,
+        },
+      );
       return { status: response.status };
     } catch (error) {
       console.error("addItemFavorite Error", error);
@@ -71,7 +83,7 @@ class ItemAPI {
     try {
       const { id, sid } = item;
       const response = await axios.delete(
-        `${API_DOMAIN}/item/favorite?id=${id}&sid=${sid}`,
+        `${process.env.REACT_APP_API_URL}/item/favorite?id=${id}&sid=${sid}`,
       );
       return { status: response.status };
     } catch (error) {
@@ -83,12 +95,15 @@ class ItemAPI {
   // 가격 알림
   static async addItemPriceAlert(item, priceThreshold) {
     try {
-      const response = await axios.post(`${API_DOMAIN}/item/alert`, {
-        itemName: item.name,
-        itemId: item.id,
-        itemSid: item.sid,
-        priceThreshold,
-      });
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/item/alert`,
+        {
+          itemName: item.name,
+          itemId: item.id,
+          itemSid: item.sid,
+          priceThreshold,
+        },
+      );
       return {
         status: response.status,
         itemPriceAlert: response.data.itemPriceAlert,
@@ -104,7 +119,9 @@ class ItemAPI {
 
   static async getItemPriceAlerts() {
     try {
-      const response = await axios.get(`${API_DOMAIN}/item/alert`);
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/item/alert`,
+      );
       return {
         status: response.status,
         itemPriceAlerts: response.data.itemPriceAlerts,
@@ -117,10 +134,13 @@ class ItemAPI {
 
   static async updateItemPriceAlert(alertId, priceThreshold) {
     try {
-      const response = await axios.put(`${API_DOMAIN}/item/alert`, {
-        alertId,
-        priceThreshold,
-      });
+      const response = await axios.put(
+        `${process.env.REACT_APP_API_URL}/item/alert`,
+        {
+          alertId,
+          priceThreshold,
+        },
+      );
       return {
         status: response.status,
         itemPriceAlert: response.data.itemPriceAlert,
@@ -134,7 +154,7 @@ class ItemAPI {
   static async deleteItemPriceAlert(alertId) {
     try {
       const response = await axios.delete(
-        `${API_DOMAIN}/item/alert?id=${alertId}`,
+        `${process.env.REACT_APP_API_URL}/item/alert?id=${alertId}`,
       );
       return { status: response.status };
     } catch (error) {
@@ -146,9 +166,12 @@ class ItemAPI {
   // 강화 정보 가져오기
   static async getReinforcementInfo(type) {
     try {
-      const response = await axios.post(`${API_DOMAIN}/reinforcement`, {
-        type,
-      });
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/reinforcement`,
+        {
+          type,
+        },
+      );
       return response.data;
     } catch (error) {
       console.error("getReinforcementInfo Error", error);
