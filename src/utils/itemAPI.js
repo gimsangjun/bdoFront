@@ -93,7 +93,7 @@ class ItemAPI {
   }
 
   // 가격 알림
-  static async addItemPriceAlert(item, priceThreshold) {
+  static async addItemPriceAlert(item, priceThreshold, alertCondition) {
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/item/alert`,
@@ -102,6 +102,7 @@ class ItemAPI {
           itemId: item.id,
           itemSid: item.sid,
           priceThreshold,
+          alertCondition, // alertCondition 추가
         },
       );
       return {
@@ -111,8 +112,8 @@ class ItemAPI {
     } catch (error) {
       console.error("addItemPriceAlert Error", error);
       return {
-        status: error.response.status,
-        message: error.response.data.message,
+        status: error.response ? error.response.status : 500,
+        message: error.response ? error.response.data.message : "서버 오류",
       };
     }
   }

@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import Modal from "react-modal";
-import ItemAPI from "../../utils/itemAPI";
 import SuccessModal from "./SuccessModal";
+import ItemAPI from "../../utils/itemAPI";
 
 const PriceAlertModal = ({ isOpen, onRequestClose, item }) => {
   const [priceThreshold, setPriceThreshold] = useState(0);
-  const [errorMessage, setErrorMessage] = useState(""); // 에러 메시지 상태 추가
+  const [alertCondition, setAlertCondition] = useState("below"); // alertCondition 상태 추가
+  const [errorMessage, setErrorMessage] = useState("");
   const [successModalIsOpen, setSuccessModalIsOpen] = useState(false);
   const inputRef = useRef(null);
 
@@ -15,7 +16,7 @@ const PriceAlertModal = ({ isOpen, onRequestClose, item }) => {
       const initialPrice = item.lastSoldPrice
         ? item.lastSoldPrice
         : item.basePrice;
-      setPriceThreshold(initialPrice); // 초기 값도 쉼표를 추가하여 설정
+      setPriceThreshold(initialPrice);
     }
   }, [item]);
 
@@ -24,14 +25,13 @@ const PriceAlertModal = ({ isOpen, onRequestClose, item }) => {
     const { status, message } = await ItemAPI.addItemPriceAlert(
       item,
       priceThreshold,
+      alertCondition,
     );
     if (status === 201) {
       setSuccessModalIsOpen(true);
       onRequestClose();
-    } else if (status === 400 && message === "이미 존재하는 가격 알림입니다.") {
-      setErrorMessage("이미 존재하는 가격 알림입니다.");
     } else {
-      setErrorMessage("가격 알림 등록에 실패했습니다.");
+      setErrorMessage(message);
     }
   };
 
@@ -44,7 +44,7 @@ const PriceAlertModal = ({ isOpen, onRequestClose, item }) => {
       <Modal
         isOpen={isOpen}
         onRequestClose={() => {
-          setErrorMessage(""); // 모달 닫을 때 에러 메시지 초기화
+          setErrorMessage("");
           onRequestClose();
         }}
         style={{
@@ -76,11 +76,40 @@ const PriceAlertModal = ({ isOpen, onRequestClose, item }) => {
             <input
               type="number"
               value={priceThreshold}
-              onChange={(e) => setPriceThreshold(e.target.value)}
+              onChange={(e) => setPriceThreshold(Number(e.target.value))}
               required
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               ref={inputRef}
             />
+          </div>
+          <div>
+            <label className="block text-gray-700 text-sm font-bold mb-2">
+              알림 조건:
+            </label>
+            <div className="flex space-x-4">
+              <label className="inline-flex items-center">
+                <input
+                  type="radio"
+                  name="alertCondition"
+                  value="below"
+                  checked={alertCondition === "below"}
+                  onChange={() => setAlertCondition("below")}
+                  className="form-radio"
+                />
+                <span className="ml-2">기준가 이하</span>
+              </label>
+              <label className="inline-flex items-center">
+                <input
+                  type="radio"
+                  name="alertCondition"
+                  value="above"
+                  checked={alertCondition === "above"}
+                  onChange={() => setAlertCondition("above")}
+                  className="form-radio"
+                />
+                <span className="ml-2">기준가 이상</span>
+              </label>
+            </div>
           </div>
           {errorMessage && (
             <p className="text-red-500 text-sm">{errorMessage}</p>
@@ -95,7 +124,7 @@ const PriceAlertModal = ({ isOpen, onRequestClose, item }) => {
             <button
               type="button"
               onClick={() => {
-                setErrorMessage(""); // 취소 버튼 클릭 시 에러 메시지 초기화
+                setErrorMessage("");
                 onRequestClose();
               }}
               className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
