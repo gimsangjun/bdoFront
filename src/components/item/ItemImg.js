@@ -49,7 +49,7 @@ export default function ItemImg({ item, className, style, enhanceLevelSize }) {
   );
 }
 
-const formatImgUrl = (item) => {
+export const formatImgUrl = (item) => {
   const defaultImgUrl = `${imgUrl}images/items/${String(item.id).padStart(
     8,
     "0",

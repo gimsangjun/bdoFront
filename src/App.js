@@ -5,10 +5,11 @@ import ErrorPage from "./pages/ErrorPage";
 import AllItemsPage from "./pages/AllItemsPage";
 import FavoritePage from "./pages/FavoritePage";
 import PriceAlertPage from "./pages/PriceAlertPage";
+import ReinforcementCalPage from "./pages/ReinforcementCalPage";
+import ProcessiongTradePage from "./pages/ProcessiongTradePage";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { fetchFavoriteItems } from "./modules/itemFav";
-import ReinforcementCalPage from "./pages/ReinforcementCalPage";
 
 export default function App() {
   // 로그인한 유저가 있으면 favItems 로드
@@ -28,6 +29,8 @@ export default function App() {
         path="/reinforcement-caculator"
         element={<ReinforcementCalPage />}
       />
+      {/* 가공 무역 */}
+      <Route path="processiong-trade" element={<ProcessiongTradePage />} />
       <Route path="/price-alert" element={<PriceAlertPage />} />
       <Route path="/favorite" element={<FavoritePage />} />
       <Route path="/items" element={<AllItemsPage />} />

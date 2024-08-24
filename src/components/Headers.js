@@ -46,6 +46,10 @@ export const MainHeader = ({ onLogout }) => {
             <Img src={anvil} alt="anvil" />
             <Span>강화 기댓값 계산기</Span>
           </MainLink>
+          <MainLink to="/processiong-trade">
+            <Img src={recommend} alt="processiong trade" />
+            <Span>가공 무역 계산기</Span>
+          </MainLink>
           <MainLink to="/">
             <Img src={product} alt="product" />
             <Span>게시판</Span>
@@ -53,10 +57,6 @@ export const MainHeader = ({ onLogout }) => {
           <MainLink to="/">
             <Img src={campfire} alt="campfire" />
             <Span>공지사항</Span>
-          </MainLink>
-          <MainLink to="/">
-            <Img src={recommend} alt="good" />
-            <Span>아무거나</Span>
           </MainLink>
         </nav>
         <div className="flex shrink-0 items-center min-w-max">
