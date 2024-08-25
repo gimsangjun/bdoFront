@@ -7,6 +7,7 @@ import FavoritePage from "./pages/FavoritePage";
 import PriceAlertPage from "./pages/PriceAlertPage";
 import ReinforcementCalPage from "./pages/ReinforcementCalPage";
 import ProcessiongTradePage from "./pages/ProcessiongTradePage";
+import ItemInfoListPage from "./pages/admin/ItemInfoListPage";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { fetchFavoriteItems } from "./modules/itemFav";
@@ -24,6 +25,9 @@ export default function App() {
 
   return (
     <Routes>
+      {/* 관리자 페이지 */}
+      {/* 아이템 정보 수정 */}
+      <Route path="/admin/item-info-list" element={<ItemInfoListPage />} />
       {/* 아이템 가격 알림. */}
       <Route
         path="/reinforcement-caculator"
@@ -31,6 +35,7 @@ export default function App() {
       />
       {/* 가공 무역 */}
       <Route path="processiong-trade" element={<ProcessiongTradePage />} />
+      {/* 아이템 가격 알림 */}
       <Route path="/price-alert" element={<PriceAlertPage />} />
       <Route path="/favorite" element={<FavoritePage />} />
       <Route path="/items" element={<AllItemsPage />} />

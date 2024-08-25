@@ -58,6 +58,10 @@ export const MainHeader = ({ onLogout }) => {
             <Img src={campfire} alt="campfire" />
             <Span>공지사항</Span>
           </MainLink>
+          <MainLink to="/admin/item-info-list">
+            <Img src={campfire} alt="item-info-list" />
+            <Span>아이템 수정</Span>
+          </MainLink>
         </nav>
         <div className="flex shrink-0 items-center min-w-max">
           <div
