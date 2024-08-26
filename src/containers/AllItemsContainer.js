@@ -35,7 +35,6 @@ export default function AllItemsContainer() {
   }, []); // 빈괄호없애면 일남. 계속요청함.
 
   const handleCategoryClick = (mainCategory, subCategory) => {
-    // TODO: 아이템 이름 검색하고, 카테고리 추가하는것도 해봐야할듯.
     const newQuery = {
       mainCategory,
       subCategory,

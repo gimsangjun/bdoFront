@@ -171,7 +171,7 @@ export default function Simulator({
               </span>
             </p>
           </div>
-          {/* TODO 초기화 버튼 크기를 제외하고 나머지 크기를 강화 버튼이 꽉채우게 하고싶어. */}
+          {/*  초기화 버튼 크기를 제외하고 나머지 크기를 강화 버튼이 꽉채우기*/}
           <div className="flex">
             <button
               onClick={handleSimulate}

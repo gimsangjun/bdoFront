@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // useNavigate 훅을 import
 import ItemInfoUpdateAPI from "../../../utils/itemInfoUpdateAPI";
 
@@ -9,7 +9,7 @@ export default function ItemInfoListContainer() {
   const [totalPages, setTotalPages] = useState(1); // 총 페이지 수를 저장하는 상태
   const [limit, setLimit] = useState(10); // 페이지당 아이템 수를 저장하는 상태
 
-  const navigate = useNavigate(); // useNavigate 훅 사용
+  const navigate = useNavigate();
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
@@ -42,7 +42,7 @@ export default function ItemInfoListContainer() {
 
   // 아이템 이름 클릭 핸들러
   const handleItemClick = (id, sid) => {
-    navigate(`/admin/item-info-update?id=${id}&sid=${sid}`); // id와 sid를 쿼리 파라미터로 포함하여 이동
+    navigate(`/admin/item-info-detail?id=${id}&sid=${sid}`);
   };
 
   return (
@@ -111,7 +111,7 @@ export default function ItemInfoListContainer() {
                   {item.mainCategory}, {item.subCategory}
                 </td>
                 <td className="p-2 border">{item.grade}</td>
-                {/* max-w-[250px]와 break-words 클래스를 td 요소에 추가 */}
+                {/* break-word는 단어가 셀의 너비를 초과하면 강제로 줄바꿈 */}
                 <td className="p-2 border max-w-[250px] break-words">
                   {item.imgUrl}
                 </td>
