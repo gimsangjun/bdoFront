@@ -9,6 +9,7 @@ import ReinforcementCalPage from "./pages/ReinforcementCalPage";
 import ProcessiongTradePage from "./pages/ProcessiongTradePage";
 import ItemInfoListPage from "./pages/admin/ItemInfoListPage";
 import ItemInfoDetailPage from "./pages/admin/ItemInfoDetailPage";
+import ItemCreatePage from "./pages/admin/ItemCreatePage";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { fetchFavoriteItems } from "./modules/itemFav";
@@ -31,6 +32,7 @@ export default function App() {
       <Route path="/admin/item-info-list" element={<ItemInfoListPage />} />
       {/* 바로 여기로 접근 못하게 해야됨 */}
       <Route path="/admin/item-info-detail" element={<ItemInfoDetailPage />} />
+      <Route path="/admin/item-create" element={<ItemCreatePage />} />
       {/* 아이템 가격 알림. */}
       <Route
         path="/reinforcement-caculator"
