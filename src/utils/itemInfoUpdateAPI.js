@@ -4,6 +4,13 @@ import axios from "./axiosInstance";
 class ItemInfoUpdateAPI {
   // GET: 아이템 정보를 쿼리에 따라 가져오기
   // 쿼리가능 : id,name, page,limit
+  // 응답
+  // response = {
+  //   currentPage: 1,
+  //   items: [],
+  //   totalItems: 1,
+  //   totalPages: 1,
+  // };
   static async getItems(query) {
     try {
       const queryString = new URLSearchParams(query).toString();
