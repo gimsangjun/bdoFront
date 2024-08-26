@@ -1,12 +1,12 @@
 import React from "react";
-import { formatImgUrl } from "../item/ItemImg";
+import ItemImg from "../item/ItemImg";
 
 // 가공무역- 아이템 컴포넌트
 export default function CraftingToolDetails({ item }) {
   return (
     <div className="p-6 bg-white shadow-lg rounded-lg max-w-md mx-auto">
       <div className="flex items-center mb-4">
-        <img src={formatImgUrl(item)} alt="Tool Icon" className="w-12 h-12" />
+        <img src={ItemImg({ item })} alt="Tool Icon" className="w-12 h-12" />
         <div className="ml-4">
           <h2 className="text-xl font-bold">{item.name}</h2>
           {/* 아이템 설명 */}
@@ -28,7 +28,7 @@ export default function CraftingToolDetails({ item }) {
           {item.materianls.map((material) => (
             <div key={material.id} className="flex items-center">
               <img
-                src={formatImgUrl(material)}
+                src={ItemImg({ item: material })}
                 alt="Material Icon"
                 className="w-6 h-6"
               />

@@ -4,6 +4,7 @@ import { getItemColor } from "./DataTdName";
 const imgUrl = "https://cdn.bdolytics.com/";
 
 // 아이템 위에 강화단계예 따른, 로마숫자 표시.
+// enhanceLevelSize 로마숫자 크기조절
 export default function ItemImg({ item, className, style, enhanceLevelSize }) {
   const enhanceLevelStyle = {
     display: "flex",
@@ -16,7 +17,7 @@ export default function ItemImg({ item, className, style, enhanceLevelSize }) {
     fontWeight: 600,
     justifyContent: "center",
     alignItems: "center",
-    fontSize: enhanceLevelSize || "1.5rem",
+    fontSize: enhanceLevelSize || "1.5rem", // enhanceLevelSize 로마숫자 크기조절
     WebkitTextStrokeWidth: "1px",
     WebkitTextStrokeColor: "#f56565",
   };
@@ -49,7 +50,7 @@ export default function ItemImg({ item, className, style, enhanceLevelSize }) {
   );
 }
 
-export const formatImgUrl = (item) => {
+const formatImgUrl = (item) => {
   const defaultImgUrl = `${imgUrl}images/items/${String(item.id).padStart(
     8,
     "0",
