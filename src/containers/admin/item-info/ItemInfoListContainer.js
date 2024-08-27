@@ -3,7 +3,9 @@ import { useNavigate } from "react-router-dom"; // useNavigate 훅을 import
 import ItemInfoUpdateAPI from "../../../utils/itemInfoUpdateAPI";
 
 export default function ItemInfoListContainer() {
-  const [searchTerm, setSearchTerm] = useState(""); // 검색어를 저장하는 상태
+  const [searchName, setSearchName] = useState(""); // 이름 검색어를 저장하는 상태
+  const [searchId, setSearchId] = useState(""); // ID 검색어를 저장하는 상태
+  const [searchSid, setSearchSid] = useState(""); // SID 검색어를 저장하는 상태
   const [items, setItems] = useState([]); // 검색 결과로 받아온 아이템 리스트를 저장하는 상태
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지를 저장하는 상태
   const [totalPages, setTotalPages] = useState(1); // 총 페이지 수를 저장하는 상태
@@ -11,8 +13,16 @@ export default function ItemInfoListContainer() {
 
   const navigate = useNavigate();
 
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
+  const handleSearchNameChange = (e) => {
+    setSearchName(e.target.value);
+  };
+
+  const handleSearchIdChange = (e) => {
+    setSearchId(e.target.value);
+  };
+
+  const handleSearchSidChange = (e) => {
+    setSearchSid(e.target.value);
   };
 
   const handlePageChange = (newPage) => {
@@ -28,16 +38,37 @@ export default function ItemInfoListContainer() {
 
   const fetchItems = async () => {
     try {
-      const data = await ItemInfoUpdateAPI.getItems({
-        name: searchTerm,
+      const query = {
+        name: searchName,
+        id: searchId,
+        sid: searchSid,
         page: currentPage,
         limit: limit,
+      };
+      // 필드가 비어 있으면 쿼리에서 제거
+      Object.keys(query).forEach((key) => {
+        if (query[key] === "" || query[key] === undefined) {
+          delete query[key];
+        }
       });
+      const data = await ItemInfoUpdateAPI.getItems(query);
       setItems(data.items);
       setTotalPages(data.totalPages);
     } catch (error) {
       console.error("아이템 리스트를 가져오는 중 오류가 발생했습니다.", error);
     }
+  };
+
+  // 모든 검색 입력 필드를 비우는 함수
+  const handleResetSearch = () => {
+    setSearchName("");
+    setSearchId("");
+    setSearchSid("");
+  };
+
+  // 아이템 생성 페이지로 이동하는 함수
+  const handleCreateItem = () => {
+    navigate("/admin/item-create");
   };
 
   // 아이템 이름 클릭 핸들러
@@ -51,16 +82,44 @@ export default function ItemInfoListContainer() {
       <div className="mb-4">
         <input
           type="text"
-          value={searchTerm}
-          onChange={handleSearchChange}
+          value={searchName}
+          onChange={handleSearchNameChange}
           placeholder="아이템 이름을 입력하세요"
           className="p-2 border rounded mr-2"
         />
+        <input
+          type="text"
+          value={searchId}
+          onChange={handleSearchIdChange}
+          placeholder="아이템 ID를 입력하세요"
+          className="p-2 border rounded mr-2"
+        />
+        <input
+          type="text"
+          value={searchSid}
+          onChange={handleSearchSidChange}
+          placeholder="아이템 SID를 입력하세요"
+          className="p-2 border rounded mr-2"
+        />
         <button
-          onClick={() => fetchItems()}
-          className="mt-2 p-2 bg-blue-500 text-white rounded"
+          onClick={fetchItems}
+          className="mt-2 p-2 bg-blue-500 text-white rounded mr-2"
         >
           검색
+        </button>
+        {/* 모든 검색 입력 필드를 비우는 버튼 */}
+        <button
+          onClick={handleResetSearch}
+          className="mt-2 p-2 bg-gray-500 text-white rounded mr-2"
+        >
+          검색 초기화
+        </button>
+        {/* 아이템 생성 페이지로 이동하는 버튼 */}
+        <button
+          onClick={handleCreateItem}
+          className="mt-2 p-2 bg-green-500 text-white rounded"
+        >
+          아이템 생성
         </button>
       </div>
 
@@ -124,7 +183,7 @@ export default function ItemInfoListContainer() {
           </tbody>
         </table>
       ) : (
-        searchTerm && <div className="mt-4">검색된 아이템이 없습니다.</div>
+        searchName && <div className="mt-4">검색된 아이템이 없습니다.</div>
       )}
 
       {/* 페이지네이션 버튼 */}
