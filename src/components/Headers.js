@@ -81,8 +81,8 @@ export function SubHeader({ currentPath }) {
 
   const sublinks = [
     { path: "/", name: "홈" },
-    { path: "/reinforcement-caculator", name: "강화 기댓값 계산기" },
     { path: "/processiong-trade", name: "가공 무역 계산기" },
+    { path: "/reinforcement-caculator", name: "강화 기댓값 계산기" },
   ];
 
   return (
