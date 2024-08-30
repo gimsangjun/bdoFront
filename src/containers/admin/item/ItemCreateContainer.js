@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // useNavigate 훅을 사용하여 라우팅
-import ItemInfoUpdateAPI from "../../../utils/itemInfoUpdateAPI";
 import SubIngredientManager from "../../../components/admin/item/SubIngredientManager"; // 하위 재료 추가 컴포넌트 import
 import FieldManager from "../../../components/admin/item/FieldManager"; // 새 필드 추가 컴포넌트 import
+import ItemAPI from "../../../utils/itemAPI";
 
 export default function ItemCreateContainer() {
   const [formData, setFormData] = useState({
@@ -41,17 +41,16 @@ export default function ItemCreateContainer() {
       return;
     }
 
-    const dataToSubmit = {
+    const dataToUpdate = {
       ...formData,
       ingredients, // 재료 목록 추가
     };
 
     try {
-      const response = await ItemInfoUpdateAPI.createItem(dataToSubmit);
-      console.log(response);
+      const response = await ItemAPI.createItem(dataToUpdate);
       alert("새로운 아이템이 성공적으로 생성되었습니다.");
       // 아이템 생성 후 상세 페이지로 이동
-      navigate(`/admin/item-info-detail?id=${formData.id}&sid=${formData.sid}`);
+      navigate(`/admin/item/detail?id=${formData.id}&sid=${formData.sid}`);
     } catch (error) {
       console.error("아이템을 생성하는 중 오류가 발생했습니다.", error);
       alert(
@@ -90,7 +89,7 @@ export default function ItemCreateContainer() {
                 key !== "sid" &&
                 key !== "mainCategory" &&
                 key !== "subCategory" &&
-                key !== "basePrice" && (
+                key !== "price" && (
                   <button
                     onClick={() => handleDeleteField(key)}
                     className="absolute top-0 right-0 mt-1 mr-1 p-1 bg-red-500 text-white rounded"

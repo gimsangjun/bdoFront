@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // useNavigate 훅을 import
-import ItemInfoUpdateAPI from "../../../utils/itemInfoUpdateAPI";
+import ItemAPI from "../../../utils/itemAPI";
 
 export default function ItemListContainer() {
   const [searchName, setSearchName] = useState(""); // 이름 검색어를 저장하는 상태
@@ -51,7 +51,7 @@ export default function ItemListContainer() {
           delete query[key];
         }
       });
-      const data = await ItemInfoUpdateAPI.getItems(query);
+      const data = await ItemAPI.getItemsByQuery(query);
       setItems(data.items);
       setTotalPages(data.totalPages);
     } catch (error) {
