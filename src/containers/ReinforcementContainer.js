@@ -18,10 +18,6 @@ export default function ReinforcementContainer({ itemId: _itemId }) {
   const [cronStonePrice, setCronStonePrice] = useState(2240000); // 크론석 가격 224만원 or 300만원
   const [stacks, setStacks] = useState([]); // 강화 스택
 
-  // TODO: items가 바뀌었으면 false로 초기화 되어야됨.
-  // TODO: type이 악세사리인 경우에만 망치 활성화 버튼이 보여야됨.
-  const [jHammer, setJHammer] = useState(false);
-
   // 초기 데이터 로딩.
   useEffect(() => {
     const fetchItem = async () => {
@@ -42,7 +38,6 @@ export default function ReinforcementContainer({ itemId: _itemId }) {
         // 강화 기본 정보 업데이트
         const data = await ItemAPI.getReinforcementInfo(filteredItems[0].type);
         setReinforcementInitData(data);
-        setJHammer(false); // J망치 비활성화
 
         // 강화 스택 초기 업데이트
         setStacks(data.recommendStack);
@@ -64,11 +59,10 @@ export default function ReinforcementContainer({ itemId: _itemId }) {
         reinforcementInitData,
         stacks,
         cronStonePrice,
-        jHammer,
       );
       setReinforcementData(updatedData);
     }
-  }, [items, cronStonePrice, stacks, reinforcementInitData, jHammer]);
+  }, [items, cronStonePrice, stacks, reinforcementInitData]);
 
   // 거래소 가격 업데이트
   const handleUpdateItemsPrice = async () => {
@@ -114,9 +108,6 @@ export default function ReinforcementContainer({ itemId: _itemId }) {
                 {/* 강화 정보 제공 테이블 */}
                 {reinforcementData && (
                   <div className="flex flex-col">
-                    <button onClick={() => setJHammer(!jHammer)}>
-                      {jHammer ? "망치 해제" : "망치 활성화"}
-                    </button>
                     <SelectItem items={items} handleItemId={setItemId} />
                     <ReinforcementDataTable
                       items={items}
@@ -230,7 +221,6 @@ const makeReinforcementData = (
   reinforcementData,
   stacks,
   cronStonePrice,
-  jHammer,
 ) => {
   const updatedReinforcementData = { ...reinforcementData };
 
@@ -284,15 +274,6 @@ const makeReinforcementData = (
       ).toFixed(2),
     );
 
-  // J의 정밀한 망치 사용
-  if (jHammer) {
-    updatedReinforcementData.gradeMaintainProbability[4] =
-      parseFloat(updatedReinforcementData.gradeMaintainProbability[4]) +
-      parseFloat(updatedReinforcementData.gradeDecreaseProbability[4]); // 강화 등급 유지 확률
-    updatedReinforcementData.gradeDecreaseProbability[4] = 0; // 마지막 단계 강화 하락 확률 0%
-    // updatedReinforcementData.costPerTry[4] = 30000000000; // 마지막 단계 강화 비용 300억
-  }
-
   // 한번 트라이당 비용
   updatedReinforcementData.costPerTry = updatedReinforcementData.stages.map(
     (stage, index) => {
@@ -308,10 +289,6 @@ const makeReinforcementData = (
       return cronStoneCost + additionalItemsCost;
     },
   );
-
-  if (jHammer) {
-    updatedReinforcementData.costPerTry[4] = 30000000000; // 마지막 단계 강화 비용 300억(J정밀한 망치 가격)
-  }
 
   // 강화를 성공하기까지 평균 시도 횟수 계산
   updatedReinforcementData.averageTry =
