@@ -1,32 +1,88 @@
+import React, { useState, useEffect } from "react";
 import CraftingToolDetails from "../components/processing-trade/CraftingToolDetails";
+import ItemAPI from "../utils/itemAPI";
 
-// 가공 무역
 export default function ProcessingTradeContainer() {
-  // 현재 item DB의 내용
-  //TODO: 여기에 하위재료와 details를 넣어야됨. DB조작하기 힘드니까 그냥 관리자 페이지 만들어서 하는게 나을듯?
-  // {
-  //   _id: ObjectId('664d464e4417f97dad97c4e8'),
-  //   id: 4702,
-  //   name: '측백나무 합판',
-  //   mainCategory: 25,
-  //   subCategory: 2,
-  //   __v: 0,
-  //   grade: 'common'
-  // }
+  const [items, setItems] = useState([]); // 아이템 정보를 저장할 상태
+  const [isLoading, setIsLoading] = useState(true); // 로딩 상태 관리
 
-  // 임시 데이터
-  // 만약 item정보가 없다면, 새로 만들어서 넣어야됨.
-  const item = {
-    id: 55757,
-    name: "설원 목재 상자",
-    details: [
-      "설명 : 측백나무 합판, 설원 삼나무 합판을 5개씩 묶어서 포장한 무역 아이템이다.",
-    ],
-    materianls: [
-      { id: 4702, name: "측백 나무 합판", quantity: 5 },
-      { id: 4722, name: "설원 삼나무 합판", quantity: 5 },
-    ],
+  const fetchItems = async () => {
+    try {
+      const fetchedItems = await ItemAPI.getItemsByQuery(
+        { mainCategory: 300 },
+        1,
+      );
+      setItems(fetchedItems.items);
+    } catch (error) {
+      console.error("아이템 정보를 가져오는 중 오류가 발생했습니다:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  return <CraftingToolDetails item={item} />;
+  const handleUpdatePrices = async () => {
+    try {
+      let itemsToUpdate = new Map();
+      const addItemWithSubcomponents = (item) => {
+        if (!itemsToUpdate.has(item.id)) {
+          itemsToUpdate.set(item.id, item);
+        }
+        if (item.components && item.components.length > 0) {
+          item.components.forEach((component) => {
+            addItemWithSubcomponents(component);
+          });
+        }
+      };
+
+      items.forEach((item) => {
+        addItemWithSubcomponents(item);
+      });
+
+      itemsToUpdate.forEach((item, key) => {
+        if (item.mainCategory === 300) {
+          itemsToUpdate.delete(key);
+        }
+      });
+
+      const itemsArray = Array.from(itemsToUpdate.values());
+      if (itemsArray.length > 0) {
+        await ItemAPI.updateItemsPrice(itemsArray);
+        await fetchItems();
+        alert("가격이 업데이트 되었습니다.");
+      } else {
+        alert("업데이트할 아이템이 없습니다.");
+      }
+    } catch (error) {
+      console.error("가격 업데이트 중 오류가 발생했습니다:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchItems();
+  }, []);
+
+  if (isLoading) {
+    return <div>로딩 중...</div>;
+  }
+
+  return (
+    <div className="flex flex-col items-center max-w-[1200px] mx-auto">
+      <div className="self-end pr-4 pt-4">
+        <button
+          onClick={handleUpdatePrices}
+          className="mb-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        >
+          전체 가격 업데이트
+        </button>
+      </div>
+      {/* 한 줄에 2개의 CraftingToolDetails을 배치 */}
+      <div className="w-full flex flex-wrap">
+        {items.map((item) => (
+          <div key={item.id} className="p-2 w-1/2">
+            <CraftingToolDetails item={item} />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }
