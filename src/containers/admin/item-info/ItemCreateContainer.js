@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // useNavigate 훅을 사용하여 라우팅
 import ItemInfoUpdateAPI from "../../../utils/itemInfoUpdateAPI";
-import SubIngredientManager from "./SubIngredientManager"; // 하위 재료 추가 컴포넌트 import
-import FieldManager from "./FieldManager"; // 새 필드 추가 컴포넌트 import
+import SubIngredientManager from "../../../components/admin/item-info/SubIngredientManager"; // 하위 재료 추가 컴포넌트 import
+import FieldManager from "../../../components/admin/item-info/FieldManager"; // 새 필드 추가 컴포넌트 import
 
 export default function ItemCreateContainer() {
   const [formData, setFormData] = useState({
@@ -54,7 +54,10 @@ export default function ItemCreateContainer() {
       navigate(`/admin/item-info-detail?id=${formData.id}&sid=${formData.sid}`);
     } catch (error) {
       console.error("아이템을 생성하는 중 오류가 발생했습니다.", error);
-      alert("아이템을 생성하는 중 오류가 발생했습니다.");
+      alert(
+        "아이템을 생성하는 중 오류가 발생했습니다. ",
+        error.response.data.message,
+      );
     }
   };
 

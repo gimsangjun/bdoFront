@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // useNavigate 훅을 사용하여 라우팅
 import ItemInfoUpdateAPI from "../../../utils/itemInfoUpdateAPI";
 import ItemImg from "../../../components/item/ItemImg";
-import SubIngredientManager from "./SubIngredientManager"; // Import SubIngredientManager
-import FieldManager from "./FieldManager"; // Import FieldManager
+import SubIngredientManager from "../../../components/admin/item-info/SubIngredientManager"; // Import SubIngredientManager
+import FieldManager from "../../../components/admin/item-info/FieldManager"; // Import FieldManager
 
 export default function ItemInfoDetailContainer({ id, sid }) {
   const [item, setItem] = useState(null); // 아이템 정보를 저장하는 상태
