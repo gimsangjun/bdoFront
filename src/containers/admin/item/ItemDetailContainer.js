@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // useNavigate 훅을 사용하여 라우팅
 import ItemInfoUpdateAPI from "../../../utils/itemInfoUpdateAPI";
-import ItemImg from "../../../components/item/ItemImg";
-import SubIngredientManager from "../../../components/admin/item-info/SubIngredientManager"; // Import SubIngredientManager
-import FieldManager from "../../../components/admin/item-info/FieldManager"; // Import FieldManager
+import ItemImg from "../../../components/ItemImg";
+import SubIngredientManager from "../../../components/admin/item/SubIngredientManager"; // Import SubIngredientManager
+import FieldManager from "../../../components/admin/item/FieldManager"; // Import FieldManager
 
-export default function ItemInfoDetailContainer({ id, sid }) {
+export default function ItemDetailContainer({ id, sid }) {
   const [item, setItem] = useState(null); // 아이템 정보를 저장하는 상태
   const [isLoading, setIsLoading] = useState(true); // 로딩 상태 관리
   const [formData, setFormData] = useState({}); // 수정 가능한 필드를 위한 상태

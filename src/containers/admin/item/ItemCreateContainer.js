@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // useNavigate 훅을 사용하여 라우팅
 import ItemInfoUpdateAPI from "../../../utils/itemInfoUpdateAPI";
-import SubIngredientManager from "../../../components/admin/item-info/SubIngredientManager"; // 하위 재료 추가 컴포넌트 import
-import FieldManager from "../../../components/admin/item-info/FieldManager"; // 새 필드 추가 컴포넌트 import
+import SubIngredientManager from "../../../components/admin/item/SubIngredientManager"; // 하위 재료 추가 컴포넌트 import
+import FieldManager from "../../../components/admin/item/FieldManager"; // 새 필드 추가 컴포넌트 import
 
 export default function ItemCreateContainer() {
   const [formData, setFormData] = useState({
@@ -63,7 +63,7 @@ export default function ItemCreateContainer() {
 
   // 목록 페이지로 돌아가는 함수
   const goBackToList = () => {
-    navigate("/admin/item-info-list");
+    navigate("/admin/item");
   };
 
   return (

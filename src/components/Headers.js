@@ -44,8 +44,8 @@ export const MainHeader = ({ onLogout }) => {
             <Span>가공 무역 계산기</Span>
           </MainLink>
           {user && user.role === "admin" && (
-            <MainLink to="/admin/item-info-list">
-              <Img src={campfire} alt="item-info-list" />
+            <MainLink to="/admin/item">
+              <Img src={campfire} alt="item" />
               <Span>아이템 수정</Span>
             </MainLink>
           )}
@@ -107,7 +107,9 @@ export function SubHeader({ currentPath }) {
 }
 
 export function NotificationHeader({ notification }) {
-  notification = notification ? notification : "공지사항입니다.";
+  notification = notification
+    ? notification
+    : "건의사항은 https://cowtrek.tistory.com/1";
   return (
     <div className="flex items-center h-10 bg-yellow-400">
       {/* width를 주지않으면 mx-auto가 먹히지 않음. */}

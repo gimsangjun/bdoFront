@@ -1,6 +1,6 @@
 import React from "react";
 import HeaderContainer from "../../containers/HeaderContainer";
-import ItemCreateContainer from "../../containers/admin/item-info/ItemCreateContainer";
+import ItemCreateContainer from "../../containers/admin/item/ItemCreateContainer";
 
 export default function ItemCreatePage() {
   return (

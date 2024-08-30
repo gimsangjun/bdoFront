@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // useNavigate 훅을 import
 import ItemInfoUpdateAPI from "../../../utils/itemInfoUpdateAPI";
 
-export default function ItemInfoListContainer() {
+export default function ItemListContainer() {
   const [searchName, setSearchName] = useState(""); // 이름 검색어를 저장하는 상태
   const [searchId, setSearchId] = useState(""); // ID 검색어를 저장하는 상태
   const [searchSid, setSearchSid] = useState(""); // SID 검색어를 저장하는 상태
@@ -68,12 +68,12 @@ export default function ItemInfoListContainer() {
 
   // 아이템 생성 페이지로 이동하는 함수
   const handleCreateItem = () => {
-    navigate("/admin/item-create");
+    navigate("/admin/item/create");
   };
 
   // 아이템 이름 클릭 핸들러
   const handleItemClick = (id, sid) => {
-    navigate(`/admin/item-info-detail?id=${id}&sid=${sid}`);
+    navigate(`/admin/item/detail?id=${id}&sid=${sid}`);
   };
 
   return (
