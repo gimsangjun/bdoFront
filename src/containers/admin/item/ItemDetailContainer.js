@@ -1,33 +1,55 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // useNavigate 훅을 사용하여 라우팅
-import ItemInfoUpdateAPI from "../../../utils/itemInfoUpdateAPI";
 import ItemImg from "../../../components/ItemImg";
 import SubIngredientManager from "../../../components/admin/item/SubIngredientManager"; // Import SubIngredientManager
 import FieldManager from "../../../components/admin/item/FieldManager"; // Import FieldManager
+import ItemAPI from "../../../utils/itemAPI";
 
 export default function ItemDetailContainer({ id, sid }) {
   const [item, setItem] = useState(null); // 아이템 정보를 저장하는 상태
   const [isLoading, setIsLoading] = useState(true); // 로딩 상태 관리
   const [formData, setFormData] = useState({}); // 수정 가능한 필드를 위한 상태
-  const [ingredients, setIngredients] = useState([]); // 하위 재료를 관리하는 상태
+  const [components, setComponents] = useState([]); // 하위 재료를 관리하는 상태
 
   const navigate = useNavigate(); // 페이지 이동을 위한 useNavigate 훅
 
-  // 아이템 정보를 가져오는 함수
   const fetchItem = async () => {
     try {
       setIsLoading(true); // 로딩 시작
-      const response = await ItemInfoUpdateAPI.getItems({ id, sid });
+      const response = await ItemAPI.getItemsByQuery({ id, sid });
       const data = response.items;
       if (data && data.length > 0) {
         setItem(data[0]);
         setFormData(data[0]); // 아이템 정보를 formData로 설정
-        setIngredients(data[0].ingredients || []); // 하위 재료 설정
+
+        // 하위 재료 설정
+        const components = data[0].components || [];
+        if (components.length > 0) {
+          await fetchComponentNames(components); // 하위 재료의 이름을 업데이트
+        } else {
+          setComponents([]); // 하위 재료가 없으면 빈 배열 설정
+        }
       }
       setIsLoading(false); // 로딩 종료
     } catch (error) {
       console.error("아이템 정보를 가져오는 중 오류가 발생했습니다.", error);
       setIsLoading(false);
+    }
+  };
+
+  // 하위 재료의 이름을 가져오는 함수
+  const fetchComponentNames = async (components) => {
+    const ids = components.map((comp) => comp.id);
+    try {
+      const componentData = await ItemAPI.getItemsByIdandSid(ids);
+      const updatedComponents = components.map((comp) => ({
+        ...comp,
+        name: componentData.find((c) => c.id === comp.id)?.name || "이름 없음",
+      }));
+      setComponents(updatedComponents);
+    } catch (error) {
+      console.error("하위 재료 이름을 가져오는 중 오류가 발생했습니다.", error);
+      setComponents(components.map((comp) => ({ ...comp, name: "오류" }))); // 오류가 발생했을 경우 이름을 '오류'로 설정
     }
   };
 
@@ -61,9 +83,9 @@ export default function ItemDetailContainer({ id, sid }) {
         id: id,
         sid: sid,
         ...formData,
-        ingredients, // 하위 재료 포함
+        components, // 하위 재료 포함
       };
-      const response = await ItemInfoUpdateAPI.updateItem(updatedData);
+      const response = await ItemAPI.updateItem(updatedData);
       alert("아이템 정보가 성공적으로 업데이트되었습니다.");
       setItem(response); // 업데이트된 아이템 정보로 상태 업데이트
     } catch (error) {
@@ -100,7 +122,7 @@ export default function ItemDetailContainer({ id, sid }) {
               (key) =>
                 key !== "_id" &&
                 key !== "__v" &&
-                key !== "ingredients" && ( // _id 및 __v 필드를 숨김
+                key !== "components" && ( // _id 및 __v 필드를 숨김
                   <div
                     key={key}
                     className="col-span-1 relative p-4 border rounded"
@@ -134,8 +156,8 @@ export default function ItemDetailContainer({ id, sid }) {
           </div>
           {/* 하위 재료 추가 */}
           <SubIngredientManager
-            ingredients={ingredients}
-            setIngredients={setIngredients}
+            components={components}
+            setComponents={setComponents}
           />
           {/* 새로운 필드 추가 */}
           <FieldManager formData={formData} setFormData={setFormData} />
