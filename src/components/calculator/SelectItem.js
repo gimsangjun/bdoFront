@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Select from "react-select";
-import ItemImg from "../item/ItemImg"; // 경로는 실제 ItemImg 파일 경로로 바꿔주세요
+import ItemImg from "../ItemImg"; // 경로는 실제 ItemImg 파일 경로로 바꿔주세요
 import ItemAPI from "../../utils/itemAPI";
 import { IdsAndSids } from "./SelectItemList";
 

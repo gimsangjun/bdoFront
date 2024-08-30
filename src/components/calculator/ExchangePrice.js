@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import ItemImg from "../item/ItemImg";
+import ItemImg from "../ItemImg";
 import { formatCost, formatDate } from "../../utils/formatUtil";
 import { LuRefreshCcw } from "react-icons/lu";
 

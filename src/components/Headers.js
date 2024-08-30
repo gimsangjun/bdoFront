@@ -3,11 +3,8 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import tw, { styled } from "twin.macro";
 import logo from "../images/logo.png";
-import product from "../images/product.png";
 import campfire from "../images/campfire.png";
 import recommend from "../images/recommend.png";
-import userImg from "../images/user.png";
-import home from "../images/home.png";
 import anvil from "../images/anvil.png";
 import { FaDiscord } from "react-icons/fa";
 
@@ -38,10 +35,6 @@ export const MainHeader = ({ onLogout }) => {
             <Img src={logo} alt="logo" />
             <span className="font-bold text-lg">BDO.GG</span>
           </MainLink>
-          <MainLink to="/" className="bg-mainBlue">
-            <Img src={home} alt="home" />
-            <Span>거래소</Span>
-          </MainLink>
           <MainLink to="/reinforcement-caculator">
             <Img src={anvil} alt="anvil" />
             <Span>강화 기댓값 계산기</Span>
@@ -50,18 +43,12 @@ export const MainHeader = ({ onLogout }) => {
             <Img src={recommend} alt="processiong trade" />
             <Span>가공 무역 계산기</Span>
           </MainLink>
-          <MainLink to="/">
-            <Img src={product} alt="product" />
-            <Span>게시판</Span>
-          </MainLink>
-          <MainLink to="/">
-            <Img src={campfire} alt="campfire" />
-            <Span>공지사항</Span>
-          </MainLink>
-          <MainLink to="/admin/item-info-list">
-            <Img src={campfire} alt="item-info-list" />
-            <Span>아이템 수정</Span>
-          </MainLink>
+          {user && user.role === "admin" && (
+            <MainLink to="/admin/item-info-list">
+              <Img src={campfire} alt="item-info-list" />
+              <Span>아이템 수정</Span>
+            </MainLink>
+          )}
         </nav>
         <div className="flex shrink-0 items-center min-w-max">
           <div
@@ -94,9 +81,8 @@ export function SubHeader({ currentPath }) {
 
   const sublinks = [
     { path: "/", name: "홈" },
-    { path: "/items", name: "전체 아이템" },
-    { path: "/favorite", name: "나의 관심 아이템" },
-    { path: "/price-alert", name: "가격 알림 보기" },
+    { path: "/reinforcement-caculator", name: "강화 기댓값 계산기" },
+    { path: "/processiong-trade", name: "가공 무역 계산기" },
   ];
 
   return (
@@ -115,20 +101,13 @@ export function SubHeader({ currentPath }) {
             </SubLink>
           ))}
         </ul>
-        {/* lg: 1024px이상일때만 mr-0 스타일이 적용됨. */}
-        <div className="flex items-center mr-2 lg:mr-0">
-          <Img src={userImg} alt="user" />
-          <Span>마이 페이지</Span>
-        </div>
       </nav>
     </div>
   );
 }
 
 export function NotificationHeader({ notification }) {
-  notification = notification
-    ? notification
-    : "당신의 취향을 만족시킬 게임들, Games.op.gg에서 만나보세요! 🎮 [클릭]";
+  notification = notification ? notification : "공지사항입니다.";
   return (
     <div className="flex items-center h-10 bg-yellow-400">
       {/* width를 주지않으면 mx-auto가 먹히지 않음. */}
@@ -136,7 +115,6 @@ export function NotificationHeader({ notification }) {
         {/* whitespace-nowrap : 두줄로 표시되지않게 */}
         <Span className="whitespace-nowrap">{notification}</Span>
       </div>
-      {/* TODO: op.gg에서 x표시를 relative, absolute로 해줬음 한번 해보면 좋을듯 */}
     </div>
   );
 }

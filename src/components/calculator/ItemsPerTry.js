@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import cronStone from "../../images/cronStone.png";
-import ItemImg from "../item/ItemImg";
+import ItemImg from "../ItemImg";
 import { formatCost } from "../../utils/formatUtil";
 import ItemAPI from "../../utils/itemAPI";
 

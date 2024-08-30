@@ -1,5 +1,4 @@
 import React from "react";
-import { getItemColor } from "./DataTdName";
 
 const imgUrl = "https://cdn.bdolytics.com/";
 
@@ -28,7 +27,7 @@ export default function ItemImg({ item, className, style, enhanceLevelSize }) {
     return "";
   };
 
-  const enhanceLevel = getRomanNumeral(item.sid);
+  const enhanceLevel = getRomanNumeral(item?.sid || 0);
 
   return (
     // 얘만 z-index가 이상한지 스크롤 햇을때 가려져야하는데, 맨위에 나타나 뭐가 문제일까? 얘와 형제인 얘들은 정상적으로 동작함.
@@ -60,4 +59,26 @@ const formatImgUrl = (item) => {
     return item.imgUrl;
   }
   return defaultImgUrl;
+};
+
+const getItemColor = (item) => {
+  switch (item.grade) {
+    case "legendary":
+      // "text-orange-400 border-orange-400";
+      return "text-[#d36200] border-[#d36200]";
+    case "epic":
+      // "text-yellow-400 border-yellow-400";
+      return "text-[#f6c232] border-[#f6c232]";
+    case "rare":
+      // "text-blue-600 border-blue-600";
+      return "text-[#0391c4] border-[#0391c4]";
+    case "uncommon":
+      // "text-[#5ff369] border-[#5ff369]"
+      //
+      return "text-green-600 border-green-600";
+    default: // common
+      // "text-[#fff] border-[#fff]";
+      // "text-gray-600 border-gray-600";
+      return "text-gray-600 border-gray-600";
+  }
 };

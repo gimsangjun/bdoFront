@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { formatCost } from "../../utils/formatUtil";
-import ItemImg from "../item/ItemImg";
+import ItemImg from "../ItemImg";
 
 // 강화 시뮬레이터를 만들어줘
 export default function Simulator({
