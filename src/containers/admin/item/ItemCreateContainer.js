@@ -13,7 +13,7 @@ export default function ItemCreateContainer() {
     subCategory: 0,
     basePrice: 0,
   });
-  const [ingredients, setIngredients] = useState([]); // 하위재료 데이터 저장
+  const [components, setComponents] = useState([]); // 하위재료 데이터 저장
 
   const navigate = useNavigate(); // 페이지 이동을 위한 useNavigate 훅
 
@@ -43,7 +43,7 @@ export default function ItemCreateContainer() {
 
     const dataToUpdate = {
       ...formData,
-      ingredients, // 재료 목록 추가
+      components, // 재료 목록 추가
     };
 
     try {
@@ -102,8 +102,8 @@ export default function ItemCreateContainer() {
         </div>
         {/* 하위 재료 추가 컴포넌트 */}
         <SubIngredientManager
-          ingredients={ingredients}
-          setIngredients={setIngredients}
+          components={components}
+          setComponents={setComponents}
         />
         {/* 새 필드 추가 컴포넌트 */}
         <FieldManager formData={formData} setFormData={setFormData} />

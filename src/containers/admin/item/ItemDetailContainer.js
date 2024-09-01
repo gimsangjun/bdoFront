@@ -99,7 +99,7 @@ export default function ItemDetailContainer({ id, sid }) {
 
   // 목록 페이지로 돌아가는 함수
   const goBackToList = () => {
-    navigate("/admin/item-info-list");
+    navigate("/admin/item");
   };
 
   // 로딩 중일 때 로딩 메시지 표시
