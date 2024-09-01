@@ -13,8 +13,10 @@ const ExchangePrice = ({
 
   // items가 바뀔 때마다 prices를 업데이트
   useEffect(() => {
-    const initialPrices = items.map((item) =>
-      item.lastSoldPrice ? item.lastSoldPrice : item.basePrice,
+    const initialPrices = items.map(
+      (item) =>
+        // item.lastSoldPrice ? item.lastSoldPrice : item.basePrice,
+        item.price,
     );
     setPrices(initialPrices);
   }, [items]);

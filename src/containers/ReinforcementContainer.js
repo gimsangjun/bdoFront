@@ -225,9 +225,10 @@ const makeReinforcementData = (
   const updatedReinforcementData = { ...reinforcementData };
 
   // 가격 정보 업데이트
-  // price에는 price만 담기도록, lastSoldPrice나 basePrice둘중 하나만 담기게 바꾸기
-  updatedReinforcementData.prices = items.map((item) =>
-    item.lastSoldPrice !== 0 ? item.lastSoldPrice : item.basePrice,
+  updatedReinforcementData.prices = items.map(
+    (item) =>
+      // item.lastSoldPrice !== 0 ? item.lastSoldPrice : item.basePrice,
+      item.price,
   );
 
   // 강화 확률 계산
