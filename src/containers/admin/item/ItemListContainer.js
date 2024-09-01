@@ -5,7 +5,6 @@ import ItemAPI from "../../../utils/itemAPI";
 export default function ItemListContainer() {
   const [searchName, setSearchName] = useState(""); // 이름 검색어를 저장하는 상태
   const [searchId, setSearchId] = useState(""); // ID 검색어를 저장하는 상태
-  const [searchSid, setSearchSid] = useState(""); // SID 검색어를 저장하는 상태
   const [items, setItems] = useState([]); // 검색 결과로 받아온 아이템 리스트를 저장하는 상태
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지를 저장하는 상태
   const [totalPages, setTotalPages] = useState(1); // 총 페이지 수를 저장하는 상태
@@ -19,10 +18,6 @@ export default function ItemListContainer() {
 
   const handleSearchIdChange = (e) => {
     setSearchId(e.target.value);
-  };
-
-  const handleSearchSidChange = (e) => {
-    setSearchSid(e.target.value);
   };
 
   const handlePageChange = (newPage) => {
@@ -41,7 +36,6 @@ export default function ItemListContainer() {
       const query = {
         name: searchName,
         id: searchId,
-        sid: searchSid,
         page: currentPage,
         limit: limit,
       };
@@ -63,7 +57,6 @@ export default function ItemListContainer() {
   const handleResetSearch = () => {
     setSearchName("");
     setSearchId("");
-    setSearchSid("");
   };
 
   // 아이템 생성 페이지로 이동하는 함수
@@ -92,13 +85,6 @@ export default function ItemListContainer() {
           value={searchId}
           onChange={handleSearchIdChange}
           placeholder="아이템 ID를 입력하세요"
-          className="p-2 border rounded mr-2"
-        />
-        <input
-          type="text"
-          value={searchSid}
-          onChange={handleSearchSidChange}
-          placeholder="아이템 SID를 입력하세요"
           className="p-2 border rounded mr-2"
         />
         <button
