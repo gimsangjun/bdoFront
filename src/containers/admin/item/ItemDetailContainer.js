@@ -97,6 +97,17 @@ export default function ItemDetailContainer({ id, sid }) {
     }
   };
 
+  const handleDelete = async () => {
+    try {
+      await ItemAPI.deleteItem(item);
+      alert("아이템이 성공적으로 삭제되었습니다.");
+      navigate("/admin/item"); // 삭제 후 아이템 목록 페이지로 이동
+    } catch (error) {
+      console.error("아이템 삭제 중 오류가 발생했습니다.", error);
+      alert("아이템을 삭제하는 중 오류가 발생했습니다.");
+    }
+  };
+
   // 목록 페이지로 돌아가는 함수
   const goBackToList = () => {
     navigate("/admin/item");
@@ -163,9 +174,15 @@ export default function ItemDetailContainer({ id, sid }) {
           <FieldManager formData={formData} setFormData={setFormData} />
           <button
             onClick={handleUpdate}
-            className="mt-4 w-full p-2 bg-blue-500 text-white rounded"
+            className="mt-2 w-full p-2 bg-blue-500 text-white rounded"
           >
             업데이트
+          </button>
+          <button
+            onClick={handleDelete}
+            className="mt-2 w-full p-2 bg-red-600 text-white rounded"
+          >
+            삭제
           </button>
           <button
             onClick={goBackToList}
