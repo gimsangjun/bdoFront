@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-// 새로운 필드 추가
+// 아이템 새로운 필드 관련 컴포넌트
 export default function FieldManager({ formData, setFormData }) {
   const [newField, setNewField] = useState({ key: "", value: "" }); // State for new field input
 

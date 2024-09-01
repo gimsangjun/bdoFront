@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import ItemAPI from "../../../utils/itemAPI";
 
+// 하위 재료 추가 관련 컴포넌트
 export default function SubcomponentManager({ components, setComponents }) {
   // 원래 DB에는 name은 없는데, 알아서 짤림.
   const [newComponent, setNewComponent] = useState({
@@ -94,23 +95,27 @@ export default function SubcomponentManager({ components, setComponents }) {
       <div className="mt-2 text-sm text-gray-600">
         {idStatus} {/* ID 상태 표시 */}
       </div>
-      <div className="mt-2">
-        {components.map((component, index) => (
-          <div key={index} className="flex items-center gap-2 mt-2">
-            <span className="block font-semibold">이름: {component.name}</span>
-            <span className="block font-semibold">ID: {component.id}</span>
-            <span className="block font-semibold">
-              수량: {component.quantity}
-            </span>
-            <button
-              onClick={() => handleDeleteComponent(index)}
-              className="p-1 bg-red-500 text-white rounded"
-            >
-              삭제
-            </button>
-          </div>
-        ))}
-      </div>
+      {components.length > 0 && (
+        <div className="mt-2">
+          {components.map((component, index) => (
+            <div key={index} className="flex items-center gap-2 mt-2">
+              <span className="block font-semibold">
+                이름: {component.name}
+              </span>
+              <span className="block font-semibold">ID: {component.id}</span>
+              <span className="block font-semibold">
+                수량: {component.quantity}
+              </span>
+              <button
+                onClick={() => handleDeleteComponent(index)}
+                className="p-1 bg-red-500 text-white rounded"
+              >
+                삭제
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
