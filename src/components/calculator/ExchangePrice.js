@@ -3,6 +3,7 @@ import ItemImg from "../ItemImg";
 import { formatCost, formatDate } from "../../utils/formatUtil";
 import { LuRefreshCcw } from "react-icons/lu";
 
+// 강화 기댓값 계산기 - 거래소 가격
 const ExchangePrice = ({
   items,
   handleItemsPrice,
@@ -21,6 +22,8 @@ const ExchangePrice = ({
     setPrices(initialPrices);
   }, [items]);
 
+  // 가격 수정 중인 아이템 인덱스를 저장, `null`이면 편집이 활성화되지 않은 상태임
+  // 수정중이지 않는 아이템의 가격들은 억,만,원 단위로 표시가 되기 때문에, 수정할 때는 모든 숫자를 보여줘야하기때문.
   const [editingIndex, setEditingIndex] = useState(null);
 
   const handlePriceChange = (e, index) => {
@@ -31,11 +34,11 @@ const ExchangePrice = ({
   };
 
   const handleBlur = () => {
-    setEditingIndex(null);
+    setEditingIndex(null); // 입력 포커스를 잃었을 때 편집 상태를 종료
   };
 
   const handleFocus = (index) => {
-    setEditingIndex(index);
+    setEditingIndex(index); // 해당 아이템을 클릭하면 편집 상태로 설정
   };
 
   return (
