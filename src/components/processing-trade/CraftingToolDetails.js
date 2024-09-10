@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react";
 import ItemImg from "../ItemImg";
 import ItemAPI from "../../utils/itemAPI";
 
-export default function CraftingToolDetails({ item }) {
-  const [subItems, setSubItems] = useState([]); // 하위 재료 정보를 저장할 상태
+// 무역품 한 상자, item은 무역품 부모를 가르킴.
+export default function CraftingToolDetails({ item, onCostUpdate }) {
+  const [subItems, setSubItems] = useState([]); // 부모의 하위 재료(자기 자신)
 
+  // 하위 아이템 가져오기.
   useEffect(() => {
     const fetchSubItems = async () => {
       if (item.components && item.components.length > 0) {
@@ -16,21 +18,30 @@ export default function CraftingToolDetails({ item }) {
             })),
           };
 
+          // 하위 재료의 정보 가져오기.
           const fetchedSubItems = await ItemAPI.getItemsByIdandSid(
             idsAndSids.items,
           );
 
+          // 하위 재료의 가져온 정보중 일치하는 데이터 가져오기
           const finalSubItems = item.components.map((component) => {
             const foundSubItem = fetchedSubItems.find(
               (subItem) => Number(subItem.id) === Number(component.id),
             );
             return {
               ...component,
-              ...foundSubItem, // 이제 fetchedSubItems에서 가져온 정보를 병합
+              ...foundSubItem,
             };
           });
+          console.log("fetchSubItems : ", item);
+          console.log("fetchSubItems : ", finalSubItems);
 
           setSubItems(finalSubItems);
+          const totalCost = finalSubItems.reduce(
+            (sum, subItem) => sum + subItem.price * subItem.quantity,
+            0,
+          );
+          onCostUpdate(item.id, totalCost);
         } catch (error) {
           console.error(
             "하위 아이템 정보를 가져오는 중 오류가 발생했습니다:",
@@ -45,15 +56,6 @@ export default function CraftingToolDetails({ item }) {
 
   return (
     <div className="flex flex-col">
-      <div className="flex items-center p-4 border rounded bg-white shadow mb-4">
-        <ItemImg item={item} className="w-12 h-12 mr-4" />
-        <div>
-          <h3 className="font-bold">{item.name}</h3>
-          <p>가격: {item.price}</p>
-        </div>
-        {/* TODO: 여기에 만드는 가격, 판매가격 넣으면 될듯.*/}
-      </div>
-
       {subItems.length > 0 && (
         <div className="ml-12">
           <h4 className="font-semibold mb-2">하위 재료:</h4>
