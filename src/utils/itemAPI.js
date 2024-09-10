@@ -19,13 +19,13 @@ class ItemAPI {
       const response = await axios.get(
         `${process.env.REACT_APP_API_URL}/item/?${params.toString()}`,
       );
-      const { items, totalItems, totalPages, currentPage } = response.data;
+      const { items, totalItemsCount, totalPages, currentPage } = response.data;
 
       return {
         status: response.status,
         items,
-        totalCount: totalItems,
-        pages: totalPages,
+        totalItemsCount,
+        totalPages,
         currentPage,
       };
     } catch (error) {
