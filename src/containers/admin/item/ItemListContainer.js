@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // useNavigate 훅을 import
 import ItemAPI from "../../../utils/itemAPI";
 
 export default function ItemListContainer() {
   const [searchName, setSearchName] = useState(""); // 이름 검색어를 저장하는 상태
   const [searchId, setSearchId] = useState(""); // ID 검색어를 저장하는 상태
+  const [searchMainCategory, setSearchMainCategory] = useState(""); // mainCategory 검색어를 저장하는 상태
   const [items, setItems] = useState([]); // 검색 결과로 받아온 아이템 리스트를 저장하는 상태
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지를 저장하는 상태
   const [totalPages, setTotalPages] = useState(1); // 총 페이지 수를 저장하는 상태
@@ -12,13 +13,10 @@ export default function ItemListContainer() {
 
   const navigate = useNavigate();
 
-  const handleSearchNameChange = (e) => {
-    setSearchName(e.target.value);
-  };
-
-  const handleSearchIdChange = (e) => {
-    setSearchId(e.target.value);
-  };
+  const handleSearchNameChange = (e) => setSearchName(e.target.value);
+  const handleSearchIdChange = (e) => setSearchId(e.target.value);
+  const handleSearchMainCategoryChange = (e) =>
+    setSearchMainCategory(e.target.value);
 
   const handlePageChange = (newPage) => {
     if (newPage > 0 && newPage <= totalPages) {
@@ -36,7 +34,7 @@ export default function ItemListContainer() {
       const query = {
         name: searchName,
         id: searchId,
-        page: currentPage,
+        mainCategory: searchMainCategory,
         limit: limit,
       };
       // 필드가 비어 있으면 쿼리에서 제거
@@ -45,7 +43,7 @@ export default function ItemListContainer() {
           delete query[key];
         }
       });
-      const data = await ItemAPI.getItemsByQuery(query);
+      const data = await ItemAPI.getItemsByQuery(query, currentPage);
       setItems(data.items);
       setTotalPages(data.totalPages);
     } catch (error) {
@@ -53,10 +51,16 @@ export default function ItemListContainer() {
     }
   };
 
+  // 페이지나 검색 조건이 변경될 때 아이템을 다시 가져오기
+  useEffect(() => {
+    fetchItems();
+  }, [currentPage, searchName, searchId, searchMainCategory, limit]);
+
   // 모든 검색 입력 필드를 비우는 함수
   const handleResetSearch = () => {
     setSearchName("");
     setSearchId("");
+    setSearchMainCategory("");
   };
 
   // 아이템 생성 페이지로 이동하는 함수
@@ -64,7 +68,7 @@ export default function ItemListContainer() {
     navigate("/admin/item/create");
   };
 
-  // 아이템 이름 클릭 핸들러
+  // 아이템 클릭하면 아이템 상세 페이지로
   const handleItemClick = (id, sid) => {
     navigate(`/admin/item/detail?id=${id}&sid=${sid}`);
   };
@@ -87,20 +91,25 @@ export default function ItemListContainer() {
           placeholder="아이템 ID를 입력하세요"
           className="p-2 border rounded mr-2"
         />
+        <input
+          type="text"
+          value={searchMainCategory}
+          onChange={handleSearchMainCategoryChange}
+          placeholder="메인 카테고리를 입력하세요"
+          className="p-2 border rounded mr-2"
+        />
         <button
           onClick={fetchItems}
           className="mt-2 p-2 bg-blue-500 text-white rounded mr-2"
         >
           검색
         </button>
-        {/* 모든 검색 입력 필드를 비우는 버튼 */}
         <button
           onClick={handleResetSearch}
           className="mt-2 p-2 bg-gray-500 text-white rounded mr-2"
         >
           검색 초기화
         </button>
-        {/* 아이템 생성 페이지로 이동하는 버튼 */}
         <button
           onClick={handleCreateItem}
           className="mt-2 p-2 bg-green-500 text-white rounded"
