@@ -11,6 +11,7 @@ export default function ProcessingTradeContainer() {
   // 사용자에게 장인1레벨부터 선택할수 있게 해준다.
   const [tradeLevel, setTradeLevel] = useState(70); // 무역레벨, 장인~도인정도까지만?
   const [distanceBonus, setDistanceBonus] = useState(150); // 거리 보너스, 마을별로는 안해도될듯
+  const [updateAt, setUpdateAt] = useState();
 
   const fetchItems = async () => {
     try {
@@ -140,7 +141,7 @@ export default function ProcessingTradeContainer() {
         </div>
         {/* 마지막 업데이트 시간 */}
         <div className="text-right text-gray-500 text-sm mt-1">
-          마지막 업데이트: {formatUpdateAt(items[0].updateAt)}
+          마지막 업데이트: {formatUpdateAt(updateAt)}
         </div>
       </div>
 
@@ -152,6 +153,7 @@ export default function ProcessingTradeContainer() {
             item={item}
             distanceBonus={distanceBonus}
             tradeLevel={tradeLevel}
+            setUpdateAt={setUpdateAt}
           />
         ))}
       </div>

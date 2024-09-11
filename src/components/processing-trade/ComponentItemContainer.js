@@ -15,6 +15,7 @@ export default function ComponentItemContainer({
   item: parentItem,
   distanceBonus,
   tradeLevel,
+  setUpdateAt,
 }) {
   const [allComponents, setAllComponents] = useState([]); // 하위 재료의 하위 재료 까지 모든 정보를 저장하는 곳.
   const [totalCost, setTotalCost] = useState(0); // 제작비용
@@ -170,6 +171,7 @@ export default function ComponentItemContainer({
     const fetchData = async () => {
       const componentsWithDetails = await fetchAllComponents(parentItem);
       setAllComponents(componentsWithDetails);
+      setUpdateAt(componentsWithDetails[0].updateAt);
     };
 
     fetchData();
